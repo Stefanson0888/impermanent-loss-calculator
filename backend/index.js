@@ -194,11 +194,6 @@ function getProtocolDisplayName(protocolType) {
   return protocolNames[protocolType] || 'Unknown Protocol';
 }
 
-// Тестовий endpoint
-app.get('/', (req, res) => {
-  res.json({ message: 'API працює!', timestamp: new Date().toISOString() });
-});
-
 // Ендпоінт
 app.post('/calculate', (req, res) => {
   const { oldPrice, newPrice, initialInvestment, poolAPY, protocolType } = req.body;
