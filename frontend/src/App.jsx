@@ -842,7 +842,7 @@ function App() {
     setLoading(true);
     
     try {
-      const res = await axios.post('http://impermanent-loss-calculator-api.vercel.app/calculate', {
+      const res = await axios.post('https://impermanent-loss-calculator-api.vercel.app/calculate', {
         oldPrice: parseFloat(oldPrice),
         newPrice: parseFloat(newPrice),
         initialInvestment: parseFloat(initialInvestment) || 0,
