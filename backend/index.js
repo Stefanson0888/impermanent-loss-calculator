@@ -4,14 +4,9 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 app.use(cors({
-  origin: [
-    'https://impermanent-loss-calculator-gray.vercel.app',
-    'http://localhost:3000',
-    'http://localhost:3001'
-  ],
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  origin: '*',
+  methods: '*',
+  allowedHeaders: '*'
 }));
 app.use(express.json());
 
@@ -198,6 +193,11 @@ function getProtocolDisplayName(protocolType) {
   };
   return protocolNames[protocolType] || 'Unknown Protocol';
 }
+
+// Тестовий endpoint
+app.get('/', (req, res) => {
+  res.json({ message: 'API працює!', timestamp: new Date().toISOString() });
+});
 
 // Ендпоінт
 app.post('/calculate', (req, res) => {
