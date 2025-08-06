@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useAnalytics } from './hooks/useAnalytics';
 
 // Популярні токени
 const POPULAR_TOKENS = {
@@ -828,6 +829,13 @@ function GlossarySection({ darkMode }) {
 }
 
 function App() {
+  const {
+    trackCalculation,
+    trackTokenSelect,
+    trackPriceInput,
+    trackDonation
+  } = useAnalytics();
+
   const [oldPrice, setOldPrice] = useState('');
   const [newPrice, setNewPrice] = useState('');
   const [initialInvestment, setInitialInvestment] = useState('');
@@ -840,6 +848,15 @@ function App() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    
+    // Відстежуємо розрахунок
+    trackCalculation(
+      selectedToken || 'Custom',
+      'USDT', // другий токен
+      parseFloat(oldPrice),
+      parseFloat(newPrice),
+      Math.abs(parseFloat(newPrice) - parseFloat(oldPrice)) / parseFloat(oldPrice) * 100
+    );
     
     try {
       const res = await axios.post('https://impermanent-loss-calculator-api.vercel.app/calculate', {
@@ -890,7 +907,14 @@ function App() {
             
             {/* Dark Mode Toggle */}
             <button
-              onClick={() => setDarkMode(!darkMode)}
+              onClick={() => {
+                setDarkMode(!darkMode);
+                trackEvent({
+                  action: 'toggle_theme',
+                  category: 'ui',
+                  label: !darkMode ? 'dark' : 'light'
+                });
+              }}
               className={`p-3 rounded-xl transition-all duration-300 ${
                 darkMode 
                   ? 'bg-gray-700 hover:bg-gray-600 text-yellow-400' 
@@ -1015,6 +1039,9 @@ function App() {
                 onChange={(e) => {
                   const token = e.target.value;
                   setSelectedToken(token);
+                  if (token) {
+                    trackTokenSelect(`${token}/USDT`);
+                  }
                 }}
                 className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-300 focus:ring-4 focus:ring-blue-500/20 ${
                   darkMode 
@@ -1043,7 +1070,12 @@ function App() {
                   type="number"
                   step="any"
                   value={oldPrice}
-                  onChange={(e) => setOldPrice(e.target.value)}
+                  onChange={(e) => {
+                    setOldPrice(e.target.value);
+                    if (e.target.value) {
+                      trackPriceInput('initial_price');
+                    }
+                  }}
                   className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-300 focus:ring-4 focus:ring-blue-500/20 ${
                     darkMode 
                       ? 'bg-gray-700 border-gray-600 text-white focus:border-blue-500' 
@@ -1065,7 +1097,12 @@ function App() {
                   type="number"
                   step="any"
                   value={newPrice}
-                  onChange={(e) => setNewPrice(e.target.value)}
+                  onChange={(e) => {
+                    setNewPrice(e.target.value);
+                    if (e.target.value) {
+                      trackPriceInput('current_price');
+                    }
+                  }}
                   className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-300 focus:ring-4 focus:ring-purple-500/20 ${
                     darkMode 
                       ? 'bg-gray-700 border-gray-600 text-white focus:border-purple-500' 
