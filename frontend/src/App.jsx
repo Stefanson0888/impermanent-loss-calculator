@@ -1,6 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useAnalytics } from './hooks/useAnalytics';
+
+// Lazy loading для освітнього контенту
+const useIntersectionObserver = (ref, options = {}) => {
+  const [isIntersecting, setIsIntersecting] = useState(false);
+  
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      setIsIntersecting(entry.isIntersecting);
+    }, options);
+    
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+    
+    return () => observer.disconnect();
+  }, []);
+  
+  return isIntersecting;
+};
 
 // Популярні токени
 const POPULAR_TOKENS = {
@@ -470,7 +489,7 @@ function calculateILLocal(oldPrice, newPrice, initialInvestment = 2000, poolAPY 
 }
 
 // Scenario Table Component
-function ScenarioTable({ currentOldPrice, initialInvestment, poolAPY, selectedProtocol, darkMode }) {
+const ScenarioTable = React.memo(({ currentOldPrice, initialInvestment, poolAPY, selectedProtocol, darkMode }) => {
   const scenarios = [
     { label: "-50%", multiplier: 0.5, color: "red" },
     { label: "-25%", multiplier: 0.75, color: "orange" },
@@ -587,7 +606,7 @@ function ScenarioTable({ currentOldPrice, initialInvestment, poolAPY, selectedPr
       </div>
     </div>
   );
-}
+});
 
 // Educational Tabs Component
 function EducationalTabs({ darkMode }) {
@@ -833,7 +852,8 @@ function App() {
     trackCalculation,
     trackTokenSelect,
     trackPriceInput,
-    trackDonation
+    trackDonation,
+    trackEvent
   } = useAnalytics();
 
   const [oldPrice, setOldPrice] = useState('');
@@ -876,6 +896,24 @@ function App() {
 
   const [selectedToken, setSelectedToken] = useState('');
   const [darkMode, setDarkMode] = useState(false);
+
+  const handleTokenChange = useCallback((token) => {
+    setSelectedToken(token);
+    if (token) {
+      trackTokenSelect(`${token}/USDT`);
+    }
+  }, [trackTokenSelect]);
+  
+  const handlePriceChange = useCallback((type, value) => {
+    if (type === 'old') {
+      setOldPrice(value);
+    } else {
+      setNewPrice(value);
+    }
+    if (value) {
+      trackPriceInput(type === 'old' ? 'initial_price' : 'current_price');
+    }
+  }, [trackPriceInput]);
 
   return (
     <div className={`min-h-screen transition-colors duration-300 ${
@@ -1036,13 +1074,7 @@ function App() {
               </label>
               <select
                 value={selectedToken}
-                onChange={(e) => {
-                  const token = e.target.value;
-                  setSelectedToken(token);
-                  if (token) {
-                    trackTokenSelect(`${token}/USDT`);
-                  }
-                }}
+                onChange={(e) => handleTokenChange(e.target.value)}
                 className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-300 focus:ring-4 focus:ring-blue-500/20 ${
                   darkMode 
                     ? 'bg-gray-700 border-gray-600 text-white focus:border-blue-500' 
@@ -1070,12 +1102,7 @@ function App() {
                   type="number"
                   step="any"
                   value={oldPrice}
-                  onChange={(e) => {
-                    setOldPrice(e.target.value);
-                    if (e.target.value) {
-                      trackPriceInput('initial_price');
-                    }
-                  }}
+                  onChange={(e) => handlePriceChange('old', e.target.value)}
                   className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-300 focus:ring-4 focus:ring-blue-500/20 ${
                     darkMode 
                       ? 'bg-gray-700 border-gray-600 text-white focus:border-blue-500' 
@@ -1097,12 +1124,7 @@ function App() {
                   type="number"
                   step="any"
                   value={newPrice}
-                  onChange={(e) => {
-                    setNewPrice(e.target.value);
-                    if (e.target.value) {
-                      trackPriceInput('current_price');
-                    }
-                  }}
+                  onChange={(e) => handlePriceChange('new', e.target.value)}
                   className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-300 focus:ring-4 focus:ring-purple-500/20 ${
                     darkMode 
                       ? 'bg-gray-700 border-gray-600 text-white focus:border-purple-500' 
@@ -1378,12 +1400,15 @@ function App() {
                   </div>
                 </div>
 
+              {useMemo(() => (
                 <ScenarioTable 
                   currentOldPrice={parseFloat(oldPrice)} 
                   initialInvestment={parseFloat(initialInvestment) || 2000}
                   poolAPY={parseFloat(poolAPY) || 0}
+                  selectedProtocol={selectedProtocol}
                   darkMode={darkMode} 
                 />
+              ), [oldPrice, initialInvestment, poolAPY, selectedProtocol, darkMode])}
               </div>
             )}
             {result.poolAPY > 0 && (
@@ -1538,7 +1563,8 @@ function App() {
             </div>
           </div>
 
-          <EducationalTabs darkMode={darkMode} />
+          {/* Lazy render educational content */}
+          {result && <EducationalTabs darkMode={darkMode} />}
         </div>
       </div>
     </div>
