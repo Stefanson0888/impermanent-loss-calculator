@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import axios from 'axios';
 import { useAnalytics } from './hooks/useAnalytics';
 
-// Популярні токени
+
 const POPULAR_TOKENS = {
   'ETH': { name: 'Ethereum' },
   'BTC': { name: 'Bitcoin' },
@@ -16,7 +16,7 @@ const POPULAR_TOKENS = {
   'AAVE': { name: 'Aave' }
 };
 
-// Популярні пули з типовими APY для підказок
+
 const POPULAR_POOLS_APY = {
   'ETH/USDT': '25-45%',
   'BTC/USDT': '15-30%',
@@ -25,9 +25,9 @@ const POPULAR_POOLS_APY = {
   'Stablecoins': '5-15%'
 };
 
-// Real Popular Pools Database (Updated January 2025)
+
 const POPULAR_POOLS = [
-  // Uniswap V3 Pools
+  
   {
     id: 'eth-usdt-uni-v3',
     name: 'ETH/USDT',
@@ -65,7 +65,7 @@ const POPULAR_POOLS = [
     category: 'Major'
   },
   
-  // PancakeSwap V3 Pools  
+    
   {
     id: 'bnb-usdt-pcs-v3',
     name: 'BNB/USDT',
@@ -91,7 +91,7 @@ const POPULAR_POOLS = [
     category: 'Major'
   },
   
-  // Curve Stable Pools
+  
   {
     id: 'usdc-usdt-curve',
     name: 'USDC/USDT',
@@ -117,7 +117,7 @@ const POPULAR_POOLS = [
     category: 'Stable'
   },
   
-  // Uniswap V2 / Classic AMM
+  
   {
     id: 'eth-usdt-uni-v2',
     name: 'ETH/USDT',
@@ -131,7 +131,7 @@ const POPULAR_POOLS = [
     category: 'Major'
   },
   
-  // Balancer Weighted Pools
+  
   {
     id: 'bal-eth-80-20',
     name: 'BAL/ETH (80/20)',
@@ -145,12 +145,12 @@ const POPULAR_POOLS = [
     category: 'DeFi'
   },
   
-  // High APY / Risky Pools
+  
   {
     id: 'sol-usdt-raydium',
     name: 'SOL/USDT',
     protocol: 'Raydium',
-    protocolType: 'uniswap-v2', // Raydium uses AMM similar to Uniswap v2
+    protocolType: 'uniswap-v2', 
     apy: 67.3,
     tvl: '$78M',
     volume24h: '$312M',
@@ -159,7 +159,7 @@ const POPULAR_POOLS = [
     category: 'Alt'
   },
   
-  // DeFi Blue Chips
+  
   {
     id: 'uni-eth-uni-v3',
     name: 'UNI/ETH',
@@ -186,7 +186,7 @@ const POPULAR_POOLS = [
   }
 ];
 
-// Available protocols for manual selection  
+  
 const AVAILABLE_PROTOCOLS = [
   {
     id: 'uniswap-v2',
@@ -232,7 +232,7 @@ const AVAILABLE_PROTOCOLS = [
   }
 ];
 
-// Risk colors helper
+
 const getRiskColor = (risk, darkMode) => {
   const colors = {
     'Low': darkMode ? 'text-green-400' : 'text-green-600',
@@ -242,7 +242,7 @@ const getRiskColor = (risk, darkMode) => {
   return colors[risk] || '';
 };
 
-// All Pools Selector Component
+
 function AllPoolsSelector({ darkMode, onPoolSelect, selectedPool }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [riskFilter, setRiskFilter] = useState('All');
@@ -276,7 +276,7 @@ function AllPoolsSelector({ darkMode, onPoolSelect, selectedPool }) {
           darkMode ? 'bg-gray-700/30 border-gray-600' : 'bg-gray-50 border-gray-300'
         }`}>
           
-          {/* Risk Filter */}
+          
           <div className={`p-4 border-b ${darkMode ? 'border-gray-600' : 'border-gray-200'}`}>
             <div className="flex items-center gap-2 mb-2">
               <span className="text-sm font-semibold">Filter by risk:</span>
@@ -381,7 +381,7 @@ function AllPoolsSelector({ darkMode, onPoolSelect, selectedPool }) {
   );
 }
 
-// FIXED Local IL calculation function for scenarios
+
 function calculateILLocal(oldPrice, newPrice, initialInvestment = 2000, poolAPY = 0, protocolType = 'uniswap-v2') {
   if (!oldPrice || !newPrice || oldPrice <= 0 || newPrice <= 0) {
     return null;
@@ -389,7 +389,7 @@ function calculateILLocal(oldPrice, newPrice, initialInvestment = 2000, poolAPY 
 
   const priceRatio = newPrice / oldPrice;
   
-  // Different formulas for different protocols with REAL differences
+  
   let multiplier, ilPercent;
   let protocolName = 'Standard AMM';
   
@@ -408,34 +408,34 @@ function calculateILLocal(oldPrice, newPrice, initialInvestment = 2000, poolAPY 
       
     case 'uniswap-v3':
     case 'pancakeswap-v3':
-      // V3 has SIGNIFICANTLY higher IL due to concentration
-      const concentrationFactor = 2.0; // 2x worse IL
+      
+      const concentrationFactor = 2.0; 
       multiplier = (2 * Math.sqrt(priceRatio)) / (1 + priceRatio);
       ilPercent = (multiplier - 1) * 100 * concentrationFactor;
       protocolName = protocolType === 'uniswap-v3' ? 'Uniswap V3' : 'PancakeSwap V3';
       break;
       
     case 'curve':
-      // Curve is MUCH better for correlated assets
+      
       const priceChange = Math.abs(priceRatio - 1);
-      if (priceChange < 0.02) { // < 2% change
-        ilPercent = -0.01 * (priceChange * 100); // Almost zero IL
+      if (priceChange < 0.02) { 
+        ilPercent = -0.01 * (priceChange * 100); 
         multiplier = 1 + (ilPercent / 100);
       } else {
         multiplier = (2 * Math.sqrt(priceRatio)) / (1 + priceRatio);
-        ilPercent = (multiplier - 1) * 100 * 0.3; // 70% less IL
+        ilPercent = (multiplier - 1) * 100 * 0.3;
       }
       protocolName = 'Curve Finance';
       break;
       
     case 'balancer-weighted':
-      // 80/20 pools have much less IL
+      
       const weight1 = 0.8;
       const weight2 = 0.2;
       const term1 = Math.pow(priceRatio, weight1);
       const term2 = Math.pow(1, weight2);
       multiplier = weight1 * term1 + weight2 * term2;
-      ilPercent = (multiplier - 1) * 100 * 0.25; // 75% less IL
+      ilPercent = (multiplier - 1) * 100 * 0.25; 
       protocolName = 'Balancer Weighted';
       break;
       
@@ -451,7 +451,7 @@ function calculateILLocal(oldPrice, newPrice, initialInvestment = 2000, poolAPY 
   const lpValue = initialInvestment * Math.max(0.1, multiplier);
   const impermanentLossUSD = lpValue - hodlValue;
   
-  // Fees calculation
+  
   const dailyAPY = poolAPY / 365 / 100;
   const assumedDays = 30;
   const totalFeesEarned = initialInvestment * dailyAPY * assumedDays;
@@ -464,7 +464,7 @@ function calculateILLocal(oldPrice, newPrice, initialInvestment = 2000, poolAPY 
   const lpProfitWithFees = lpValueWithFees - initialInvestment;
   const lpProfitPercentWithFees = (lpProfitWithFees / initialInvestment) * 100;
   
-  // Break-even calculation
+  
   let breakEvenDays = null;
   let breakEvenText = "No IL to compensate!";
   
@@ -494,7 +494,7 @@ function calculateILLocal(oldPrice, newPrice, initialInvestment = 2000, poolAPY 
     lpProfitPercentWithFees: parseFloat(lpProfitPercentWithFees.toFixed(2)),
     priceChange: parseFloat(((newPrice - oldPrice) / oldPrice * 100).toFixed(2)),
     betterStrategy: (poolAPY > 0 ? lpValueWithFees : lpValue) > hodlValue ? 'LP' : 'HODL',
-    // ALL REQUIRED FIELDS
+    
     protocolName,
     breakEvenDays,
     breakEvenText,
@@ -507,7 +507,7 @@ function calculateILLocal(oldPrice, newPrice, initialInvestment = 2000, poolAPY 
   };
 }
 
-// Scenario Table Component
+
 const ScenarioTable = React.memo(({ currentOldPrice, initialInvestment, poolAPY, selectedProtocol, darkMode }) => {
   const scenarios = [
     { label: "-50%", multiplier: 0.5, color: "red" },
@@ -627,7 +627,7 @@ const ScenarioTable = React.memo(({ currentOldPrice, initialInvestment, poolAPY,
   );
 });
 
-// Educational Tabs Component
+
 function EducationalTabs({ darkMode }) {
   const [activeTab, setActiveTab] = useState('learn');
 
@@ -639,7 +639,7 @@ function EducationalTabs({ darkMode }) {
 
   return (
     <div className="p-8">
-      {/* Tab Navigation */}
+      
       <div className="flex space-x-1 mb-8">
         {tabs.map((tab) => (
           <button
@@ -661,7 +661,7 @@ function EducationalTabs({ darkMode }) {
         ))}
       </div>
 
-      {/* Tab Content */}
+      
       <div className="space-y-6">
         {activeTab === 'learn' && <LearnSection darkMode={darkMode} />}
         {activeTab === 'faq' && <FAQSection darkMode={darkMode} />}
@@ -671,7 +671,7 @@ function EducationalTabs({ darkMode }) {
   );
 }
 
-// Learn Section Component
+
 function LearnSection({ darkMode }) {
   const articles = [
     {
@@ -728,7 +728,7 @@ function LearnSection({ darkMode }) {
   );
 }
 
-// FAQ Section Component
+
 function FAQSection({ darkMode }) {
   const [openFAQ, setOpenFAQ] = useState(null);
 
@@ -800,7 +800,6 @@ function FAQSection({ darkMode }) {
   );
 }
 
-// Glossary Section Component
 function GlossarySection({ darkMode }) {
   const terms = [
     {
@@ -890,7 +889,7 @@ function App() {
     e.preventDefault();
     setLoading(true);
     
-    // Відстежуємо розрахунок
+    
     trackCalculation(
       selectedToken || 'Custom',
       'USDT',
@@ -922,7 +921,7 @@ function App() {
         : 'bg-gradient-to-br from-slate-50 via-white to-blue-50'
     }`}>
       
-      {/* Header */}
+      
       <div className={`border-b shadow-sm transition-colors duration-300 ${
         darkMode 
           ? 'bg-gray-800/90 backdrop-blur-md border-gray-700' 
@@ -943,7 +942,7 @@ function App() {
               </p>
             </div>
             
-            {/* Dark Mode Toggle */}
+            
             <button
               onClick={() => {
                 setDarkMode(!darkMode);
@@ -976,14 +975,14 @@ function App() {
   
       <div className="max-w-6xl mx-auto px-6 py-12">
 
-      {/* Main Calculator Card */}
+      
       <div className={`rounded-2xl shadow-xl border transition-colors duration-300 overflow-hidden ${
         darkMode 
           ? 'bg-gray-800/90 backdrop-blur-md border-gray-700' 
           : 'bg-white/90 backdrop-blur-md border-gray-200'
       }`}>
         
-        {/* Input Section */}
+        
         <div className={`p-8 border-b transition-colors duration-300 ${
           darkMode ? 'border-gray-700' : 'border-gray-200'
         }`}>
@@ -1013,7 +1012,7 @@ function App() {
           </div>
           
           <form onSubmit={handleSubmit}>
-            {/* Protocol Selector */}
+            
             <div className="mb-6">
               <label className={`block text-sm font-semibold mb-3 transition-colors duration-300 ${
                 darkMode ? 'text-gray-300' : 'text-gray-700'
@@ -1065,7 +1064,6 @@ function App() {
               </div>
             </div>
 
-            {/* Token Selector */}
             <div className="mb-6">
               <label className={`block text-sm font-semibold mb-3 transition-colors duration-300 ${
                 darkMode ? 'text-gray-300' : 'text-gray-700'
@@ -1224,7 +1222,6 @@ function App() {
           </form>
         </div>
 
-        {/* Results Section */}
         {result && (
           <div className="p-8">
             <div className="flex items-center gap-3 mb-6">
@@ -1250,7 +1247,6 @@ function App() {
               </div>
             </div>
 
-            {/* Pool Info Banner */}
             {selectedPool && (() => {
               const pool = POPULAR_POOLS.find(p => p.id === selectedPool);
               if (!pool) return null;
@@ -1291,7 +1287,6 @@ function App() {
               );
             })()}
             
-            {/* Protocol Info Banner */}
             {!selectedPool && result && (() => {
               const protocol = AVAILABLE_PROTOCOLS.find(p => p.id === selectedProtocol);
               if (!protocol) return null;
@@ -1330,7 +1325,6 @@ function App() {
               );
             })()}
 
-            {/* Main Results */}
             <div className={`rounded-xl p-6 mb-6 ${darkMode ? 'bg-gray-700/50' : 'bg-gray-50'}`}>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
                 <div>
@@ -1393,7 +1387,6 @@ function App() {
               </div>
             </div>
 
-            {/* Scenario Analysis Section */}
             {result && (
               <div className={`rounded-xl p-6 mt-6 border transition-colors duration-300 ${
                 darkMode ? 'bg-blue-900/20 border-blue-500/50' : 'bg-blue-50 border-blue-300'
@@ -1484,7 +1477,6 @@ function App() {
                   </div>
                 </div>
 
-                {/* Break-even Analysis */}
                 <div className={`rounded-lg p-4 ${
                   darkMode ? 'bg-gray-800/50' : 'bg-white/70'
                 }`}>
@@ -1523,10 +1515,9 @@ function App() {
         )}
       </div>
 
-      {/* Educational Content Section */}
+      
       <div className="mt-12">
         
-        {/* Live Data Disclaimer */}
         <div className={`rounded-xl p-4 mb-6 border transition-colors duration-300 ${
           darkMode ? 'bg-blue-900/10 border-blue-500/30' : 'bg-blue-50 border-blue-200'
         }`}>
@@ -1550,7 +1541,6 @@ function App() {
             : 'bg-white/90 backdrop-blur-md border-gray-200'
         }`}>
           
-          {/* Section Header */}
           <div className={`p-8 border-b transition-colors duration-300 ${
             darkMode ? 'border-gray-700' : 'border-gray-200'
           }`}>
@@ -1579,7 +1569,6 @@ function App() {
             </div>
           </div>
 
-          {/* Lazy render educational content */}
           {result && <EducationalTabs darkMode={darkMode} />}
         </div>
       </div>
