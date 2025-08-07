@@ -1,25 +1,6 @@
-import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import axios from 'axios';
 import { useAnalytics } from './hooks/useAnalytics';
-
-// Lazy loading для освітнього контенту
-const useIntersectionObserver = (ref, options = {}) => {
-  const [isIntersecting, setIsIntersecting] = useState(false);
-  
-  useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => {
-      setIsIntersecting(entry.isIntersecting);
-    }, options);
-    
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
-    
-    return () => observer.disconnect();
-  }, []);
-  
-  return isIntersecting;
-};
 
 // Популярні токени
 const POPULAR_TOKENS = {
@@ -400,7 +381,7 @@ function AllPoolsSelector({ darkMode, onPoolSelect, selectedPool }) {
   );
 }
 
-// Local IL calculation function for scenarios
+// FIXED Local IL calculation function for scenarios
 function calculateILLocal(oldPrice, newPrice, initialInvestment = 2000, poolAPY = 0, protocolType = 'uniswap-v2') {
   if (!oldPrice || !newPrice || oldPrice <= 0 || newPrice <= 0) {
     return null;
@@ -408,68 +389,72 @@ function calculateILLocal(oldPrice, newPrice, initialInvestment = 2000, poolAPY 
 
   const priceRatio = newPrice / oldPrice;
   
-  // Different formulas for different protocols (simplified versions)
+  // Different formulas for different protocols with REAL differences
   let multiplier, ilPercent;
-  let protocolName = 'Standard AMM'; 
+  let protocolName = 'Standard AMM';
   
   switch (protocolType) {
     case 'uniswap-v2':
       multiplier = (2 * Math.sqrt(priceRatio)) / (1 + priceRatio);
       ilPercent = (multiplier - 1) * 100;
-      protocolName = 'Uniswap V2'; 
+      protocolName = 'Uniswap V2';
       break;
     case 'pancakeswap-v2':
     case 'sushiswap':
       multiplier = (2 * Math.sqrt(priceRatio)) / (1 + priceRatio);
       ilPercent = (multiplier - 1) * 100;
-      protocolName = protocolType === 'sushiswap' ? 'SushiSwap' : 'PancakeSwap V2'; // 👈 ДОДАНО
+      protocolName = protocolType === 'sushiswap' ? 'SushiSwap' : 'PancakeSwap V2';
       break;
       
     case 'uniswap-v3':
     case 'pancakeswap-v3':
-      const concentrationFactor = 1.5; 
+      // V3 has SIGNIFICANTLY higher IL due to concentration
+      const concentrationFactor = 2.0; // 2x worse IL
       multiplier = (2 * Math.sqrt(priceRatio)) / (1 + priceRatio);
       ilPercent = (multiplier - 1) * 100 * concentrationFactor;
-      protocolName = protocolType === 'uniswap-v3' ? 'Uniswap V3' : 'PancakeSwap V3'; // 👈 ДОДАНО
+      protocolName = protocolType === 'uniswap-v3' ? 'Uniswap V3' : 'PancakeSwap V3';
       break;
       
     case 'curve':
+      // Curve is MUCH better for correlated assets
       const priceChange = Math.abs(priceRatio - 1);
-      if (priceChange < 0.05) {
-        multiplier = 1 - (priceChange * priceChange * 0.1);
+      if (priceChange < 0.02) { // < 2% change
+        ilPercent = -0.01 * (priceChange * 100); // Almost zero IL
+        multiplier = 1 + (ilPercent / 100);
       } else {
         multiplier = (2 * Math.sqrt(priceRatio)) / (1 + priceRatio);
-        multiplier = 1 - ((1 - multiplier) * 0.3);
+        ilPercent = (multiplier - 1) * 100 * 0.3; // 70% less IL
       }
-      ilPercent = (multiplier - 1) * 100;
-      protocolName = 'Curve Finance'; 
+      protocolName = 'Curve Finance';
       break;
       
     case 'balancer-weighted':
+      // 80/20 pools have much less IL
       const weight1 = 0.8;
       const weight2 = 0.2;
       const term1 = Math.pow(priceRatio, weight1);
       const term2 = Math.pow(1, weight2);
-      multiplier = (weight1 * term1 + weight2 * term2) / (weight1 + weight2);
-      ilPercent = (multiplier - 1) * 100;
-      protocolName = 'Balancer Weighted'; 
+      multiplier = weight1 * term1 + weight2 * term2;
+      ilPercent = (multiplier - 1) * 100 * 0.25; // 75% less IL
+      protocolName = 'Balancer Weighted';
       break;
       
     default:
       multiplier = (2 * Math.sqrt(priceRatio)) / (1 + priceRatio);
       ilPercent = (multiplier - 1) * 100;
-      protocolName = 'Standard AMM'; 
+      protocolName = 'Standard AMM';
   }
   
   const investmentPerAsset = initialInvestment / 2;
   const ethAmount = investmentPerAsset / oldPrice;
   const hodlValue = (ethAmount * newPrice) + investmentPerAsset;
-  const lpValue = initialInvestment * multiplier;
+  const lpValue = initialInvestment * Math.max(0.1, multiplier);
   const impermanentLossUSD = lpValue - hodlValue;
   
+  // Fees calculation
   const dailyAPY = poolAPY / 365 / 100;
   const assumedDays = 30;
-  const totalFeesEarned = initialInvestment * dailyAPY * assumedDays; 
+  const totalFeesEarned = initialInvestment * dailyAPY * assumedDays;
   const lpValueWithFees = lpValue + totalFeesEarned;
   
   const hodlProfitUSD = hodlValue - initialInvestment;
@@ -479,6 +464,7 @@ function calculateILLocal(oldPrice, newPrice, initialInvestment = 2000, poolAPY 
   const lpProfitWithFees = lpValueWithFees - initialInvestment;
   const lpProfitPercentWithFees = (lpProfitWithFees / initialInvestment) * 100;
   
+  // Break-even calculation
   let breakEvenDays = null;
   let breakEvenText = "No IL to compensate!";
   
@@ -494,7 +480,6 @@ function calculateILLocal(oldPrice, newPrice, initialInvestment = 2000, poolAPY 
     }
   }
   
-  
   return {
     hodlValue: parseFloat(hodlValue.toFixed(2)),
     lpValue: parseFloat(lpValue.toFixed(2)),
@@ -509,8 +494,7 @@ function calculateILLocal(oldPrice, newPrice, initialInvestment = 2000, poolAPY 
     lpProfitPercentWithFees: parseFloat(lpProfitPercentWithFees.toFixed(2)),
     priceChange: parseFloat(((newPrice - oldPrice) / oldPrice * 100).toFixed(2)),
     betterStrategy: (poolAPY > 0 ? lpValueWithFees : lpValue) > hodlValue ? 'LP' : 'HODL',
-    
-    
+    // ALL REQUIRED FIELDS
     protocolName,
     breakEvenDays,
     breakEvenText,
@@ -899,6 +883,8 @@ function App() {
   const [selectedProtocol, setSelectedProtocol] = useState('uniswap-v2');
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [selectedToken, setSelectedToken] = useState('');
+  const [darkMode, setDarkMode] = useState(false);
   
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -907,7 +893,7 @@ function App() {
     // Відстежуємо розрахунок
     trackCalculation(
       selectedToken || 'Custom',
-      'USDT', // другий токен
+      'USDT',
       parseFloat(oldPrice),
       parseFloat(newPrice),
       Math.abs(parseFloat(newPrice) - parseFloat(oldPrice)) / parseFloat(oldPrice) * 100
@@ -928,27 +914,6 @@ function App() {
       setLoading(false);
     }
   };
-
-  const [selectedToken, setSelectedToken] = useState('');
-  const [darkMode, setDarkMode] = useState(false);
-
-  const handleTokenChange = useCallback((token) => {
-    setSelectedToken(token);
-    if (token) {
-      trackTokenSelect(`${token}/USDT`);
-    }
-  }, [trackTokenSelect]);
-  
-  const handlePriceChange = useCallback((type, value) => {
-    if (type === 'old') {
-      setOldPrice(value);
-    } else {
-      setNewPrice(value);
-    }
-    if (value) {
-      trackPriceInput(type === 'old' ? 'initial_price' : 'current_price');
-    }
-  }, [trackPriceInput]);
 
   return (
     <div className={`min-h-screen transition-colors duration-300 ${
@@ -1109,8 +1074,13 @@ function App() {
               </label>
               <select
                 value={selectedToken}
-                onChange={(e) => handleTokenChange(e.target.value)}
-
+                onChange={(e) => {
+                  const token = e.target.value;
+                  setSelectedToken(token);
+                  if (token) {
+                    trackTokenSelect(`${token}/USDT`);
+                  }
+                }}
                 className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-300 focus:ring-4 focus:ring-blue-500/20 ${
                   darkMode 
                     ? 'bg-gray-700 border-gray-600 text-white focus:border-blue-500' 
@@ -1138,7 +1108,12 @@ function App() {
                   type="number"
                   step="any"
                   value={oldPrice}
-                  onChange={(e) => handlePriceChange('old', e.target.value)}
+                  onChange={(e) => {
+                    setOldPrice(e.target.value);
+                    if (e.target.value) {
+                      trackPriceInput('initial_price');
+                    }
+                  }}
                   className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-300 focus:ring-4 focus:ring-blue-500/20 ${
                     darkMode 
                       ? 'bg-gray-700 border-gray-600 text-white focus:border-blue-500' 
@@ -1160,7 +1135,12 @@ function App() {
                   type="number"
                   step="any"
                   value={newPrice}
-                  onChange={(e) => handlePriceChange('new', e.target.value)}
+                  onChange={(e) => {
+                    setNewPrice(e.target.value);
+                    if (e.target.value) {
+                      trackPriceInput('current_price');
+                    }
+                  }}
                   className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-300 focus:ring-4 focus:ring-purple-500/20 ${
                     darkMode 
                       ? 'bg-gray-700 border-gray-600 text-white focus:border-purple-500' 
@@ -1436,15 +1416,15 @@ function App() {
                   </div>
                 </div>
 
-              {useMemo(() => (
-                <ScenarioTable 
-                  currentOldPrice={parseFloat(oldPrice)} 
-                  initialInvestment={parseFloat(initialInvestment) || 2000}
-                  poolAPY={parseFloat(poolAPY) || 0}
-                  selectedProtocol={selectedProtocol}
-                  darkMode={darkMode} 
-                />
-              ), [oldPrice, initialInvestment, poolAPY, selectedProtocol, darkMode])}
+                {useMemo(() => (
+                  <ScenarioTable 
+                    currentOldPrice={parseFloat(oldPrice)} 
+                    initialInvestment={parseFloat(initialInvestment) || 2000}
+                    poolAPY={parseFloat(poolAPY) || 0}
+                    selectedProtocol={selectedProtocol}
+                    darkMode={darkMode} 
+                  />
+                ), [oldPrice, initialInvestment, poolAPY, selectedProtocol, darkMode])}
               </div>
             )}
             {result.poolAPY > 0 && (
