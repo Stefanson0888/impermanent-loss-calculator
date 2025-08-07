@@ -187,50 +187,314 @@ const POPULAR_POOLS = [
 ];
 
   
-const AVAILABLE_PROTOCOLS = [
+// Розширений список протоколів з покращеними конфігураціями
+const EXPANDED_PROTOCOLS = [
+  // Класичні AMM
   {
     id: 'uniswap-v2',
     name: 'Uniswap V2',
     description: 'Classic constant product formula (x*y=k)',
     icon: '🦄',
-    characteristics: ['Standard IL calculation', '50/50 weight pools', 'Most common AMM']
+    category: 'Classic AMM',
+    network: ['Ethereum'],
+    characteristics: ['50/50 weight pools', 'Standard IL calculation', 'High liquidity'],
+    avgFee: '0.30%',
+    complexity: 'Simple',
+    riskLevel: 'Medium',
+    config: {
+      feeStructure: 'fixed',
+      concentratedLiquidity: false,
+      customWeights: false
+    }
   },
   {
-    id: 'uniswap-v3', 
+    id: 'sushiswap',
+    name: 'SushiSwap',
+    description: 'Uniswap V2 fork with additional SUSHI rewards',
+    icon: '🍣',
+    category: 'Classic AMM',
+    network: ['Ethereum', 'Polygon', 'BSC', 'Arbitrum'],
+    characteristics: ['SUSHI rewards', 'Multi-chain', 'Community owned'],
+    avgFee: '0.30%',
+    complexity: 'Simple',
+    riskLevel: 'Medium',
+    config: {
+      feeStructure: 'fixed',
+      additionalRewards: true,
+      multiChain: true
+    }
+  },
+  
+  // Концентрована ліквідність
+  {
+    id: 'uniswap-v3',
     name: 'Uniswap V3',
-    description: 'Concentrated liquidity with price ranges',
+    description: 'Concentrated liquidity with custom price ranges',
     icon: '🦄',
-    characteristics: ['Concentrated liquidity', 'Potentially higher IL', 'Active management needed']
+    category: 'Concentrated Liquidity',
+    network: ['Ethereum', 'Polygon', 'Arbitrum', 'Optimism'],
+    characteristics: ['Concentrated liquidity', 'Custom ranges', 'Higher capital efficiency'],
+    avgFee: '0.05% - 1.00%',
+    complexity: 'Advanced',
+    riskLevel: 'High',
+    config: {
+      feeStructure: 'tiered',
+      concentratedLiquidity: true,
+      customRanges: true,
+      feeTiers: [0.05, 0.3, 1.0]
+    }
   },
   {
     id: 'pancakeswap-v3',
     name: 'PancakeSwap V3',
-    description: 'BSC concentrated liquidity',
+    description: 'BSC concentrated liquidity with lower fees',
     icon: '🥞',
-    characteristics: ['Lower fees', 'BSC ecosystem', 'Concentrated liquidity']
+    category: 'Concentrated Liquidity',
+    network: ['BSC', 'Ethereum'],
+    characteristics: ['Lower fees', 'Concentrated liquidity', 'BSC native'],
+    avgFee: '0.01% - 1.00%',
+    complexity: 'Advanced',
+    riskLevel: 'High',
+    config: {
+      feeStructure: 'tiered',
+      concentratedLiquidity: true,
+      customRanges: true,
+      feeTiers: [0.01, 0.25, 1.0]
+    }
   },
   {
-    id: 'curve',
-    name: 'Curve Finance',
-    description: 'Optimized for stablecoins and similar assets',
-    icon: '🌀',
-    characteristics: ['Minimal IL for stables', 'StableSwap formula', 'Best for correlated assets']
+    id: 'algebra',
+    name: 'Algebra Finance',
+    description: 'Adaptive fees with concentrated liquidity',
+    icon: '📊',
+    category: 'Concentrated Liquidity',
+    network: ['Polygon'],
+    characteristics: ['Adaptive fees', 'Dynamic pricing', 'Concentrated liquidity'],
+    avgFee: '0.01% - 0.30%',
+    complexity: 'Advanced',
+    riskLevel: 'High',
+    config: {
+      feeStructure: 'adaptive',
+      concentratedLiquidity: true,
+      dynamicFees: true
+    }
   },
+  
+  // Стейблкоїн протоколи
+  {
+    id: 'curve-stable',
+    name: 'Curve StableSwap',
+    description: 'Optimized for stablecoins and pegged assets',
+    icon: '🌀',
+    category: 'Stablecoin AMM',
+    network: ['Ethereum', 'Polygon', 'Arbitrum'],
+    characteristics: ['Minimal IL for stables', 'StableSwap formula', 'Low slippage'],
+    avgFee: '0.04%',
+    complexity: 'Moderate',
+    riskLevel: 'Low',
+    config: {
+      feeStructure: 'fixed',
+      amplification: 2000,
+      stableOptimized: true
+    }
+  },
+  {
+    id: 'curve-crypto',
+    name: 'Curve CryptoSwap',
+    description: 'For volatile assets with automatic rebalancing',
+    icon: '🌀',
+    category: 'Crypto AMM',
+    network: ['Ethereum', 'Polygon'],
+    characteristics: ['Internal oracles', 'Auto-rebalancing', 'Volatile assets'],
+    avgFee: '0.04% - 0.40%',
+    complexity: 'Advanced',
+    riskLevel: 'Medium',
+    config: {
+      feeStructure: 'dynamic',
+      internalOracle: true,
+      autoRebalancing: true
+    }
+  },
+  
+  // Weighted протоколи
   {
     id: 'balancer-weighted',
     name: 'Balancer Weighted',
     description: 'Custom weight pools (80/20, 60/40, etc.)',
     icon: '⚖️',
-    characteristics: ['Custom pool weights', 'Reduced IL vs 50/50', 'More complex math']
+    category: 'Weighted Pools',
+    network: ['Ethereum', 'Polygon', 'Arbitrum'],
+    characteristics: ['Custom weights', 'Reduced IL', 'Portfolio management'],
+    avgFee: '0.10% - 1.00%',
+    complexity: 'Moderate',
+    riskLevel: 'Medium',
+    config: {
+      feeStructure: 'custom',
+      customWeights: true,
+      multiToken: true
+    }
   },
   {
-    id: 'sushiswap',
-    name: 'SushiSwap',
-    description: 'Fork of Uniswap V2 with additional rewards',
-    icon: '🍣',
-    characteristics: ['Same as Uniswap V2', 'Additional SUSHI rewards', 'Multi-chain']
+    id: 'balancer-stable',
+    name: 'Balancer StablePool',
+    description: 'Stable pools with Curve-like math',
+    icon: '⚖️',
+    category: 'Stablecoin AMM',
+    network: ['Ethereum', 'Polygon'],
+    characteristics: ['Stable math', 'Low IL', 'Multiple tokens'],
+    avgFee: '0.10%',
+    complexity: 'Moderate',
+    riskLevel: 'Low',
+    config: {
+      feeStructure: 'fixed',
+      stableOptimized: true,
+      multiToken: true
+    }
+  },
+  
+  // Ve(3,3) протоколи
+  {
+    id: 'solidly',
+    name: 'Solidly',
+    description: 'Ve(3,3) model with stable/volatile curves',
+    icon: '💎',
+    category: 'Ve(3,3)',
+    network: ['Fantom', 'Ethereum'],
+    characteristics: ['Ve(3,3) tokenomics', 'Dual curves', 'Vote rewards'],
+    avgFee: '0.01% - 0.30%',
+    complexity: 'Advanced',
+    riskLevel: 'Medium',
+    config: {
+      feeStructure: 'dual',
+      veTokenomics: true,
+      stableVolatileCurves: true
+    }
+  },
+  {
+    id: 'velodrome',
+    name: 'Velodrome',
+    description: 'Optimism ve(3,3) with improved mechanics',
+    icon: '🚴',
+    category: 'Ve(3,3)',
+    network: ['Optimism'],
+    characteristics: ['Improved ve(3,3)', 'Optimism native', 'Weekly rewards'],
+    avgFee: '0.01% - 0.30%',
+    complexity: 'Advanced',
+    riskLevel: 'Medium',
+    config: {
+      feeStructure: 'dual',
+      veTokenomics: true,
+      weeklyRewards: true
+    }
+  },
+  {
+    id: 'thena',
+    name: 'Thena',
+    description: 'BSC ve(3,3) implementation',
+    icon: '🏛️',
+    category: 'Ve(3,3)',
+    network: ['BSC'],
+    characteristics: ['BSC ve(3,3)', 'Dual curves', 'THE rewards'],
+    avgFee: '0.01% - 0.30%',
+    complexity: 'Advanced',
+    riskLevel: 'Medium',
+    config: {
+      feeStructure: 'dual',
+      veTokenomics: true,
+      bscNative: true
+    }
+  },
+  
+  // Perpetual/GMX-style
+  {
+    id: 'gmx',
+    name: 'GMX',
+    description: 'Multi-asset pool for perpetual trading',
+    icon: '📈',
+    category: 'Perpetual DEX',
+    network: ['Arbitrum', 'Avalanche'],
+    characteristics: ['Multi-asset pool', 'Perpetual trading', 'GLP tokens'],
+    avgFee: 'Variable',
+    complexity: 'Advanced',
+    riskLevel: 'High',
+    config: {
+      feeStructure: 'dynamic',
+      multiAsset: true,
+      perpetualTrading: true
+    }
+  },
+  {
+    id: 'gains',
+    name: 'Gains Network',
+    description: 'Synthetic leveraged trading with DAI vault',
+    icon: '📊',
+    category: 'Perpetual DEX',
+    network: ['Polygon', 'Arbitrum'],
+    characteristics: ['DAI vault', 'Synthetic leverage', 'Decentralized oracle'],
+    avgFee: 'Variable',
+    complexity: 'Advanced',
+    riskLevel: 'High',
+    config: {
+      feeStructure: 'dynamic',
+      syntheticAssets: true,
+      daiVault: true
+    }
+  },
+  
+  // Нові/унікальні протоколи
+  {
+    id: 'maverick',
+    name: 'Maverick Protocol',
+    description: 'Directional liquidity with boosted positions',
+    icon: '🎯',
+    category: 'Directional Liquidity',
+    network: ['Ethereum', 'Polygon'],
+    characteristics: ['Directional liquidity', 'Boosted positions', 'Mode selection'],
+    avgFee: '0.05% - 1.00%',
+    complexity: 'Advanced',
+    riskLevel: 'High',
+    config: {
+      feeStructure: 'tiered',
+      directionalLiquidity: true,
+      boostedPositions: true
+    }
+  },
+  {
+    id: 'kyberswap',
+    name: 'KyberSwap Elastic',
+    description: 'Concentrated liquidity with anti-sniping',
+    icon: '🔄',
+    category: 'Concentrated Liquidity',
+    network: ['Ethereum', 'Polygon', 'BSC', 'Arbitrum'],
+    characteristics: ['Anti-MEV protection', 'Concentrated liquidity', 'Auto-compound'],
+    avgFee: '0.008% - 1.00%',
+    complexity: 'Advanced',
+    riskLevel: 'Medium',
+    config: {
+      feeStructure: 'tiered',
+      antiMev: true,
+      autoCompound: true
+    }
+  },
+  {
+    id: 'dodo',
+    name: 'DODO PMM',
+    description: 'Proactive Market Maker with external price feeds',
+    icon: '🦤',
+    category: 'PMM',
+    network: ['Ethereum', 'BSC', 'Polygon'],
+    characteristics: ['External oracles', 'PMM algorithm', 'Single-sided liquidity'],
+    avgFee: '0.03% - 0.30%',
+    complexity: 'Advanced',
+    riskLevel: 'Medium',
+    config: {
+      feeStructure: 'dynamic',
+      externalOracles: true,
+      singleSided: true
+    }
   }
 ];
+
 
 
 const getRiskColor = (risk, darkMode) => {
@@ -381,82 +645,204 @@ function AllPoolsSelector({ darkMode, onPoolSelect, selectedPool }) {
   );
 }
 
-
-function calculateILLocal(oldPrice, newPrice, initialInvestment = 2000, poolAPY = 0, protocolType = 'uniswap-v2') {
+function calculateILAdvanced(oldPrice, newPrice, initialInvestment = 2000, poolAPY = 0, protocolType = 'uniswap-v2', protocolConfig = {}) {
   if (!oldPrice || !newPrice || oldPrice <= 0 || newPrice <= 0) {
     return null;
   }
 
   const priceRatio = newPrice / oldPrice;
-  
-  
   let multiplier, ilPercent;
   let protocolName = 'Standard AMM';
+  let additionalData = {};
   
   switch (protocolType) {
     case 'uniswap-v2':
-      multiplier = (2 * Math.sqrt(priceRatio)) / (1 + priceRatio);
-      ilPercent = (multiplier - 1) * 100;
-      protocolName = 'Uniswap V2';
-      break;
-    case 'pancakeswap-v2':
     case 'sushiswap':
+    case 'pancakeswap-v2':
+      // Класична формула x*y=k
       multiplier = (2 * Math.sqrt(priceRatio)) / (1 + priceRatio);
       ilPercent = (multiplier - 1) * 100;
-      protocolName = protocolType === 'sushiswap' ? 'SushiSwap' : 'PancakeSwap V2';
+      protocolName = protocolType === 'sushiswap' ? 'SushiSwap' : 
+                    protocolType === 'pancakeswap-v2' ? 'PancakeSwap V2' : 'Uniswap V2';
       break;
       
     case 'uniswap-v3':
     case 'pancakeswap-v3':
+      // Концентрована ліквідність з діапазонами цін
+      const { lowerTick = 0.8, upperTick = 1.25, currentTick = 1.0 } = protocolConfig;
       
-      const concentrationFactor = 2.0; 
-      multiplier = (2 * Math.sqrt(priceRatio)) / (1 + priceRatio);
-      ilPercent = (multiplier - 1) * 100 * concentrationFactor;
+      if (priceRatio < lowerTick || priceRatio > upperTick) {
+        // Поза діапазоном - позиція неактивна
+        const outOfRangeMultiplier = priceRatio < lowerTick ? 
+          (lowerTick + (priceRatio - lowerTick) * 0.5) / priceRatio :
+          priceRatio / (upperTick + (priceRatio - upperTick) * 0.5);
+        multiplier = Math.max(0.3, outOfRangeMultiplier);
+        ilPercent = (multiplier - 1) * 100;
+        
+        additionalData.outOfRange = true;
+        additionalData.activeRange = false;
+      } else {
+        // Всередині діапазону - концентрована ліквідність
+        const concentrationFactor = Math.sqrt(upperTick / lowerTick);
+        multiplier = (2 * Math.sqrt(priceRatio)) / (1 + priceRatio);
+        ilPercent = (multiplier - 1) * 100 * Math.min(concentrationFactor, 2.0);
+        
+        additionalData.inRange = true;
+        additionalData.activeRange = true;
+        additionalData.concentrationBonus = concentrationFactor > 1.5;
+      }
+      
+      additionalData.concentrationRatio = upperTick / lowerTick;
+      additionalData.capitalEfficiency = Math.min(10, 4 / (upperTick - lowerTick));
+      
       protocolName = protocolType === 'uniswap-v3' ? 'Uniswap V3' : 'PancakeSwap V3';
       break;
       
     case 'curve':
+    case 'curve-stable':
+      // StableSwap формула для стейблкоїнів
+      const A = protocolConfig.amplification || 2000;
+      const priceDeviation = Math.abs(priceRatio - 1);
       
-      const priceChange = Math.abs(priceRatio - 1);
-      if (priceChange < 0.02) { 
-        ilPercent = -0.01 * (priceChange * 100); 
+      if (priceDeviation < 0.005) {
+        // Мінімальний IL для стейблів в нормальному діапазоні
+        ilPercent = -priceDeviation * 0.1; 
         multiplier = 1 + (ilPercent / 100);
+      } else if (priceDeviation < 0.02) {
+        // Помірний IL при невеликому депеггінгу
+        const stableSwapMultiplier = 1 - (priceDeviation * priceDeviation) / (8 * A / 10000);
+        multiplier = Math.max(0.7, stableSwapMultiplier);
+        ilPercent = (multiplier - 1) * 100;
       } else {
-        multiplier = (2 * Math.sqrt(priceRatio)) / (1 + priceRatio);
-        ilPercent = (multiplier - 1) * 100 * 0.3;
+        // Значний IL при великому депеггінгу
+        const depegMultiplier = 1 - (priceDeviation * Math.sqrt(priceDeviation)) / 2;
+        multiplier = Math.max(0.3, depegMultiplier);
+        ilPercent = (multiplier - 1) * 100;
       }
-      protocolName = 'Curve Finance';
+      
+      protocolName = 'Curve StableSwap';
+      additionalData = {
+        amplification: A,
+        priceDeviation: priceDeviation.toFixed(4),
+        depegRisk: priceDeviation > 0.05 ? 'High' : priceDeviation > 0.02 ? 'Medium' : 'Low',
+        stableOptimized: true
+      };
       break;
       
     case 'balancer-weighted':
+      // Weighted pools з кастомними вагами
+      const { weight1 = 0.8, weight2 = 0.2 } = protocolConfig;
       
-      const weight1 = 0.8;
-      const weight2 = 0.2;
-      const term1 = Math.pow(priceRatio, weight1);
-      const term2 = Math.pow(1, weight2);
-      multiplier = weight1 * term1 + weight2 * term2;
-      ilPercent = (multiplier - 1) * 100 * 0.25; 
+      // Формула для weighted pools - зменшений IL завдяки нерівним вагам
+      const w1 = weight1, w2 = weight2;
+      const weightedMultiplier = Math.pow(priceRatio, w1) * w1 + Math.pow(1, w2) * w2;
+      multiplier = weightedMultiplier / (w1 + w2);
+      ilPercent = (multiplier - 1) * 100;
+      
+      // Розрахунок переваги weighted pool над 50/50
+      const standardIL = ((2 * Math.sqrt(priceRatio)) / (1 + priceRatio) - 1) * 100;
+      const ilReduction = Math.abs(standardIL) - Math.abs(ilPercent);
+      
       protocolName = 'Balancer Weighted';
+      additionalData = {
+        weights: [Math.round(w1*100), Math.round(w2*100)],
+        ilReduction: ilReduction.toFixed(2),
+        balancerAdvantage: ilReduction > 0
+      };
+      break;
+      
+    case 'gmx':
+      // GMX-style pools з мультиплексингом та P&L торгівців
+      const poolUtilization = protocolConfig.utilization || 0.75;
+      const tradersPnL = protocolConfig.tradersPnL || 0; // Позитивний = програш трейдерів
+      
+      multiplier = (2 * Math.sqrt(priceRatio)) / (1 + priceRatio);
+      let baseIL = (multiplier - 1) * 100;
+      
+      // Корекція на утилізацію та P&L трейдерів
+      const utilizationAdjustment = 1 + poolUtilization * 0.3;
+      const pnlBonus = tradersPnL * 0.01; // 1% бонусу за кожен % програшу трейдерів
+      
+      ilPercent = baseIL * utilizationAdjustment + pnlBonus;
+      multiplier = 1 + (ilPercent / 100);
+      
+      protocolName = 'GMX';
+      additionalData = {
+        utilization: (poolUtilization * 100).toFixed(1),
+        tradersPnL: tradersPnL.toFixed(1),
+        glpRewards: true,
+        tradingFees: true
+      };
+      break;
+      
+    case 'solidly':
+    case 'velodrome':
+      // Ve(3,3) протоколи з різними кривими
+      const isStable = protocolConfig.isStable || false;
+      const veBoost = protocolConfig.veBoost || 1.0;
+      
+      if (isStable) {
+        // Stable curve - мінімальний IL
+        const stableDeviation = Math.abs(priceRatio - 1);
+        if (stableDeviation < 0.01) {
+          ilPercent = -stableDeviation * 0.05;
+        } else {
+          ilPercent = -stableDeviation * stableDeviation * 10;
+        }
+        multiplier = 1 + (ilPercent / 100);
+      } else {
+        // Volatile curve - стандартний IL
+        multiplier = (2 * Math.sqrt(priceRatio)) / (1 + priceRatio);
+        ilPercent = (multiplier - 1) * 100;
+      }
+      
+      // Ve(3,3) boost effect
+      const boostedRewards = veBoost * 0.2; // додаткові 20% за максимальний boost
+      
+      protocolName = protocolType === 'solidly' ? 'Solidly' : 'Velodrome';
+      additionalData = {
+        poolType: isStable ? 'Stable' : 'Volatile',
+        veBoost: veBoost.toFixed(1),
+        boostedAPY: boostedRewards.toFixed(1),
+        weeklyRewards: true
+      };
+      break;
+      
+    case 'algebra':
+      // Algebra з адаптивними комісіями
+      const volatilityIndex = Math.abs(Math.log(priceRatio)) * 10;
+      const adaptiveFeeMultiplier = Math.min(2.5, 1 + volatilityIndex * 0.1);
+      
+      multiplier = (2 * Math.sqrt(priceRatio)) / (1 + priceRatio);
+      ilPercent = (multiplier - 1) * 100;
+      
+      protocolName = 'Algebra Finance';
+      additionalData = {
+        adaptiveFees: true,
+        feeMultiplier: adaptiveFeeMultiplier.toFixed(2),
+        volatilityIndex: volatilityIndex.toFixed(1)
+      };
       break;
       
     default:
       multiplier = (2 * Math.sqrt(priceRatio)) / (1 + priceRatio);
       ilPercent = (multiplier - 1) * 100;
-      protocolName = 'Standard AMM';
   }
   
+  // Базові розрахунки
   const investmentPerAsset = initialInvestment / 2;
   const ethAmount = investmentPerAsset / oldPrice;
   const hodlValue = (ethAmount * newPrice) + investmentPerAsset;
-  const lpValue = initialInvestment * Math.max(0.1, multiplier);
+  const lpValue = initialInvestment * Math.max(0.01, multiplier);
   const impermanentLossUSD = lpValue - hodlValue;
   
-  
+  // Комісії та APY
   const dailyAPY = poolAPY / 365 / 100;
   const assumedDays = 30;
   const totalFeesEarned = initialInvestment * dailyAPY * assumedDays;
   const lpValueWithFees = lpValue + totalFeesEarned;
   
+  // Розрахунки прибутку
   const hodlProfitUSD = hodlValue - initialInvestment;
   const hodlProfitPercent = (hodlProfitUSD / initialInvestment) * 100;
   const lpProfitUSD = lpValue - initialInvestment;
@@ -464,7 +850,7 @@ function calculateILLocal(oldPrice, newPrice, initialInvestment = 2000, poolAPY 
   const lpProfitWithFees = lpValueWithFees - initialInvestment;
   const lpProfitPercentWithFees = (lpProfitWithFees / initialInvestment) * 100;
   
-  
+  // Break-even аналіз
   let breakEvenDays = null;
   let breakEvenText = "No IL to compensate!";
   
@@ -472,13 +858,13 @@ function calculateILLocal(oldPrice, newPrice, initialInvestment = 2000, poolAPY 
     const dailyFees = initialInvestment * dailyAPY;
     if (dailyFees > 0) {
       breakEvenDays = Math.ceil(Math.abs(impermanentLossUSD) / dailyFees);
-      if (breakEvenDays > 365) {
-        breakEvenText = "Never (>1 year)";
-      } else {
-        breakEvenText = `${breakEvenDays} days`;
-      }
+      breakEvenText = breakEvenDays > 365 ? "Never (>1 year)" : `${breakEvenDays} days`;
     }
   }
+  
+  // Розрахунок ризик-скору та рекомендацій
+  const riskScore = calculateAdvancedRiskScore(ilPercent, poolAPY, protocolType, additionalData);
+  const recommendation = generateAdvancedRecommendation(ilPercent, poolAPY, protocolType, additionalData, riskScore);
   
   return {
     hodlValue: parseFloat(hodlValue.toFixed(2)),
@@ -494,7 +880,6 @@ function calculateILLocal(oldPrice, newPrice, initialInvestment = 2000, poolAPY 
     lpProfitPercentWithFees: parseFloat(lpProfitPercentWithFees.toFixed(2)),
     priceChange: parseFloat(((newPrice - oldPrice) / oldPrice * 100).toFixed(2)),
     betterStrategy: (poolAPY > 0 ? lpValueWithFees : lpValue) > hodlValue ? 'LP' : 'HODL',
-    
     protocolName,
     breakEvenDays,
     breakEvenText,
@@ -503,10 +888,189 @@ function calculateILLocal(oldPrice, newPrice, initialInvestment = 2000, poolAPY 
     feesPerWeek: parseFloat((totalFeesEarned / assumedDays * 7).toFixed(2)),
     feesPerMonth: parseFloat(totalFeesEarned.toFixed(2)),
     assumedDays,
-    poolAPY
+    poolAPY,
+    
+    // Протокол-специфічні дані
+    ...additionalData,
+    
+    // Ризик-метрики
+    riskScore,
+    recommendation,
+    
+    // Додаткові метрики
+    efficiency: calculateProtocolEfficiency(protocolType, additionalData),
+    complexity: getProtocolComplexity(protocolType)
   };
 }
 
+// Розрахунок ризик-скору
+function calculateAdvancedRiskScore(ilPercent, poolAPY, protocolType, additionalData) {
+  let riskScore = 0;
+  
+  // IL ризик
+  const absIL = Math.abs(ilPercent);
+  if (absIL < 1) riskScore += 1;
+  else if (absIL < 5) riskScore += 3;
+  else if (absIL < 15) riskScore += 5;
+  else if (absIL < 30) riskScore += 7;
+  else riskScore += 9;
+  
+  // APY ризик
+  if (poolAPY > 200) riskScore += 6;
+  else if (poolAPY > 100) riskScore += 4;
+  else if (poolAPY > 50) riskScore += 2;
+  else if (poolAPY < 5) riskScore += 1;
+  
+  // Протокол-специфічні ризики
+  switch (protocolType) {
+    case 'uniswap-v3':
+    case 'pancakeswap-v3':
+      if (additionalData.outOfRange) riskScore += 4;
+      if (additionalData.concentrationRatio > 3) riskScore += 2;
+      break;
+      
+    case 'curve':
+    case 'curve-stable':
+      if (additionalData.depegRisk === 'High') riskScore += 5;
+      else if (additionalData.depegRisk === 'Medium') riskScore += 2;
+      break;
+      
+    case 'gmx':
+      if (additionalData.utilization > 90) riskScore += 3;
+      if (additionalData.tradersPnL < -10) riskScore += 2; // трейдери виграють
+      break;
+      
+    case 'balancer-weighted':
+      // Weighted pools зазвичай менш ризикові
+      riskScore = Math.max(0, riskScore - 1);
+      break;
+  }
+  
+  return Math.min(10, Math.max(1, riskScore));
+}
+
+/ Покращена генерація рекомендацій
+function generateAdvancedRecommendation(ilPercent, poolAPY, protocolType, additionalData, riskScore) {
+  const absIL = Math.abs(ilPercent);
+  const ilToApyRatio = poolAPY > 0 ? absIL / (poolAPY / 12) : 0; // місячне співвідношення
+  
+  // Протокол-специфічні рекомендації
+  if (protocolType === 'uniswap-v3' || protocolType === 'pancakeswap-v3') {
+    if (additionalData.outOfRange) {
+      return "🚨 OUT OF RANGE: Position inactive, no fees earned. Consider rebalancing your range or withdrawing liquidity.";
+    } else if (additionalData.concentrationRatio > 5) {
+      return "⚠️ NARROW RANGE: High capital efficiency but frequent rebalancing needed. Monitor closely.";
+    } else if (additionalData.concentrationBonus) {
+      return "🟢 OPTIMAL RANGE: Good concentration with manageable risk. Earning boosted fees.";
+    }
+  }
+  
+  if (protocolType === 'curve' || protocolType === 'curve-stable') {
+    if (additionalData.depegRisk === 'High') {
+      return "🔴 DEPEG ALERT: Major stablecoin deviation detected. High risk of permanent loss!";
+    } else if (additionalData.depegRisk === 'Medium') {
+      return "🟡 DEPEG WARNING: Moderate price deviation. Monitor for further divergence.";
+    } else {
+      return "🟢 STABLE PAIR: Minimal IL risk. Good choice for conservative LP strategy.";
+    }
+  }
+  
+  if (protocolType === 'gmx') {
+    if (additionalData.tradersPnL > 5) {
+      return "💰 TRADERS LOSING: Pool earning from trader losses. Strong performance expected.";
+    } else if (additionalData.tradersPnL < -5) {
+      return "📉 TRADERS WINNING: Pool paying out to successful traders. Consider reducing exposure.";
+    }
+  }
+  
+  if (protocolType === 'balancer-weighted') {
+    if (additionalData.balancerAdvantage) {
+      return `🎯 BALANCED ADVANTAGE: ${additionalData.weights[0]}/${additionalData.weights[1]} weighting reduces IL by ${additionalData.ilReduction}% vs 50/50 pool.`;
+    }
+  }
+  
+  // Загальні рекомендації на основі метрик
+  if (riskScore <= 3 && absIL < 2 && poolAPY > 15) {
+    return "🟢 EXCELLENT: Low risk, good returns. Ideal for conservative DeFi portfolio.";
+  } else if (riskScore <= 5 && ilToApyRatio < 3) {
+    return "🟡 GOOD: Moderate risk with fees likely compensating IL. Suitable for balanced strategy.";
+  } else if (riskScore >= 8 || absIL > 25) {
+    return "🔴 HIGH RISK: Significant IL potential. Only for experienced LPs with active management.";
+  } else if (poolAPY < 5 && absIL > 5) {
+    return "❌ POOR RISK/REWARD: Low fees unlikely to compensate IL. Consider HODL instead.";
+  } else if (poolAPY > 100) {
+    return "⚠️ UNSUSTAINABLE: Extremely high APY suggests temporary incentives or high risk.";
+  } else {
+    return "🟡 MODERATE: Standard risk/reward profile. Monitor market conditions and IL development.";
+  }
+}
+
+// Розрахунок ефективності протоколу
+function calculateProtocolEfficiency(protocolType, additionalData) {
+  let baseEfficiency = 50; // з 100
+  
+  switch (protocolType) {
+    case 'uniswap-v3':
+    case 'pancakeswap-v3':
+      baseEfficiency = 75;
+      if (additionalData.capitalEfficiency) {
+        baseEfficiency += Math.min(20, additionalData.capitalEfficiency * 2);
+      }
+      if (additionalData.outOfRange) {
+        baseEfficiency -= 30;
+      }
+      break;
+      
+    case 'curve':
+    case 'curve-stable':
+      baseEfficiency = 85; // дуже ефективні для стейблів
+      if (additionalData.depegRisk === 'High') baseEfficiency -= 40;
+      else if (additionalData.depegRisk === 'Medium') baseEfficiency -= 15;
+      break;
+      
+    case 'balancer-weighted':
+      baseEfficiency = 70;
+      if (additionalData.balancerAdvantage) baseEfficiency += 15;
+      break;
+      
+    case 'gmx':
+      baseEfficiency = 60;
+      if (additionalData.tradersPnL > 0) baseEfficiency += 20;
+      break;
+      
+    case 'solidly':
+    case 'velodrome':
+      baseEfficiency = 65;
+      if (additionalData.poolType === 'Stable') baseEfficiency += 15;
+      if (additionalData.veBoost > 2) baseEfficiency += 10;
+      break;
+      
+    default:
+      baseEfficiency = 50;
+  }
+  
+  return Math.min(100, Math.max(0, baseEfficiency));
+}
+
+// Складність протоколу
+function getProtocolComplexity(protocolType) {
+  const complexityMap = {
+    'uniswap-v2': 'Simple',
+    'sushiswap': 'Simple',
+    'pancakeswap-v2': 'Simple',
+    'uniswap-v3': 'Advanced',
+    'pancakeswap-v3': 'Advanced',
+    'curve': 'Moderate',
+    'curve-stable': 'Moderate',
+    'balancer-weighted': 'Moderate',
+    'gmx': 'Expert',
+    'solidly': 'Advanced',
+    'velodrome': 'Advanced',
+    'algebra': 'Advanced'
+  };
+  
+  return complexityMap[protocolType] || 'Moderate';
+} 
 
 const ScenarioTable = React.memo(({ currentOldPrice, initialInvestment, poolAPY, selectedProtocol, darkMode }) => {
   const scenarios = [
@@ -565,7 +1129,7 @@ const ScenarioTable = React.memo(({ currentOldPrice, initialInvestment, poolAPY,
         <tbody>
           {scenarios.map((scenario, index) => {
             const newPrice = currentOldPrice * scenario.multiplier;
-            const calc = calculateILLocal(currentOldPrice, newPrice, initialInvestment, poolAPY, selectedProtocol);
+            const calc = calculateILAdvanced(currentOldPrice, newPrice, initialInvestment, poolAPY, selectedProtocol);
             
             if (!calc) return null;
 
@@ -1022,7 +1586,7 @@ function App() {
               </label>
               
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                {AVAILABLE_PROTOCOLS.map((protocol) => (
+                {EXPANDED_PROTOCOLS.map((protocol) => (
                   <div
                     key={protocol.id}
                     onClick={() => setSelectedProtocol(protocol.id)}
@@ -1288,7 +1852,7 @@ function App() {
             })()}
             
             {!selectedPool && result && (() => {
-              const protocol = AVAILABLE_PROTOCOLS.find(p => p.id === selectedProtocol);
+              const protocol = EXPANDED_PROTOCOLS.find(p => p.id === selectedProtocol);
               if (!protocol) return null;
               
               return (
@@ -1408,16 +1972,6 @@ function App() {
                     </p>
                   </div>
                 </div>
-
-                const memoizedScenarioTable = useMemo(() => (
-                  <ScenarioTable 
-                    currentOldPrice={parseFloat(oldPrice)} 
-                    initialInvestment={parseFloat(initialInvestment) || 2000}
-                    poolAPY={parseFloat(poolAPY) || 0}
-                    selectedProtocol={selectedProtocol}
-                    darkMode={darkMode} 
-                  />
-                ), [oldPrice, initialInvestment, poolAPY, selectedProtocol, darkMode])}
               </div>
             )}
             {result.poolAPY > 0 && (
@@ -1575,6 +2129,34 @@ function App() {
     </div>
   </div>
 );
+}
+
+// Функція для отримання конфігурації протоколу
+function getProtocolConfig(protocolId, customConfig = {}) {
+  const protocol = EXPANDED_PROTOCOLS.find(p => p.id === protocolId);
+  if (!protocol) return null;
+  
+  return {
+    ...protocol,
+    config: {
+      ...protocol.config,
+      ...customConfig
+    }
+  };
+}
+
+// Розрахунок складності та ризику
+function calculateComplexityScore(protocol) {
+  let score = 0;
+  
+  if (protocol.config.concentratedLiquidity) score += 3;
+  if (protocol.config.customWeights) score += 2;
+  if (protocol.config.dynamicFees) score += 2;
+  if (protocol.config.veTokenomics) score += 3;
+  if (protocol.config.perpetualTrading) score += 4;
+  if (protocol.config.antiMev) score += 1;
+  
+  return Math.min(10, score);
 }
 
 export default App;
