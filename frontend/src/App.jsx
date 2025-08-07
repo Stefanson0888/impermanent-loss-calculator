@@ -1409,7 +1409,7 @@ function App() {
                   </div>
                 </div>
 
-                {useMemo(() => (
+                const memoizedScenarioTable = useMemo(() => (
                   <ScenarioTable 
                     currentOldPrice={parseFloat(oldPrice)} 
                     initialInvestment={parseFloat(initialInvestment) || 2000}
