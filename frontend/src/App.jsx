@@ -407,133 +407,61 @@ function calculateILLocal(oldPrice, newPrice, initialInvestment = 2000, poolAPY 
   }
 
   const priceRatio = newPrice / oldPrice;
-  const priceChange = Math.abs(priceRatio - 1); // Абсолютна зміна ціни (0.1 = 10%)
   
+  // Different formulas for different protocols (simplified versions)
   let multiplier, ilPercent;
-  let protocolName = 'Unknown';
   
   switch (protocolType) {
     case 'uniswap-v2':
     case 'pancakeswap-v2':
-      // Стандартна AMM формула x*y=k (50/50 пул)
-      multiplier = (2 * Math.sqrt(priceRatio)) / (1 + priceRatio);
-      ilPercent = (multiplier - 1) * 100;
-      protocolName = protocolType === 'uniswap-v2' ? 'Uniswap V2' : 'PancakeSwap V2';
-      break;
-      
     case 'sushiswap':
-      // Як Uniswap V2, але трохи краще через додаткові SUSHI rewards
       multiplier = (2 * Math.sqrt(priceRatio)) / (1 + priceRatio);
       ilPercent = (multiplier - 1) * 100;
-      // SushiSwap має додаткові винагороди, що частково компенсують IL
-      ilPercent = ilPercent * 0.85; // 15% краще через SUSHI rewards
-      protocolName = 'SushiSwap';
       break;
       
     case 'uniswap-v3':
     case 'pancakeswap-v3':
-      // Концентрована ліквідність = ЗНАЧНО вищий IL
+      const concentrationFactor = 1.2;
       multiplier = (2 * Math.sqrt(priceRatio)) / (1 + priceRatio);
-      
-      // Concentration multiplier залежить від price range
-      // Чим вужчий діапазон, тим вищий IL
-      let concentrationMultiplier;
-      if (priceChange < 0.05) { // < 5% зміни
-        concentrationMultiplier = 1.2; // Трохи гірше
-      } else if (priceChange < 0.15) { // 5-15% зміни  
-        concentrationMultiplier = 2.0; // В 2 рази гірше
-      } else if (priceChange < 0.30) { // 15-30% зміни
-        concentrationMultiplier = 3.5; // В 3.5 рази гірше 🔥
-      } else { // > 30% зміни
-        concentrationMultiplier = 5.0; // ДУЖЕ високий IL 💀
-      }
-      
-      ilPercent = ((multiplier - 1) * concentrationMultiplier) * 100;
-      protocolName = protocolType === 'uniswap-v3' ? 'Uniswap V3' : 'PancakeSwap V3';
+      multiplier = multiplier * concentrationFactor - (concentrationFactor - 1);
+      ilPercent = (multiplier - 1) * 100;
       break;
       
     case 'curve':
-      // StableSwap - оптимізовано для корельованих активів
-      protocolName = 'Curve Finance';
-      
-      if (priceChange < 0.02) { // < 2% зміни ціни
-        // Мінімальний IL для стейблкоїнів/корельованих активів
-        ilPercent = -0.001 * (priceChange * 100); // Майже 0%
-      } else if (priceChange < 0.05) { // 2-5% зміни
-        // Все ще дуже низький IL
-        ilPercent = -0.01 * Math.pow(priceChange * 100, 1.5);
+      const priceChange = Math.abs(priceRatio - 1);
+      if (priceChange < 0.05) {
+        multiplier = 1 - (priceChange * priceChange * 0.1);
       } else {
-        // Для великих змін використовуємо модифіковану формулу
         multiplier = (2 * Math.sqrt(priceRatio)) / (1 + priceRatio);
-        // Curve все одно краще стандартного AMM
-        ilPercent = (multiplier - 1) * 100 * 0.3; // 70% менший IL
+        multiplier = 1 - ((1 - multiplier) * 0.3);
       }
+      ilPercent = (multiplier - 1) * 100;
       break;
       
     case 'balancer-weighted':
-      // Weighted pools (зазвичай 80/20 або 60/40)
-      protocolName = 'Balancer Weighted';
-      
-      // Для 80/20 пулу (80% volatile asset, 20% stable)
-      const weight1 = 0.8; // Weight of changing asset (ETH)
-      const weight2 = 0.2; // Weight of stable asset (USDT)
-      
-      // Weighted geometric mean formula
+      const weight1 = 0.8;
+      const weight2 = 0.2;
       const term1 = Math.pow(priceRatio, weight1);
-      const term2 = Math.pow(1, weight2); // Stable asset doesn't change
-      
-      multiplier = weight1 * term1 + weight2 * term2;
-      
-      // Balancer має значно менший IL через несиметричні ваги
+      const term2 = Math.pow(1, weight2);
+      multiplier = (weight1 * term1 + weight2 * term2) / (weight1 + weight2);
       ilPercent = (multiplier - 1) * 100;
-      
-      // Додаткове зменшення IL через weighted pools
-      ilPercent = ilPercent * 0.25; // 75% менший IL ніж 50/50 пул
       break;
       
     default:
-      // Fallback до стандартної формули
       multiplier = (2 * Math.sqrt(priceRatio)) / (1 + priceRatio);
       ilPercent = (multiplier - 1) * 100;
-      protocolName = 'Standard AMM';
   }
   
   const investmentPerAsset = initialInvestment / 2;
   const ethAmount = investmentPerAsset / oldPrice;
   const hodlValue = (ethAmount * newPrice) + investmentPerAsset;
-  const lpValue = initialInvestment * Math.max(0.1, multiplier); // Мінімум 10% залишається
+  const lpValue = initialInvestment * multiplier;
   const impermanentLossUSD = lpValue - hodlValue;
   
-  // Fees calculation з різними ставками для різних протоколів
-  let dailyAPYRate = poolAPY / 365 / 100;
-  
-  // Різні протоколи мають різні fee structures
-  switch (protocolType) {
-    case 'uniswap-v2':
-    case 'uniswap-v3':
-      // Uniswap: 0.3% fees, високий volume
-      break; // Базова ставка
-    case 'pancakeswap-v2':
-    case 'pancakeswap-v3':
-      // PancakeSwap: 0.25% fees, BSC екосистема
-      dailyAPYRate = dailyAPYRate * 1.1; // 10% краще через нижчі gas fees
-      break;
-    case 'curve':
-      // Curve: 0.04-0.4% fees, але стабільний volume
-      dailyAPYRate = dailyAPYRate * 0.7; // 30% менше через низькі fees
-      break;
-    case 'sushiswap':
-      // SushiSwap: додаткові SUSHI rewards
-      dailyAPYRate = dailyAPYRate * 1.3; // 30% краще через SUSHI rewards
-      break;
-    case 'balancer-weighted':
-      // Balancer: 0.5-1% fees
-      dailyAPYRate = dailyAPYRate * 1.2; // 20% краще через вищі fees
-      break;
-  }
-  
+  // Fees calculation
+  const dailyAPY = poolAPY / 365 / 100;
   const assumedDays = 30;
-  const totalFeesEarned = initialInvestment * dailyAPYRate * assumedDays;
+  const totalFeesEarned = initialInvestment * dailyAPY * assumedDays;
   const lpValueWithFees = lpValue + totalFeesEarned;
   
   const hodlProfitUSD = hodlValue - initialInvestment;
@@ -542,21 +470,6 @@ function calculateILLocal(oldPrice, newPrice, initialInvestment = 2000, poolAPY 
   const lpProfitPercent = (lpProfitUSD / initialInvestment) * 100;
   const lpProfitWithFees = lpValueWithFees - initialInvestment;
   const lpProfitPercentWithFees = (lpProfitWithFees / initialInvestment) * 100;
-  
-  // Break-even calculation
-  let breakEvenDays = null;
-  let breakEvenText = "No IL to compensate!";
-  
-  if (impermanentLossUSD < 0 && dailyAPYRate > 0) {
-    const dailyFees = initialInvestment * dailyAPYRate;
-    breakEvenDays = Math.ceil(Math.abs(impermanentLossUSD) / dailyFees);
-    
-    if (breakEvenDays > 365) {
-      breakEvenText = "Never (>1 year)";
-    } else {
-      breakEvenText = `${breakEvenDays} days`;
-    }
-  }
   
   return {
     hodlValue: parseFloat(hodlValue.toFixed(2)),
@@ -571,15 +484,7 @@ function calculateILLocal(oldPrice, newPrice, initialInvestment = 2000, poolAPY 
     lpProfitWithFees: parseFloat(lpProfitWithFees.toFixed(2)),
     lpProfitPercentWithFees: parseFloat(lpProfitPercentWithFees.toFixed(2)),
     priceChange: parseFloat(((newPrice - oldPrice) / oldPrice * 100).toFixed(2)),
-    betterStrategy: (poolAPY > 0 ? lpValueWithFees : lpValue) > hodlValue ? 'LP' : 'HODL',
-    protocolName,
-    breakEvenDays,
-    breakEvenText,
-    totalFeesEarned: parseFloat(totalFeesEarned.toFixed(2)),
-    feesPerDay: parseFloat((totalFeesEarned / assumedDays).toFixed(2)),
-    feesPerWeek: parseFloat((totalFeesEarned / assumedDays * 7).toFixed(2)),
-    feesPerMonth: parseFloat(totalFeesEarned.toFixed(2)),
-    assumedDays
+    betterStrategy: (poolAPY > 0 ? lpValueWithFees : lpValue) > hodlValue ? 'LP' : 'HODL'
   };
 }
 
@@ -959,7 +864,7 @@ function App() {
   const [selectedProtocol, setSelectedProtocol] = useState('uniswap-v2');
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -1170,6 +1075,7 @@ function App() {
               <select
                 value={selectedToken}
                 onChange={(e) => handleTokenChange(e.target.value)}
+
                 className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-300 focus:ring-4 focus:ring-blue-500/20 ${
                   darkMode 
                     ? 'bg-gray-700 border-gray-600 text-white focus:border-blue-500' 
