@@ -410,21 +410,27 @@ function calculateILLocal(oldPrice, newPrice, initialInvestment = 2000, poolAPY 
   
   // Different formulas for different protocols (simplified versions)
   let multiplier, ilPercent;
+  let protocolName = 'Standard AMM'; 
   
   switch (protocolType) {
     case 'uniswap-v2':
+      multiplier = (2 * Math.sqrt(priceRatio)) / (1 + priceRatio);
+      ilPercent = (multiplier - 1) * 100;
+      protocolName = 'Uniswap V2'; 
+      break;
     case 'pancakeswap-v2':
     case 'sushiswap':
       multiplier = (2 * Math.sqrt(priceRatio)) / (1 + priceRatio);
       ilPercent = (multiplier - 1) * 100;
+      protocolName = protocolType === 'sushiswap' ? 'SushiSwap' : 'PancakeSwap V2'; // 👈 ДОДАНО
       break;
       
     case 'uniswap-v3':
     case 'pancakeswap-v3':
-      const concentrationFactor = 1.2;
+      const concentrationFactor = 1.5; 
       multiplier = (2 * Math.sqrt(priceRatio)) / (1 + priceRatio);
-      multiplier = multiplier * concentrationFactor - (concentrationFactor - 1);
-      ilPercent = (multiplier - 1) * 100;
+      ilPercent = (multiplier - 1) * 100 * concentrationFactor;
+      protocolName = protocolType === 'uniswap-v3' ? 'Uniswap V3' : 'PancakeSwap V3'; // 👈 ДОДАНО
       break;
       
     case 'curve':
@@ -436,6 +442,7 @@ function calculateILLocal(oldPrice, newPrice, initialInvestment = 2000, poolAPY 
         multiplier = 1 - ((1 - multiplier) * 0.3);
       }
       ilPercent = (multiplier - 1) * 100;
+      protocolName = 'Curve Finance'; 
       break;
       
     case 'balancer-weighted':
@@ -445,11 +452,13 @@ function calculateILLocal(oldPrice, newPrice, initialInvestment = 2000, poolAPY 
       const term2 = Math.pow(1, weight2);
       multiplier = (weight1 * term1 + weight2 * term2) / (weight1 + weight2);
       ilPercent = (multiplier - 1) * 100;
+      protocolName = 'Balancer Weighted'; 
       break;
       
     default:
       multiplier = (2 * Math.sqrt(priceRatio)) / (1 + priceRatio);
       ilPercent = (multiplier - 1) * 100;
+      protocolName = 'Standard AMM'; 
   }
   
   const investmentPerAsset = initialInvestment / 2;
@@ -458,10 +467,9 @@ function calculateILLocal(oldPrice, newPrice, initialInvestment = 2000, poolAPY 
   const lpValue = initialInvestment * multiplier;
   const impermanentLossUSD = lpValue - hodlValue;
   
-  // Fees calculation
   const dailyAPY = poolAPY / 365 / 100;
   const assumedDays = 30;
-  const totalFeesEarned = initialInvestment * dailyAPY * assumedDays;
+  const totalFeesEarned = initialInvestment * dailyAPY * assumedDays; 
   const lpValueWithFees = lpValue + totalFeesEarned;
   
   const hodlProfitUSD = hodlValue - initialInvestment;
@@ -470,6 +478,22 @@ function calculateILLocal(oldPrice, newPrice, initialInvestment = 2000, poolAPY 
   const lpProfitPercent = (lpProfitUSD / initialInvestment) * 100;
   const lpProfitWithFees = lpValueWithFees - initialInvestment;
   const lpProfitPercentWithFees = (lpProfitWithFees / initialInvestment) * 100;
+  
+  let breakEvenDays = null;
+  let breakEvenText = "No IL to compensate!";
+  
+  if (impermanentLossUSD < 0 && dailyAPY > 0) {
+    const dailyFees = initialInvestment * dailyAPY;
+    if (dailyFees > 0) {
+      breakEvenDays = Math.ceil(Math.abs(impermanentLossUSD) / dailyFees);
+      if (breakEvenDays > 365) {
+        breakEvenText = "Never (>1 year)";
+      } else {
+        breakEvenText = `${breakEvenDays} days`;
+      }
+    }
+  }
+  
   
   return {
     hodlValue: parseFloat(hodlValue.toFixed(2)),
@@ -484,7 +508,18 @@ function calculateILLocal(oldPrice, newPrice, initialInvestment = 2000, poolAPY 
     lpProfitWithFees: parseFloat(lpProfitWithFees.toFixed(2)),
     lpProfitPercentWithFees: parseFloat(lpProfitPercentWithFees.toFixed(2)),
     priceChange: parseFloat(((newPrice - oldPrice) / oldPrice * 100).toFixed(2)),
-    betterStrategy: (poolAPY > 0 ? lpValueWithFees : lpValue) > hodlValue ? 'LP' : 'HODL'
+    betterStrategy: (poolAPY > 0 ? lpValueWithFees : lpValue) > hodlValue ? 'LP' : 'HODL',
+    
+    
+    protocolName,
+    breakEvenDays,
+    breakEvenText,
+    totalFeesEarned: parseFloat(totalFeesEarned.toFixed(2)),
+    feesPerDay: parseFloat((totalFeesEarned / assumedDays).toFixed(2)),
+    feesPerWeek: parseFloat((totalFeesEarned / assumedDays * 7).toFixed(2)),
+    feesPerMonth: parseFloat(totalFeesEarned.toFixed(2)),
+    assumedDays,
+    poolAPY
   };
 }
 
