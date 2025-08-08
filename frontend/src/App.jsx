@@ -2007,47 +2007,32 @@ function App() {
                 <span className="text-purple-500 ml-1 text-xs">MULTI-PROTOCOL</span>
               </label>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                {EXPANDED_PROTOCOLS.map((protocol) => (
-                  <div
-                    key={protocol.id}
-                    onClick={() => setSelectedProtocol(protocol.id)}
-                    className={`p-4 rounded-xl border-2 cursor-pointer transition-all duration-300 ${
-                      selectedProtocol === protocol.id
-                        ? darkMode 
-                          ? 'border-purple-500 bg-purple-900/20' 
-                          : 'border-purple-500 bg-purple-50'
-                        : darkMode
-                          ? 'border-gray-600 bg-gray-700/30 hover:border-gray-500'
-                          : 'border-gray-300 bg-gray-50 hover:border-gray-400'
-                    }`}
-                  >
-                    <div className="flex items-start gap-3">
-                      <div className="text-2xl">{protocol.icon}</div>
-                      <div className="flex-1">
-                        <div className={`font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
-                          {protocol.name}
-                        </div>
-                        <div className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                          {protocol.description}
-                        </div>
-                        <div className="flex flex-wrap gap-1 mt-2">
-                          {protocol.characteristics.slice(0, 2).map((char, index) => (
-                            <span
-                              key={index}
-                              className={`text-xs px-2 py-1 rounded-full ${
-                                darkMode ? 'bg-gray-600 text-gray-300' : 'bg-gray-200 text-gray-600'
-                              }`}
-                            >
-                              {char}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <select
+                value={selectedProtocol}
+                onChange={(e) => setSelectedProtocol(e.target.value)}
+                className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-300 focus:ring-4 focus:ring-purple-500/20 ${
+                  darkMode 
+                    ? 'bg-gray-700 border-gray-600 text-white focus:border-purple-500' 
+                    : 'bg-white border-gray-300 text-gray-900 focus:border-purple-500'
+                }`}
+              >
+                <optgroup label="🦄 Classic AMM">
+                  <option value="uniswap-v2">Uniswap V2</option>
+                  <option value="sushiswap">SushiSwap</option>
+                </optgroup>
+                <optgroup label="📊 Concentrated Liquidity">
+                  <option value="uniswap-v3">Uniswap V3</option>
+                  <option value="pancakeswap-v3">PancakeSwap V3</option>
+                  <option value="algebra">Algebra Finance</option>
+                </optgroup>
+                <optgroup label="🌀 Stablecoin AMM">
+                  <option value="curve-stable">Curve StableSwap</option>
+                  <option value="balancer-stable">Balancer StablePool</option>
+                </optgroup>
+                <optgroup label="⚖️ Weighted Pools">
+                  <option value="balancer-weighted">Balancer Weighted</option>
+                </optgroup>
+              </select>
             </div>
 
             <div className="mb-6">
@@ -2219,7 +2204,7 @@ function App() {
               )}
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8" style={{ minHeight: '120px' }}>
               <div>
                 <label className={`block text-sm font-semibold mb-3 transition-colors duration-300 ${
                     darkMode ? 'text-gray-300' : 'text-gray-700'
@@ -2230,16 +2215,24 @@ function App() {
                       <span className="text-green-500 ml-2 text-xs animate-pulse">🔴 LIVE</span>
                     )}
                 </label>
-                <input
-                  type="number"
-                  step="any"
-                  value={oldPrice}
-                  onChange={(e) => {
-                    setOldPrice(e.target.value);
-                    if (e.target.value) {
-                      trackPriceInput('initial_price');
-                    }
-                  }}
+                {newPrice && (
+                  <div className="flex gap-1 mt-2">
+                    {[-50, -25, -10, 10, 25, 50].map((percent) => (
+                      <button
+                        key={percent}
+                        type="button"
+                        onClick={() => setOldPrice((parseFloat(newPrice) * (1 + percent/100)).toFixed(2))}
+                        className={`px-2 py-1 text-xs rounded-md transition-all duration-200 ${
+                          darkMode 
+                            ? 'bg-gray-600 hover:bg-gray-500 text-gray-300' 
+                            : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
+                        }`}
+                      >
+                        {percent > 0 ? '+' : ''}{percent}%
+                      </button>
+                    ))}
+                  </div>
+                )}
                   className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-300 focus:ring-4 focus:ring-blue-500/20 ${
                     darkMode 
                       ? 'bg-gray-700 border-gray-600 text-white focus:border-blue-500' 
