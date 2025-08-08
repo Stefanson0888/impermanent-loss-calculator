@@ -2138,7 +2138,7 @@ function App() {
               )}
               
               {selectedToken && livePools.length > 0 && !loadingPools && (
-                <div className={`mt-3 p-4 rounded-lg border transition-colors duration-300 ${
+                <div className={`mt-3 absolute top-full left-0 right-0 z-10 p-4 rounded-lg border transition-colors duration-300 ${
                   darkMode ? 'bg-purple-900/20 border-purple-500/50' : 'bg-purple-50 border-purple-300'
                 }`}>
                   <div className="flex items-center gap-2 mb-3">
