@@ -2055,8 +2055,6 @@ function App() {
                   </option>
                 ))}
               </select>
-              
-              <div style={{ minHeight: '250px' }}></div>
 
               {/* Live Price Display */}
               {loadingPrice && (
@@ -2232,7 +2230,7 @@ function App() {
                   required
                 />
                 {newPrice && (
-                  <div className="flex gap-1 mt-2">
+                  <div className="grid grid-cols-6 gap-1 mt-2 text-xs">
                     {[-50, -25, -10, 10, 25, 50].map((percent) => (
                       <button
                         key={percent}
