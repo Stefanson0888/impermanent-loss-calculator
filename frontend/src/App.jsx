@@ -2215,6 +2215,24 @@ function App() {
                       <span className="text-green-500 ml-2 text-xs animate-pulse">🔴 LIVE</span>
                     )}
                 </label>
+                <input
+                  type="number"
+                  step="any"
+                  value={oldPrice}
+                  onChange={(e) => {
+                    setOldPrice(e.target.value);
+                    if (e.target.value) {
+                      trackPriceInput('initial_price');
+                    }
+                  }}
+                  className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-300 focus:ring-4 focus:ring-blue-500/20 ${
+                    darkMode 
+                      ? 'bg-gray-700 border-gray-600 text-white focus:border-blue-500' 
+                      : 'bg-white border-gray-300 text-gray-900 focus:border-blue-500'
+                  }`}
+                  placeholder="0"
+                  required
+                />
                 {newPrice && (
                   <div className="flex gap-1 mt-2">
                     {[-50, -25, -10, 10, 25, 50].map((percent) => (
@@ -2233,14 +2251,6 @@ function App() {
                     ))}
                   </div>
                 )}
-                  className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-300 focus:ring-4 focus:ring-blue-500/20 ${
-                    darkMode 
-                      ? 'bg-gray-700 border-gray-600 text-white focus:border-blue-500' 
-                      : 'bg-white border-gray-300 text-gray-900 focus:border-blue-500'
-                  }`}
-                  placeholder="0"
-                  required
-                />
               </div>
               
               <div>
