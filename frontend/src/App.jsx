@@ -1846,10 +1846,6 @@ function App() {
         if (priceData.price > 0) {
           setNewPrice(priceData.price.toString());
           
-          // Якщо стара ціна порожня, ставимо ціну -10% як початкову
-          if (!oldPrice) {
-            setOldPrice((priceData.price * 0.9).toFixed(2));
-          }
         }
         
         setLastUpdated(priceData.lastUpdated);
@@ -2059,9 +2055,9 @@ function App() {
                   </option>
                 ))}
               </select>
-            </div>
               
-            <div style={{ minHeight: '300px', overflow: 'hidden' }}>
+              <div style={{ minHeight: '250px' }}></div>
+
               {/* Live Price Display */}
               {loadingPrice && (
                 <div className={`mt-3 p-3 rounded-lg border ${
@@ -2143,7 +2139,7 @@ function App() {
                 </div>
               )}
               
-              {livePools.length > 0 && !loadingPools && (
+              {selectedToken && livePools.length > 0 && !loadingPools && (
                 <div className={`mt-3 p-4 rounded-lg border transition-colors duration-300 ${
                   darkMode ? 'bg-purple-900/20 border-purple-500/50' : 'bg-purple-50 border-purple-300'
                 }`}>
@@ -2205,7 +2201,7 @@ function App() {
                 </div>
               )}
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8" style={{ minHeight: '120px' }}>
               <div>
                 <label className={`block text-sm font-semibold mb-3 transition-colors duration-300 ${
