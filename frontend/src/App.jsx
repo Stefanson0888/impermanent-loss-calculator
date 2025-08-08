@@ -2031,7 +2031,7 @@ function App() {
               </select>
             </div>
 
-            <div className="mb-6">
+            <div className="mb-6" relative>
               <label className={`block text-sm font-semibold mb-3 transition-colors duration-300 ${
                 darkMode ? 'text-gray-300' : 'text-gray-700'
               }`}>
@@ -2069,7 +2069,7 @@ function App() {
               )}
               
               {tokenPrice && !loadingPrice && (
-                <div className={`mt-3 p-4 rounded-lg border transition-colors duration-300 ${
+                <div className={`mt-3 absolute top-full left-0 right-0 z-10 p-4 rounded-lg border transition-colors duration-300 ${
                   darkMode ? 'bg-green-900/20 border-green-500/50' : 'bg-green-50 border-green-300'
                 }`}>
                   <div className="flex flex-wrap items-center justify-between gap-4">
