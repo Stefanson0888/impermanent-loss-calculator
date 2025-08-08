@@ -2,6 +2,267 @@ import React, { useState, useMemo, useEffect } from 'react';
 import axios from 'axios';
 import { useAnalytics } from './hooks/useAnalytics';
 
+// API конфігурація
+const API_CONFIG = {
+  COINGECKO_BASE: 'https://api.coingecko.com/api/v3',
+  DEFILLAMA_BASE: 'https://yields.llama.fi',
+  CACHE_DURATION: 5 * 60 * 1000, // 5 хвилин
+};
+
+// Простий кеш для API запитів
+const apiCache = new Map();
+
+// Функція для кешування API запитів
+function getCachedData(key) {
+  const cached = apiCache.get(key);
+  if (cached && Date.now() - cached.timestamp < API_CONFIG.CACHE_DURATION) {
+    return cached.data;
+  }
+  return null;
+}
+
+function setCachedData(key, data) {
+  apiCache.set(key, {
+    data,
+    timestamp: Date.now()
+  });
+}
+
+// CoinGecko API функції
+const CoinGeckoAPI = {
+  // Отримання ціни токена
+  async getTokenPrice(tokenId) {
+    const cacheKey = `price_${tokenId}`;
+    const cached = getCachedData(cacheKey);
+    if (cached) return cached;
+
+    try {
+      const response = await fetch(
+        `${API_CONFIG.COINGECKO_BASE}/simple/price?ids=${tokenId}&vs_currencies=usd&include_24hr_change=true&include_market_cap=true`
+      );
+      
+      if (!response.ok) throw new Error('CoinGecko API error');
+      
+      const data = await response.json();
+      const result = {
+        price: data[tokenId]?.usd || 0,
+        change24h: data[tokenId]?.usd_24h_change || 0,
+        marketCap: data[tokenId]?.usd_market_cap || 0,
+        lastUpdated: new Date().toLocaleTimeString()
+      };
+      
+      setCachedData(cacheKey, result);
+      return result;
+    } catch (error) {
+      console.error('Error fetching token price:', error);
+      return { price: 0, change24h: 0, marketCap: 0, error: error.message };
+    }
+  },
+
+  // Пошук токена за символом
+  async searchToken(symbol) {
+    const cacheKey = `search_${symbol}`;
+    const cached = getCachedData(cacheKey);
+    if (cached) return cached;
+
+    try {
+      const response = await fetch(
+        `${API_CONFIG.COINGECKO_BASE}/search?query=${symbol}`
+      );
+      
+      if (!response.ok) throw new Error('Search API error');
+      
+      const data = await response.json();
+      const result = data.coins?.slice(0, 5) || [];
+      
+      setCachedData(cacheKey, result);
+      return result;
+    } catch (error) {
+      console.error('Error searching token:', error);
+      return [];
+    }
+  },
+
+  // Топ токени
+  async getTopTokens(limit = 50) {
+    const cacheKey = `top_tokens_${limit}`;
+    const cached = getCachedData(cacheKey);
+    if (cached) return cached;
+
+    try {
+      const response = await fetch(
+        `${API_CONFIG.COINGECKO_BASE}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${limit}&page=1&sparkline=false`
+      );
+      
+      if (!response.ok) throw new Error('Top tokens API error');
+      
+      const data = await response.json();
+      const result = data.map(coin => ({
+        id: coin.id,
+        symbol: coin.symbol.toUpperCase(),
+        name: coin.name,
+        price: coin.current_price,
+        change24h: coin.price_change_percentage_24h,
+        marketCap: coin.market_cap,
+        image: coin.image
+      }));
+      
+      setCachedData(cacheKey, result);
+      return result;
+    } catch (error) {
+      console.error('Error fetching top tokens:', error);
+      return [];
+    }
+  }
+};
+
+// DefiLlama API функції
+const DefiLlamaAPI = {
+  // Отримання пулів протоколу
+  async getProtocolPools(protocol) {
+    const cacheKey = `pools_${protocol}`;
+    const cached = getCachedData(cacheKey);
+    if (cached) return cached;
+
+    try {
+      const response = await fetch(
+        `${API_CONFIG.DEFILLAMA_BASE}/pools`
+      );
+      
+      if (!response.ok) throw new Error('DefiLlama API error');
+      
+      const data = await response.json();
+      const protocolPools = data.data
+        ?.filter(pool => pool.project?.toLowerCase().includes(protocol.toLowerCase()))
+        ?.slice(0, 20) || [];
+      
+      const result = protocolPools.map(pool => ({
+        id: pool.pool,
+        symbol: pool.symbol,
+        protocol: pool.project,
+        apy: pool.apy || 0,
+        apyBase: pool.apyBase || 0,
+        apyReward: pool.apyReward || 0,
+        tvl: pool.tvlUsd || 0,
+        volume24h: pool.volumeUsd1d || 0,
+        chain: pool.chain,
+        stablePool: pool.stablecoin || false,
+        ilRisk: pool.il7d || 0
+      }));
+      
+      setCachedData(cacheKey, result);
+      return result;
+    } catch (error) {
+      console.error('Error fetching protocol pools:', error);
+      return [];
+    }
+  },
+
+  // Топ пули
+  async getTopPools(limit = 50) {
+    const cacheKey = `top_pools_${limit}`;
+    const cached = getCachedData(cacheKey);
+    if (cached) return cached;
+
+    try {
+      const response = await fetch(
+        `${API_CONFIG.DEFILLAMA_BASE}/pools`
+      );
+      
+      if (!response.ok) throw new Error('DefiLlama API error');
+      
+      const data = await response.json();
+      const topPools = data.data
+        ?.sort((a, b) => (b.tvlUsd || 0) - (a.tvlUsd || 0))
+        ?.slice(0, limit) || [];
+      
+      const result = topPools.map(pool => ({
+        id: pool.pool,
+        symbol: pool.symbol,
+        protocol: pool.project,
+        apy: pool.apy || 0,
+        apyBase: pool.apyBase || 0,
+        apyReward: pool.apyReward || 0,
+        tvl: pool.tvlUsd || 0,
+        volume24h: pool.volumeUsd1d || 0,
+        chain: pool.chain,
+        stablePool: pool.stablecoin || false,
+        ilRisk: pool.il7d || 0,
+        lastUpdated: new Date().toLocaleTimeString()
+      }));
+      
+      setCachedData(cacheKey, result);
+      return result;
+    } catch (error) {
+      console.error('Error fetching top pools:', error);
+      return [];
+    }
+  },
+
+  // Пошук пулів за парою токенів
+  async findPoolsForPair(token1, token2) {
+    const cacheKey = `pair_${token1}_${token2}`;
+    const cached = getCachedData(cacheKey);
+    if (cached) return cached;
+
+    try {
+      const response = await fetch(
+        `${API_CONFIG.DEFILLAMA_BASE}/pools`
+      );
+      
+      if (!response.ok) throw new Error('DefiLlama API error');
+      
+      const data = await response.json();
+      const pairPools = data.data?.filter(pool => {
+        const symbol = pool.symbol?.toLowerCase() || '';
+        const t1 = token1.toLowerCase();
+        const t2 = token2.toLowerCase();
+        return symbol.includes(t1) && symbol.includes(t2);
+      })?.slice(0, 10) || [];
+      
+      const result = pairPools.map(pool => ({
+        id: pool.pool,
+        symbol: pool.symbol,
+        protocol: pool.project,
+        apy: pool.apy || 0,
+        tvl: pool.tvlUsd || 0,
+        volume24h: pool.volumeUsd1d || 0,
+        chain: pool.chain,
+        ilRisk: pool.il7d || 0
+      }));
+      
+      setCachedData(cacheKey, result);
+      return result;
+    } catch (error) {
+      console.error('Error finding pools for pair:', error);
+      return [];
+    }
+  }
+};
+
+// Mapping популярних токенів до CoinGecko ID
+const TOKEN_ID_MAPPING = {
+  'ETH': 'ethereum',
+  'BTC': 'bitcoin', 
+  'BNB': 'binancecoin',
+  'SOL': 'solana',
+  'ADA': 'cardano',
+  'MATIC': 'matic-network',
+  'DOT': 'polkadot',
+  'LINK': 'chainlink',
+  'UNI': 'uniswap',
+  'AAVE': 'aave',
+  'USDT': 'tether',
+  'USDC': 'usd-coin',
+  'DAI': 'dai',
+  'WBTC': 'wrapped-bitcoin',
+  'AVAX': 'avalanche-2',
+  'ATOM': 'cosmos',
+  'NEAR': 'near',
+  'FTM': 'fantom',
+  'CRV': 'curve-dao-token',
+  'COMP': 'compound-governance-token'
+};
 
 const POPULAR_TOKENS = {
   'ETH': { name: 'Ethereum' },
@@ -1563,6 +1824,53 @@ function App() {
   const [selectedToken, setSelectedToken] = useState('');
   const [darkMode, setDarkMode] = useState(false);
   
+  // Нові стейти для API даних
+  const [tokenPrice, setTokenPrice] = useState(null);
+  const [loadingPrice, setLoadingPrice] = useState(false);
+  const [livePools, setLivePools] = useState([]);
+  const [loadingPools, setLoadingPools] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState(null);
+  
+  // Автозаповнення ціни при виборі токена
+  const handleTokenSelect = async (token) => {
+    setSelectedToken(token);
+    trackTokenSelect(`${token}/USDT`);
+    
+    if (token && TOKEN_ID_MAPPING[token]) {
+      setLoadingPrice(true);
+      try {
+        const priceData = await CoinGeckoAPI.getTokenPrice(TOKEN_ID_MAPPING[token]);
+        setTokenPrice(priceData);
+        
+        // Автозаповнення поточної ціни
+        if (priceData.price > 0) {
+          setNewPrice(priceData.price.toString());
+          
+          // Якщо стара ціна порожня, ставимо ціну -10% як початкову
+          if (!oldPrice) {
+            setOldPrice((priceData.price * 0.9).toFixed(2));
+          }
+        }
+        
+        setLastUpdated(priceData.lastUpdated);
+        
+        // Шукаємо пули для цього токена
+        setLoadingPools(true);
+        const pools = await DefiLlamaAPI.findPoolsForPair(token, 'USDT');
+        setLivePools(pools);
+        setLoadingPools(false);
+        
+      } catch (error) {
+        console.error('Error fetching token data:', error);
+      } finally {
+        setLoadingPrice(false);
+      }
+    } else {
+      setTokenPrice(null);
+      setLivePools([]);
+    }
+  };
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -1747,38 +2055,180 @@ function App() {
                 darkMode ? 'text-gray-300' : 'text-gray-700'
               }`}>
                 Select Token (Optional)
+                <span className="text-green-500 ml-2 text-xs">🔴 LIVE PRICES</span>
               </label>
+              
               <select
                 value={selectedToken}
-                onChange={(e) => {
-                  const token = e.target.value;
-                  setSelectedToken(token);
-                  if (token) {
-                    trackTokenSelect(`${token}/USDT`);
-                  }
-                }}
+                onChange={(e) => handleTokenSelect(e.target.value)}
                 className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-300 focus:ring-4 focus:ring-blue-500/20 ${
                   darkMode 
                     ? 'bg-gray-700 border-gray-600 text-white focus:border-blue-500' 
                     : 'bg-white border-gray-300 text-gray-900 focus:border-blue-500'
                 }`}
               >
-                <option value="">Choose a token or enter manually</option>
+                <option value="">Choose a token for live price data</option>
                 {Object.entries(POPULAR_TOKENS).map(([symbol, data]) => (
                   <option key={symbol} value={symbol}>
                     {symbol} - {data.name}
                   </option>
                 ))}
               </select>
+              
+              {/* Live Price Display */}
+              {loadingPrice && (
+                <div className={`mt-3 p-3 rounded-lg border ${
+                  darkMode ? 'bg-blue-900/20 border-blue-500/50' : 'bg-blue-50 border-blue-300'
+                }`}>
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                    <span className="text-sm">Fetching live price data...</span>
+                  </div>
+                </div>
+              )}
+              
+              {tokenPrice && !loadingPrice && (
+                <div className={`mt-3 p-4 rounded-lg border transition-colors duration-300 ${
+                  darkMode ? 'bg-green-900/20 border-green-500/50' : 'bg-green-50 border-green-300'
+                }`}>
+                  <div className="flex flex-wrap items-center justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      <div className="text-2xl">💰</div>
+                      <div>
+                        <div className={`font-bold text-lg ${darkMode ? 'text-white' : 'text-gray-800'}`}>
+                          ${tokenPrice.price?.toLocaleString() || 'N/A'}
+                        </div>
+                        <div className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                          Current {selectedToken} Price
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="flex gap-6 text-sm">
+                      <div className="text-center">
+                        <div className={`font-semibold ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                          24h Change
+                        </div>
+                        <div className={`font-bold ${
+                          tokenPrice.change24h >= 0 ? 'text-green-500' : 'text-red-500'
+                        }`}>
+                          {tokenPrice.change24h >= 0 ? '+' : ''}{tokenPrice.change24h?.toFixed(2)}%
+                        </div>
+                      </div>
+                      
+                      <div className="text-center">
+                        <div className={`font-semibold ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                          Market Cap
+                        </div>
+                        <div className={`font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
+                          ${(tokenPrice.marketCap / 1e9)?.toFixed(1)}B
+                        </div>
+                      </div>
+                      
+                      <div className="text-center">
+                        <div className={`font-semibold ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                          Updated
+                        </div>
+                        <div className="text-green-500 font-semibold text-xs">
+                          {lastUpdated}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {tokenPrice.error && (
+                    <div className="mt-2 text-red-500 text-sm">
+                      ⚠️ {tokenPrice.error}
+                    </div>
+                  )}
+                </div>
+              )}
+              
+              {/* Live Pools */}
+              {loadingPools && selectedToken && (
+                <div className={`mt-3 p-3 rounded-lg border ${
+                  darkMode ? 'bg-purple-900/20 border-purple-500/50' : 'bg-purple-50 border-purple-300'
+                }`}>
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 border-2 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+                    <span className="text-sm">Finding best pools for {selectedToken}...</span>
+                  </div>
+                </div>
+              )}
+              
+              {livePools.length > 0 && !loadingPools && (
+                <div className={`mt-3 p-4 rounded-lg border transition-colors duration-300 ${
+                  darkMode ? 'bg-purple-900/20 border-purple-500/50' : 'bg-purple-50 border-purple-300'
+                }`}>
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="text-lg">🏊‍♂️</div>
+                    <div className={`font-semibold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
+                      Top {selectedToken} Pools ({livePools.length} found)
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {livePools.slice(0, 6).map((pool, index) => (
+                      <div
+                        key={index}
+                        onClick={() => {
+                          setPoolAPY(pool.apy.toFixed(1));
+                          // Можна додати вибір пулу
+                        }}
+                        className={`p-3 rounded-lg border cursor-pointer transition-all duration-300 ${
+                          darkMode
+                            ? 'border-gray-600 bg-gray-700/50 hover:border-purple-500'
+                            : 'border-gray-300 bg-white hover:border-purple-500'
+                        }`}
+                      >
+                        <div className="flex justify-between items-start mb-2">
+                          <div>
+                            <div className={`font-semibold text-sm ${darkMode ? 'text-white' : 'text-gray-800'}`}>
+                              {pool.symbol}
+                            </div>
+                            <div className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                              {pool.protocol} • {pool.chain}
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <div className="text-green-500 font-bold text-sm">
+                              {pool.apy.toFixed(1)}%
+                            </div>
+                            <div className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                              APY
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="flex justify-between text-xs">
+                          <div className={`${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                            TVL: ${(pool.tvl / 1e6).toFixed(1)}M
+                          </div>
+                          <div className={`${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                            Click to use APY
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  <div className={`mt-3 text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                    💡 Click any pool to auto-fill APY. Data from DefiLlama.
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
               <div>
                 <label className={`block text-sm font-semibold mb-3 transition-colors duration-300 ${
-                  darkMode ? 'text-gray-300' : 'text-gray-700'
-                }`}>
-                  Initial Price ($)
-                  {selectedToken && <span className="text-blue-500 ml-1">[{selectedToken}]</span>}
+                    darkMode ? 'text-gray-300' : 'text-gray-700'
+                  }`}>
+                    Initial Price ($)
+                    {selectedToken && <span className="text-blue-500 ml-1">[{selectedToken}]</span>}
+                    {tokenPrice && (
+                      <span className="text-green-500 ml-2 text-xs animate-pulse">🔴 LIVE</span>
+                    )}
                 </label>
                 <input
                   type="number"
@@ -1802,10 +2252,13 @@ function App() {
               
               <div>
                 <label className={`block text-sm font-semibold mb-3 transition-colors duration-300 ${
-                  darkMode ? 'text-gray-300' : 'text-gray-700'
-                }`}>
-                  Current Price ($)
-                  {selectedToken && <span className="text-purple-500 ml-1">[{selectedToken}]</span>}
+                    darkMode ? 'text-gray-300' : 'text-gray-700'
+                  }`}>
+                    Current Price ($)
+                    {selectedToken && <span className="text-purple-500 ml-1">[{selectedToken}]</span>}
+                    {tokenPrice && (
+                      <span className="text-green-500 ml-2 text-xs animate-pulse">🔴 AUTO-FILLED</span>
+                    )}
                 </label>
                 <input
                   type="number"
@@ -1873,6 +2326,40 @@ function App() {
                 />
               </div>
             </div>
+
+            {/* Refresh Data Button */}
+            {selectedToken && (
+              <div className="mb-6 text-center">
+                <button
+                  type="button"
+                  onClick={() => handleTokenSelect(selectedToken)}
+                  disabled={loadingPrice}
+                  className={`px-6 py-2 rounded-lg font-semibold transition-all duration-300 ${
+                    darkMode
+                      ? 'bg-gray-700 hover:bg-gray-600 disabled:bg-gray-800 text-gray-300'
+                      : 'bg-gray-200 hover:bg-gray-300 disabled:bg-gray-100 text-gray-700'
+                  }`}
+                >
+                  {loadingPrice ? (
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
+                      <span>Updating...</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <span>🔄</span>
+                      <span>Refresh Live Data</span>
+                    </div>
+                  )}
+                </button>
+                
+                {lastUpdated && (
+                  <div className={`text-xs mt-2 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                    Last updated: {lastUpdated}
+                  </div>
+                )}
+              </div>
+            )}
 
             <button
               type="submit"
