@@ -2254,10 +2254,12 @@ function App() {
                 <label className={`block text-sm font-semibold mb-3 h-12 flex items-end transition-colors duration-300 ${
                     darkMode ? 'text-gray-300' : 'text-gray-700'
                   }`}>
-                    Current Price ($)
-                    {selectedToken && <span className="text-purple-500 ml-1">[{selectedToken}]</span>}
+                    <div>
+                      Current Price ($)
+                      {selectedToken && <span className="text-purple-500 ml-1">[{selectedToken}]</span>}
+                    </div>
                     {tokenPrice && (
-                      <span className="text-green-500 ml-2 text-xs animate-pulse">🔴 AUTO-FILLED</span>
+                      <div className="text-green-500 text-xs animate-pulse">🔴 AUTO-FILLED</div>
                     )}
                 </label>
                 <input
