@@ -2204,6 +2204,9 @@ function App() {
               )}
             </div>
 
+            <div style={{ minHeight: '200px' }} className="mb-4">
+            </div>
+            
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8" style={{ minHeight: '120px' }}>
               <div>
                 <label className={`block text-sm font-semibold mb-3 transition-colors duration-300 ${
