@@ -1996,7 +1996,7 @@ function App() {
           <form onSubmit={handleSubmit}>
             
             <div className="mb-6">
-              <label className={`block text-sm font-semibold mb-3 transition-colors duration-300 ${
+              <label className={`block text-sm font-semibold mb-3 h-12 flex items-end transition-colors duration-300 ${
                 darkMode ? 'text-gray-300' : 'text-gray-700'
               }`}>
                 🔧 AMM Protocol
@@ -2032,7 +2032,7 @@ function App() {
             </div>
 
             <div className="mb-6" relative>
-              <label className={`block text-sm font-semibold mb-3 transition-colors duration-300 ${
+              <label className={`block text-sm font-semibold mb-3 h-12 flex items-end transition-colors duration-300 ${
                 darkMode ? 'text-gray-300' : 'text-gray-700'
               }`}>
                 Select Token (Optional)
@@ -2202,7 +2202,8 @@ function App() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8" style={{ minHeight: '120px' }}>
               <div>
-                <label className={`block text-sm font-semibold mb-3 transition-colors duration-300 ${
+                
+              <label className={`block text-sm font-semibold mb-3 h-12 flex items-end transition-colors duration-300 ${
                     darkMode ? 'text-gray-300' : 'text-gray-700'
                   }`}>
                     Initial Price ($)
@@ -2250,7 +2251,7 @@ function App() {
               </div>
               
               <div>
-                <label className={`block text-sm font-semibold mb-3 transition-colors duration-300 ${
+                <label className={`block text-sm font-semibold mb-3 h-12 flex items-end transition-colors duration-300 ${
                     darkMode ? 'text-gray-300' : 'text-gray-700'
                   }`}>
                     Current Price ($)
@@ -2280,7 +2281,7 @@ function App() {
               </div>
 
               <div>
-                <label className={`block text-sm font-semibold mb-3 transition-colors duration-300 ${
+                <label className={`block text-sm font-semibold mb-3 h-12 flex items-end transition-colors duration-300 ${
                   darkMode ? 'text-gray-300' : 'text-gray-700'
                 }`}>
                   Pool APY (%)
@@ -2306,7 +2307,7 @@ function App() {
               </div>
 
               <div>
-                <label className={`block text-sm font-semibold mb-3 transition-colors duration-300 ${
+                <label className={`block text-sm font-semibold mb-3 h-12 flex items-end transition-colors duration-300 ${
                   darkMode ? 'text-gray-300' : 'text-gray-700'
                 }`}>
                   Investment ($)
