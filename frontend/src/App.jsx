@@ -2201,16 +2201,19 @@ function App() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8" style={{ minHeight: '120px' }}>
-              <div>
-                
-              <label className={`block text-sm font-semibold mb-3 h-12 flex items-end transition-colors duration-300 ${
+  
+              {/* Initial Price */}
+              <div className="flex flex-col">
+                <label
+                  className={`block text-sm font-semibold mb-3 h-[40px] flex items-center transition-colors duration-300 ${
                     darkMode ? 'text-gray-300' : 'text-gray-700'
-                  }`}>
-                    Initial Price ($)
-                    {selectedToken && <span className="text-blue-500 ml-1">[{selectedToken}]</span>}
-                    {tokenPrice && (
-                      <span className="text-green-500 ml-2 text-xs animate-pulse">🔴 LIVE</span>
-                    )}
+                  }`}
+                >
+                  Initial Price ($)
+                  {selectedToken && <span className="text-blue-500 ml-1">[{selectedToken}]</span>}
+                  {tokenPrice && (
+                    <span className="text-green-500 ml-2 text-xs animate-pulse">🔴 LIVE</span>
+                  )}
                 </label>
                 <input
                   type="number"
@@ -2236,37 +2239,38 @@ function App() {
                       <button
                         key={percent}
                         type="button"
-                        onClick={() => setOldPrice((parseFloat(newPrice) * (1 + percent/100)).toFixed(2))}
+                        onClick={() =>
+                          setOldPrice((parseFloat(newPrice) * (1 + percent / 100)).toFixed(2))
+                        }
                         className={`px-2 py-1 text-xs rounded-md transition-all duration-200 ${
-                          darkMode 
-                            ? 'bg-gray-600 hover:bg-gray-500 text-gray-300' 
+                          darkMode
+                            ? 'bg-gray-600 hover:bg-gray-500 text-gray-300'
                             : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
                         }`}
                       >
-                        {percent > 0 ? '+' : ''}{percent}%
+                        {percent > 0 ? '+' : ''}
+                        {percent}%
                       </button>
                     ))}
                   </div>
                 )}
               </div>
-              
-              <div>
+
+              {/* Current Price */}
+              <div className="flex flex-col">
                 <label
-                  className={`text-sm font-semibold mb-3 transition-colors duration-300 ${
+                  className={`text-sm font-semibold mb-3 h-[40px] flex flex-col justify-between transition-colors duration-300 ${
                     darkMode ? 'text-gray-300' : 'text-gray-700'
                   }`}
                 >
-                  <div className="flex items-center gap-2">
-                    <span>
-                      Current Price ($)
-                      {selectedToken && (
-                        <span className="text-purple-500 ml-1">[{selectedToken}]</span>
-                      )}
-                    </span>
+                  <div>
+                    Current Price ($)
+                    {selectedToken && (
+                      <span className="text-purple-500 ml-1">[{selectedToken}]</span>
+                    )}
                   </div>
-
                   {tokenPrice && (
-                    <div className="text-green-500 text-xs animate-pulse mt-1">
+                    <div className="text-green-500 text-xs animate-pulse">
                       🔴 AUTO-FILLED
                     </div>
                   )}
@@ -2282,8 +2286,8 @@ function App() {
                     }
                   }}
                   className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-300 focus:ring-4 focus:ring-purple-500/20 ${
-                    darkMode 
-                      ? 'bg-gray-700 border-gray-600 text-white focus:border-purple-500' 
+                    darkMode
+                      ? 'bg-gray-700 border-gray-600 text-white focus:border-purple-500'
                       : 'bg-white border-gray-300 text-gray-900 focus:border-purple-500'
                   }`}
                   placeholder="0"
@@ -2291,10 +2295,13 @@ function App() {
                 />
               </div>
 
-              <div>
-                <label className={`block text-sm font-semibold mb-3 h-12 flex items-end transition-colors duration-300 ${
-                  darkMode ? 'text-gray-300' : 'text-gray-700'
-                }`}>
+              {/* Pool APY */}
+              <div className="flex flex-col">
+                <label
+                  className={`block text-sm font-semibold mb-3 h-[40px] flex items-center transition-colors duration-300 ${
+                    darkMode ? 'text-gray-300' : 'text-gray-700'
+                  }`}
+                >
                   Pool APY (%)
                   <span className="text-orange-500 ml-1 text-xs">✨ NEW</span>
                 </label>
@@ -2306,8 +2313,8 @@ function App() {
                   value={poolAPY}
                   onChange={(e) => setPoolAPY(e.target.value)}
                   className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-300 focus:ring-4 focus:ring-orange-500/20 ${
-                    darkMode 
-                      ? 'bg-gray-700 border-gray-600 text-white focus:border-orange-500' 
+                    darkMode
+                      ? 'bg-gray-700 border-gray-600 text-white focus:border-orange-500'
                       : 'bg-white border-gray-300 text-gray-900 focus:border-orange-500'
                   }`}
                   placeholder="25"
@@ -2317,10 +2324,13 @@ function App() {
                 </div>
               </div>
 
-              <div>
-                <label className={`block text-sm font-semibold mb-3 h-12 flex items-end transition-colors duration-300 ${
-                  darkMode ? 'text-gray-300' : 'text-gray-700'
-                }`}>
+              {/* Investment */}
+              <div className="flex flex-col">
+                <label
+                  className={`block text-sm font-semibold mb-3 h-[40px] flex items-center transition-colors duration-300 ${
+                    darkMode ? 'text-gray-300' : 'text-gray-700'
+                  }`}
+                >
                   Investment ($)
                 </label>
                 <input
@@ -2329,14 +2339,16 @@ function App() {
                   value={initialInvestment}
                   onChange={(e) => setInitialInvestment(e.target.value)}
                   className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-300 focus:ring-4 focus:ring-green-500/20 ${
-                    darkMode 
-                      ? 'bg-gray-700 border-gray-600 text-white focus:border-green-500' 
+                    darkMode
+                      ? 'bg-gray-700 border-gray-600 text-white focus:border-green-500'
                       : 'bg-white border-gray-300 text-gray-900 focus:border-green-500'
                   }`}
                   placeholder="0"
                 />
               </div>
-            </div>
+
+             </div>
+
 
             {/* Refresh Data Button */}
             {selectedToken && (
