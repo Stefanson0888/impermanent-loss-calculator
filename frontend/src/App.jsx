@@ -2251,7 +2251,7 @@ function App() {
               </div>
               
               <div>
-                <label className={`block text-sm font-semibold mb-3 h-12 flex items-end transition-colors duration-300 ${
+                <label className={`text-sm font-semibold mb-3 h-12 flex items-end transition-colors duration-300 ${
                     darkMode ? 'text-gray-300' : 'text-gray-700'
                   }`}>
                     <div>
