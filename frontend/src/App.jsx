@@ -2219,6 +2219,7 @@ function App() {
                       {tokenPrice && <span className="text-green-500 ml-2 text-xs animate-pulse">🔴 LIVE</span>}
                     </span>
                   </div>
+                  <div className="text-xs h-[16px]"></div>
                 </label>
 
                 <input
@@ -2239,56 +2240,6 @@ function App() {
                   placeholder="0"
                   required
                 />
-
-                {newPrice && (
-                  <>
-                    <select
-                      onChange={(e) => {
-                        const val = e.target.value;
-                        if (val === 'custom') {
-                          setShowCustom(true);
-                        } else {
-                          setShowCustom(false);
-                          const percent = parseFloat(val);
-                          setOldPrice((parseFloat(newPrice) * (1 + percent / 100)).toFixed(2));
-                        }
-                      }}
-                      defaultValue=""
-                      className={`mt-2 w-full px-3 py-2 rounded-lg border-2 text-sm ${
-                        darkMode
-                          ? 'bg-gray-700 border-gray-600 text-white'
-                          : 'bg-white border-gray-300 text-gray-900'
-                      }`}
-                    >
-                      <option value="" disabled>Adjust by %</option>
-                      {[-50, -25, -10].map((percent) => (
-                        <option key={percent} value={percent}>
-                          {percent}%
-                        </option>
-                      ))}
-                      <option value="custom">Custom</option>
-                      {[10, 25, 50].map((percent) => (
-                        <option key={percent} value={percent}>
-                          +{percent}%
-                        </option>
-                      ))}
-                    </select>
-
-                    {showCustom && (
-                      <input
-                        type="number"
-                        step="any"
-                        className={`mt-2 w-full px-3 py-2 rounded-lg border-2 text-sm ${
-                          darkMode
-                            ? 'bg-gray-700 border-gray-600 text-white'
-                            : 'bg-white border-gray-300 text-gray-900'
-                        }`}
-                        placeholder="Enter custom price"
-                        onChange={(e) => setOldPrice(e.target.value)}
-                      />
-                    )}
-                  </>
-                )}
               </div>
 
               {/* Current Price */}
