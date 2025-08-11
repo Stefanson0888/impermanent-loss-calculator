@@ -9,6 +9,8 @@ const API_CONFIG = {
   CACHE_DURATION: 5 * 60 * 1000, // 5 хвилин
 };
 
+const [showCustom, setShowCustom] = useState(false);
+
 // Простий кеш для API запитів
 const apiCache = new Map();
 
@@ -2216,7 +2218,6 @@ function App() {
                       {tokenPrice && <span className="text-green-500 ml-2 text-xs animate-pulse">🔴 LIVE</span>}
                     </span>
                   </div>
-                  <div className="text-xs h-[16px]"></div>
                 </label>
 
                 <input
@@ -2237,27 +2238,55 @@ function App() {
                   placeholder="0"
                   required
                 />
-                {/* Dropdown замість кнопок */}
+
                 {newPrice && (
-                  <select
-                    onChange={(e) => {
-                      const percent = parseFloat(e.target.value);
-                      setOldPrice((parseFloat(newPrice) * (1 + percent/100)).toFixed(2));
-                    }}
-                    defaultValue=""
-                    className={`mt-2 w-full px-3 py-2 rounded-lg border-2 text-sm ${
-                      darkMode
-                        ? 'bg-gray-700 border-gray-600 text-white'
-                        : 'bg-white border-gray-300 text-gray-900'
-                    }`}
-                  >
-                    <option value="" disabled>Adjust by %</option>
-                    {[-50, -25, -10, 10, 25, 50].map((percent) => (
-                      <option key={percent} value={percent}>
-                        {percent > 0 ? '+' : ''}{percent}%
-                      </option>
-                    ))}
-                  </select>
+                  <>
+                    <select
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        if (val === 'custom') {
+                          setShowCustom(true);
+                        } else {
+                          setShowCustom(false);
+                          const percent = parseFloat(val);
+                          setOldPrice((parseFloat(newPrice) * (1 + percent / 100)).toFixed(2));
+                        }
+                      }}
+                      defaultValue=""
+                      className={`mt-2 w-full px-3 py-2 rounded-lg border-2 text-sm ${
+                        darkMode
+                          ? 'bg-gray-700 border-gray-600 text-white'
+                          : 'bg-white border-gray-300 text-gray-900'
+                      }`}
+                    >
+                      <option value="" disabled>Adjust by %</option>
+                      {[-50, -25, -10].map((percent) => (
+                        <option key={percent} value={percent}>
+                          {percent}%
+                        </option>
+                      ))}
+                      <option value="custom">Custom</option>
+                      {[10, 25, 50].map((percent) => (
+                        <option key={percent} value={percent}>
+                          +{percent}%
+                        </option>
+                      ))}
+                    </select>
+
+                    {showCustom && (
+                      <input
+                        type="number"
+                        step="any"
+                        className={`mt-2 w-full px-3 py-2 rounded-lg border-2 text-sm ${
+                          darkMode
+                            ? 'bg-gray-700 border-gray-600 text-white'
+                            : 'bg-white border-gray-300 text-gray-900'
+                        }`}
+                        placeholder="Enter custom price"
+                        onChange={(e) => setOldPrice(e.target.value)}
+                      />
+                    )}
+                  </>
                 )}
               </div>
 
@@ -2269,11 +2298,11 @@ function App() {
                   }`}
                   style={{ minHeight: '40px' }}
                 >
-                  <div className="flex items-center">
-                    Current Price ($)
-                    {selectedToken && (
-                      <span className="text-purple-500 ml-1">[{selectedToken}]</span>
-                    )}
+                  <div className="flex justify-between items-center">
+                    <span>Current Price ($)</span>
+                    <span>
+                      {selectedToken && <span className="text-purple-500 ml-1">[{selectedToken}]</span>}
+                    </span>
                   </div>
                   {tokenPrice && (
                     <div className="text-green-500 text-xs animate-pulse">🔴 AUTO-FILLED</div>
@@ -2307,8 +2336,8 @@ function App() {
                   }`}
                   style={{ minHeight: '40px' }}
                 >
-                  <div className="flex items-center">
-                    Pool APY (%)
+                  <div className="flex justify-between items-center">
+                    <span>Pool APY (%)</span>
                     <span className="text-orange-500 ml-1 text-xs">✨ NEW</span>
                   </div>
                 </label>
@@ -2339,7 +2368,9 @@ function App() {
                   }`}
                   style={{ minHeight: '40px' }}
                 >
-                  <div>Investment ($)</div>
+                  <div className="flex justify-between items-center">
+                    <span>Investment ($)</span>
+                  </div>
                 </label>
                 <input
                   type="number"
