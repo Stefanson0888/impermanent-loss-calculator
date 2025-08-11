@@ -2209,14 +2209,16 @@ function App() {
                   }`}
                   style={{ minHeight: '40px' }}
                 >
-                  <div className="flex items-center">
-                    Initial Price ($)
-                    {selectedToken && <span className="text-blue-500 ml-1">[{selectedToken}]</span>}
-                    {tokenPrice && (
-                      <span className="text-green-500 ml-2 text-xs animate-pulse">🔴 LIVE</span>
-                    )}
+                  <div className="flex justify-between items-center">
+                    <span>Initial Price ($)</span>
+                    <span>
+                      {selectedToken && <span className="text-blue-500 ml-1">[{selectedToken}]</span>}
+                      {tokenPrice && <span className="text-green-500 ml-2 text-xs animate-pulse">🔴 LIVE</span>}
+                    </span>
                   </div>
+                  <div className="text-xs h-[16px]"></div>
                 </label>
+
                 <input
                   type="number"
                   step="any"
