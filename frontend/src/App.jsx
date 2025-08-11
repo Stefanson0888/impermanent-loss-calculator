@@ -9,8 +9,6 @@ const API_CONFIG = {
   CACHE_DURATION: 5 * 60 * 1000, // 5 хвилин
 };
 
-const [showCustom, setShowCustom] = useState(false);
-
 // Простий кеш для API запитів
 const apiCache = new Map();
 
@@ -1832,6 +1830,9 @@ function App() {
   const [livePools, setLivePools] = useState([]);
   const [loadingPools, setLoadingPools] = useState(false);
   const [lastUpdated, setLastUpdated] = useState(null);
+
+  const [showCustom, setShowCustom] = useState(false);
+
   
   // Автозаповнення ціни при виборі токена
   const handleTokenSelect = async (token) => {
