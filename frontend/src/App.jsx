@@ -2237,23 +2237,27 @@ function App() {
                   placeholder="0"
                   required
                 />
+                {/* Dropdown замість кнопок */}
                 {newPrice && (
-                  <div className="grid grid-cols-6 gap-1 mt-2 text-xs">
+                  <select
+                    onChange={(e) => {
+                      const percent = parseFloat(e.target.value);
+                      setOldPrice((parseFloat(newPrice) * (1 + percent/100)).toFixed(2));
+                    }}
+                    defaultValue=""
+                    className={`mt-2 w-full px-3 py-2 rounded-lg border-2 text-sm ${
+                      darkMode
+                        ? 'bg-gray-700 border-gray-600 text-white'
+                        : 'bg-white border-gray-300 text-gray-900'
+                    }`}
+                  >
+                    <option value="" disabled>Adjust by %</option>
                     {[-50, -25, -10, 10, 25, 50].map((percent) => (
-                      <button
-                        key={percent}
-                        type="button"
-                        onClick={() => setOldPrice((parseFloat(newPrice) * (1 + percent/100)).toFixed(2))}
-                        className={`px-2 py-1 text-xs rounded-md transition-all duration-200 ${
-                          darkMode 
-                            ? 'bg-gray-600 hover:bg-gray-500 text-gray-300' 
-                            : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
-                        }`}
-                      >
+                      <option key={percent} value={percent}>
                         {percent > 0 ? '+' : ''}{percent}%
-                      </button>
+                      </option>
                     ))}
-                  </div>
+                  </select>
                 )}
               </div>
 
