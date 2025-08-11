@@ -2200,20 +2200,22 @@ function App() {
               )}
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8" style={{ minHeight: '120px' }}>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
               {/* Initial Price */}
               <div>
-                <label className={`block text-sm font-semibold mb-3 h-[40px] flex flex-col justify-between transition-colors duration-300 ${
-                  darkMode ? 'text-gray-300' : 'text-gray-700'
-                }`}>
-                  <div>
+                <label
+                  className={`block text-sm font-semibold mb-3 flex flex-col justify-between transition-colors duration-300 ${
+                    darkMode ? 'text-gray-300' : 'text-gray-700'
+                  }`}
+                  style={{ minHeight: '40px' }}
+                >
+                  <div className="flex items-center">
                     Initial Price ($)
                     {selectedToken && <span className="text-blue-500 ml-1">[{selectedToken}]</span>}
                     {tokenPrice && (
                       <span className="text-green-500 ml-2 text-xs animate-pulse">🔴 LIVE</span>
                     )}
                   </div>
-                  <div className="text-xs h-[16px]"></div>
                 </label>
                 <input
                   type="number"
@@ -2255,21 +2257,20 @@ function App() {
 
               {/* Current Price */}
               <div>
-                <label className={`text-sm font-semibold mb-3 h-[40px] flex flex-col justify-between transition-colors duration-300 ${
-                  darkMode ? 'text-gray-300' : 'text-gray-700'
-                }`}>
-                  <div>
+                <label
+                  className={`block text-sm font-semibold mb-3 flex flex-col justify-between transition-colors duration-300 ${
+                    darkMode ? 'text-gray-300' : 'text-gray-700'
+                  }`}
+                  style={{ minHeight: '40px' }}
+                >
+                  <div className="flex items-center">
                     Current Price ($)
                     {selectedToken && (
                       <span className="text-purple-500 ml-1">[{selectedToken}]</span>
                     )}
                   </div>
-                  {tokenPrice ? (
-                    <div className="text-green-500 text-xs animate-pulse mt-1">
-                      🔴 AUTO-FILLED
-                    </div>
-                  ) : (
-                    <div className="text-xs h-[16px]"></div>
+                  {tokenPrice && (
+                    <div className="text-green-500 text-xs animate-pulse">🔴 AUTO-FILLED</div>
                   )}
                 </label>
                 <input
@@ -2294,14 +2295,16 @@ function App() {
 
               {/* Pool APY */}
               <div>
-                <label className={`block text-sm font-semibold mb-3 h-[40px] flex flex-col justify-between transition-colors duration-300 ${
-                  darkMode ? 'text-gray-300' : 'text-gray-700'
-                }`}>
-                  <div>
+                <label
+                  className={`block text-sm font-semibold mb-3 flex flex-col justify-between transition-colors duration-300 ${
+                    darkMode ? 'text-gray-300' : 'text-gray-700'
+                  }`}
+                  style={{ minHeight: '40px' }}
+                >
+                  <div className="flex items-center">
                     Pool APY (%)
                     <span className="text-orange-500 ml-1 text-xs">✨ NEW</span>
                   </div>
-                  <div className="text-xs h-[16px]"></div>
                 </label>
                 <input
                   type="number"
@@ -2324,11 +2327,13 @@ function App() {
 
               {/* Investment */}
               <div>
-                <label className={`block text-sm font-semibold mb-3 h-[40px] flex flex-col justify-between transition-colors duration-300 ${
-                  darkMode ? 'text-gray-300' : 'text-gray-700'
-                }`}>
+                <label
+                  className={`block text-sm font-semibold mb-3 flex flex-col justify-between transition-colors duration-300 ${
+                    darkMode ? 'text-gray-300' : 'text-gray-700'
+                  }`}
+                  style={{ minHeight: '40px' }}
+                >
                   <div>Investment ($)</div>
-                  <div className="text-xs h-[16px]"></div>
                 </label>
                 <input
                   type="number"
@@ -2344,6 +2349,7 @@ function App() {
                 />
               </div>
             </div>
+
 
             {/* Refresh Data Button */}
             {selectedToken && (
