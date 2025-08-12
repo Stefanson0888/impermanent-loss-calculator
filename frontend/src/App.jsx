@@ -2207,21 +2207,30 @@ function App() {
 
               {/* Initial Price */}
               <div>
-                <div className="h-10 flex items-end gap-2">
-                  <span className={`text-sm font-semibold ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                    Initial Price ($)
-                  </span>
-                  {selectedToken && <span className="text-blue-500">[{selectedToken}]</span>}
-                  {tokenPrice && <span className="text-green-500 text-xs animate-pulse">🔴 LIVE</span>}
+                <div className="h-10 flex flex-col justify-end gap-1">
+                  <div className="flex items-center gap-2">
+                    <span className={`text-sm font-semibold ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                      Initial Price ($)
+                    </span>
+                    {selectedToken && <span className="text-blue-500">[{selectedToken}]</span>}
+                  </div>
+                  {tokenPrice && (
+                    <div className="text-green-500 text-xs animate-pulse">
+                      🔴 LIVE
+                    </div>
+                  )}
                 </div>
                 <input
                   type="number"
                   step="any"
                   value={oldPrice}
-                  onChange={(e) => setOldPrice(e.target.value)}
+                  onChange={(e) => {
+                    setOldPrice(e.target.value);
+                    if (e.target.value) trackPriceInput('initial_price');
+                  }}
                   className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-300 focus:ring-4 focus:ring-blue-500/20
-                    ${darkMode 
-                      ? 'bg-gray-700 border-gray-600 text-white focus:border-blue-500' 
+                    ${darkMode
+                      ? 'bg-gray-700 border-gray-600 text-white focus:border-blue-500'
                       : 'bg-white border-gray-300 text-gray-900 focus:border-blue-500'
                     }`}
                   placeholder="0"
@@ -2231,21 +2240,30 @@ function App() {
 
               {/* Current Price */}
               <div>
-                <div className="h-10 flex items-end gap-2">
-                  <span className={`text-sm font-semibold ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                    Current Price ($)
-                  </span>
-                  {selectedToken && <span className="text-purple-500">[{selectedToken}]</span>}
-                  {tokenPrice && <span className="text-green-500 text-xs animate-pulse">🔴 AUTO-FILLED</span>}
+                <div className="h-10 flex flex-col justify-end gap-1">
+                  <div className="flex items-center gap-2">
+                    <span className={`text-sm font-semibold ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                      Current Price ($)
+                    </span>
+                    {selectedToken && <span className="text-purple-500">[{selectedToken}]</span>}
+                  </div>
+                  {tokenPrice && (
+                    <div className="text-green-500 text-xs animate-pulse">
+                      🔴 AUTO-FILLED
+                    </div>
+                  )}
                 </div>
                 <input
                   type="number"
                   step="any"
                   value={newPrice}
-                  onChange={(e) => setNewPrice(e.target.value)}
+                  onChange={(e) => {
+                    setNewPrice(e.target.value);
+                    if (e.target.value) trackPriceInput('current_price');
+                  }}
                   className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-300 focus:ring-4 focus:ring-purple-500/20
-                    ${darkMode 
-                      ? 'bg-gray-700 border-gray-600 text-white focus:border-purple-500' 
+                    ${darkMode
+                      ? 'bg-gray-700 border-gray-600 text-white focus:border-purple-500'
                       : 'bg-white border-gray-300 text-gray-900 focus:border-purple-500'
                     }`}
                   placeholder="0"
