@@ -2203,143 +2203,113 @@ function App() {
               )}
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">  
               {/* Initial Price */}
-              <div>
-                <label
-                  className={`block text-sm font-semibold mb-3 flex flex-col justify-between transition-colors duration-300 ${
-                    darkMode ? 'text-gray-300' : 'text-gray-700'
-                  }`}
-                  style={{ minHeight: '40px' }}
-                >
-                  <div className="flex justify-between items-center">
-                    <span>Initial Price ($)</span>
-                    <span>
-                      {selectedToken && <span className="text-blue-500 ml-1">[{selectedToken}]</span>}
-                      {tokenPrice && <span className="text-green-500 ml-2 text-xs animate-pulse">🔴 LIVE</span>}
-                    </span>
-                  </div>
-                  <div className="text-xs h-[16px]"></div>
-                </label>
-
+              <div className="relative">
                 <input
                   type="number"
                   step="any"
+                  id="oldPrice"
                   value={oldPrice}
-                  onChange={(e) => {
-                    setOldPrice(e.target.value);
-                    if (e.target.value) {
-                      trackPriceInput('initial_price');
-                    }
-                  }}
-                  className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-300 focus:ring-4 focus:ring-blue-500/20 ${
-                    darkMode 
+                  onChange={(e) => setOldPrice(e.target.value)}
+                  className={`peer w-full px-4 pt-5 pb-2 rounded-xl border-2 transition-all duration-300 focus:ring-4 focus:ring-blue-500/20
+                    ${darkMode 
                       ? 'bg-gray-700 border-gray-600 text-white focus:border-blue-500' 
                       : 'bg-white border-gray-300 text-gray-900 focus:border-blue-500'
-                  }`}
-                  placeholder="0"
+                    }`}
+                  placeholder=" "
                   required
                 />
+                <label
+                  htmlFor="oldPrice"
+                  className={`absolute left-4 top-2 text-xs transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-400 peer-focus:top-2 peer-focus:text-xs
+                    ${darkMode ? 'text-gray-300 peer-placeholder-shown:text-gray-400 peer-focus:text-blue-400' : 'text-gray-700 peer-focus:text-blue-500'}`}
+                >
+                  Initial Price ($) {selectedToken && <span className="text-blue-500">[{selectedToken}]</span>}
+                  {tokenPrice && <span className="text-green-500 ml-2 text-xs animate-pulse">🔴 LIVE</span>}
+                </label>
               </div>
 
               {/* Current Price */}
-              <div>
-                <label
-                  className={`block text-sm font-semibold mb-3 flex flex-col justify-between transition-colors duration-300 ${
-                    darkMode ? 'text-gray-300' : 'text-gray-700'
-                  }`}
-                  style={{ minHeight: '40px' }}
-                >
-                  <div className="flex justify-between items-center">
-                    <span>Current Price ($)</span>
-                    <span>
-                      {selectedToken && <span className="text-purple-500 ml-1">[{selectedToken}]</span>}
-                    </span>
-                  </div>
-                  {tokenPrice && (
-                    <div className="text-green-500 text-xs animate-pulse">🔴 AUTO-FILLED</div>
-                  )}
-                </label>
+              <div className="relative">
                 <input
                   type="number"
                   step="any"
+                  id="newPrice"
                   value={newPrice}
-                  onChange={(e) => {
-                    setNewPrice(e.target.value);
-                    if (e.target.value) {
-                      trackPriceInput('current_price');
-                    }
-                  }}
-                  className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-300 focus:ring-4 focus:ring-purple-500/20 ${
-                    darkMode 
+                  onChange={(e) => setNewPrice(e.target.value)}
+                  className={`peer w-full px-4 pt-5 pb-2 rounded-xl border-2 transition-all duration-300 focus:ring-4 focus:ring-purple-500/20
+                    ${darkMode 
                       ? 'bg-gray-700 border-gray-600 text-white focus:border-purple-500' 
                       : 'bg-white border-gray-300 text-gray-900 focus:border-purple-500'
-                  }`}
-                  placeholder="0"
+                    }`}
+                  placeholder=" "
                   required
                 />
+                <label
+                  htmlFor="newPrice"
+                  className={`absolute left-4 top-2 text-xs transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-400 peer-focus:top-2 peer-focus:text-xs
+                    ${darkMode ? 'text-gray-300 peer-placeholder-shown:text-gray-400 peer-focus:text-purple-400' : 'text-gray-700 peer-focus:text-purple-500'}`}
+                >
+                  Current Price ($) {selectedToken && <span className="text-purple-500">[{selectedToken}]</span>}
+                  {tokenPrice && <span className="text-green-500 ml-2 text-xs animate-pulse">🔴 AUTO-FILLED</span>}
+                </label>
               </div>
 
               {/* Pool APY */}
-              <div>
-                <label
-                  className={`block text-sm font-semibold mb-3 flex flex-col justify-between transition-colors duration-300 ${
-                    darkMode ? 'text-gray-300' : 'text-gray-700'
-                  }`}
-                  style={{ minHeight: '40px' }}
-                >
-                  <div className="flex justify-between items-center">
-                    <span>Pool APY (%)</span>
-                    <span className="text-orange-500 ml-1 text-xs">✨ NEW</span>
-                  </div>
-                </label>
+              <div className="relative">
                 <input
                   type="number"
                   step="any"
                   min="0"
                   max="1000"
+                  id="poolAPY"
                   value={poolAPY}
                   onChange={(e) => setPoolAPY(e.target.value)}
-                  className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-300 focus:ring-4 focus:ring-orange-500/20 ${
-                    darkMode 
+                  className={`peer w-full px-4 pt-5 pb-2 rounded-xl border-2 transition-all duration-300 focus:ring-4 focus:ring-orange-500/20
+                    ${darkMode 
                       ? 'bg-gray-700 border-gray-600 text-white focus:border-orange-500' 
                       : 'bg-white border-gray-300 text-gray-900 focus:border-orange-500'
-                  }`}
-                  placeholder="25"
+                    }`}
+                  placeholder=" "
                 />
+                <label
+                  htmlFor="poolAPY"
+                  className={`absolute left-4 top-2 text-xs transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-400 peer-focus:top-2 peer-focus:text-xs
+                    ${darkMode ? 'text-gray-300 peer-placeholder-shown:text-gray-400 peer-focus:text-orange-400' : 'text-gray-700 peer-focus:text-orange-500'}`}
+                >
+                  Pool APY (%) <span className="text-orange-500 text-xs">✨ NEW</span>
+                </label>
                 <div className={`text-xs mt-1 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
                   💡 Popular pairs: ETH/USDT ~25-45%, BTC/USDT ~15-30%
                 </div>
               </div>
 
               {/* Investment */}
-              <div>
-                <label
-                  className={`block text-sm font-semibold mb-3 flex flex-col justify-between transition-colors duration-300 ${
-                    darkMode ? 'text-gray-300' : 'text-gray-700'
-                  }`}
-                  style={{ minHeight: '40px' }}
-                >
-                  <div className="flex justify-between items-center">
-                    <span>Investment ($)</span>
-                  </div>
-                </label>
+              <div className="relative">
                 <input
                   type="number"
                   step="any"
+                  id="investment"
                   value={initialInvestment}
                   onChange={(e) => setInitialInvestment(e.target.value)}
-                  className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-300 focus:ring-4 focus:ring-green-500/20 ${
-                    darkMode 
+                  className={`peer w-full px-4 pt-5 pb-2 rounded-xl border-2 transition-all duration-300 focus:ring-4 focus:ring-green-500/20
+                    ${darkMode 
                       ? 'bg-gray-700 border-gray-600 text-white focus:border-green-500' 
                       : 'bg-white border-gray-300 text-gray-900 focus:border-green-500'
-                  }`}
-                  placeholder="0"
+                    }`}
+                  placeholder=" "
                 />
+                <label
+                  htmlFor="investment"
+                  className={`absolute left-4 top-2 text-xs transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-400 peer-focus:top-2 peer-focus:text-xs
+                    ${darkMode ? 'text-gray-300 peer-placeholder-shown:text-gray-400 peer-focus:text-green-400' : 'text-gray-700 peer-focus:text-green-500'}`}
+                >
+                  Investment ($)
+                </label>
               </div>
+
             </div>
-
-
             {/* Refresh Data Button */}
             {selectedToken && (
               <div className="mb-6 text-center">
