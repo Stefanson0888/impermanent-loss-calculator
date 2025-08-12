@@ -2203,113 +2203,106 @@ function App() {
               )}
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">  
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+
               {/* Initial Price */}
-              <div className="relative">
+              <div>
+                <div className="h-10 flex items-end gap-2">
+                  <span className={`text-sm font-semibold ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    Initial Price ($)
+                  </span>
+                  {selectedToken && <span className="text-blue-500">[{selectedToken}]</span>}
+                  {tokenPrice && <span className="text-green-500 text-xs animate-pulse">🔴 LIVE</span>}
+                </div>
                 <input
                   type="number"
                   step="any"
-                  id="oldPrice"
                   value={oldPrice}
                   onChange={(e) => setOldPrice(e.target.value)}
-                  className={`peer w-full px-4 pt-5 pb-2 rounded-xl border-2 transition-all duration-300 focus:ring-4 focus:ring-blue-500/20
+                  className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-300 focus:ring-4 focus:ring-blue-500/20
                     ${darkMode 
                       ? 'bg-gray-700 border-gray-600 text-white focus:border-blue-500' 
                       : 'bg-white border-gray-300 text-gray-900 focus:border-blue-500'
                     }`}
-                  placeholder=" "
+                  placeholder="0"
                   required
                 />
-                <label
-                  htmlFor="oldPrice"
-                  className={`absolute left-4 top-2 text-xs transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-400 peer-focus:top-2 peer-focus:text-xs
-                    ${darkMode ? 'text-gray-300 peer-placeholder-shown:text-gray-400 peer-focus:text-blue-400' : 'text-gray-700 peer-focus:text-blue-500'}`}
-                >
-                  Initial Price ($) {selectedToken && <span className="text-blue-500">[{selectedToken}]</span>}
-                  {tokenPrice && <span className="text-green-500 ml-2 text-xs animate-pulse">🔴 LIVE</span>}
-                </label>
               </div>
 
               {/* Current Price */}
-              <div className="relative">
+              <div>
+                <div className="h-10 flex items-end gap-2">
+                  <span className={`text-sm font-semibold ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    Current Price ($)
+                  </span>
+                  {selectedToken && <span className="text-purple-500">[{selectedToken}]</span>}
+                  {tokenPrice && <span className="text-green-500 text-xs animate-pulse">🔴 AUTO-FILLED</span>}
+                </div>
                 <input
                   type="number"
                   step="any"
-                  id="newPrice"
                   value={newPrice}
                   onChange={(e) => setNewPrice(e.target.value)}
-                  className={`peer w-full px-4 pt-5 pb-2 rounded-xl border-2 transition-all duration-300 focus:ring-4 focus:ring-purple-500/20
+                  className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-300 focus:ring-4 focus:ring-purple-500/20
                     ${darkMode 
                       ? 'bg-gray-700 border-gray-600 text-white focus:border-purple-500' 
                       : 'bg-white border-gray-300 text-gray-900 focus:border-purple-500'
                     }`}
-                  placeholder=" "
+                  placeholder="0"
                   required
                 />
-                <label
-                  htmlFor="newPrice"
-                  className={`absolute left-4 top-2 text-xs transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-400 peer-focus:top-2 peer-focus:text-xs
-                    ${darkMode ? 'text-gray-300 peer-placeholder-shown:text-gray-400 peer-focus:text-purple-400' : 'text-gray-700 peer-focus:text-purple-500'}`}
-                >
-                  Current Price ($) {selectedToken && <span className="text-purple-500">[{selectedToken}]</span>}
-                  {tokenPrice && <span className="text-green-500 ml-2 text-xs animate-pulse">🔴 AUTO-FILLED</span>}
-                </label>
               </div>
 
               {/* Pool APY */}
-              <div className="relative">
+              <div>
+                <div className="h-10 flex items-end gap-2">
+                  <span className={`text-sm font-semibold ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    Pool APY (%)
+                  </span>
+                  <span className="text-orange-500 text-xs">✨ NEW</span>
+                </div>
                 <input
                   type="number"
                   step="any"
                   min="0"
                   max="1000"
-                  id="poolAPY"
                   value={poolAPY}
                   onChange={(e) => setPoolAPY(e.target.value)}
-                  className={`peer w-full px-4 pt-5 pb-2 rounded-xl border-2 transition-all duration-300 focus:ring-4 focus:ring-orange-500/20
+                  className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-300 focus:ring-4 focus:ring-orange-500/20
                     ${darkMode 
                       ? 'bg-gray-700 border-gray-600 text-white focus:border-orange-500' 
                       : 'bg-white border-gray-300 text-gray-900 focus:border-orange-500'
                     }`}
-                  placeholder=" "
+                  placeholder="25"
                 />
-                <label
-                  htmlFor="poolAPY"
-                  className={`absolute left-4 top-2 text-xs transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-400 peer-focus:top-2 peer-focus:text-xs
-                    ${darkMode ? 'text-gray-300 peer-placeholder-shown:text-gray-400 peer-focus:text-orange-400' : 'text-gray-700 peer-focus:text-orange-500'}`}
-                >
-                  Pool APY (%) <span className="text-orange-500 text-xs">✨ NEW</span>
-                </label>
                 <div className={`text-xs mt-1 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
                   💡 Popular pairs: ETH/USDT ~25-45%, BTC/USDT ~15-30%
                 </div>
               </div>
 
               {/* Investment */}
-              <div className="relative">
+              <div>
+                <div className="h-10 flex items-end gap-2">
+                  <span className={`text-sm font-semibold ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    Investment ($)
+                  </span>
+                </div>
                 <input
                   type="number"
                   step="any"
-                  id="investment"
                   value={initialInvestment}
                   onChange={(e) => setInitialInvestment(e.target.value)}
-                  className={`peer w-full px-4 pt-5 pb-2 rounded-xl border-2 transition-all duration-300 focus:ring-4 focus:ring-green-500/20
+                  className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-300 focus:ring-4 focus:ring-green-500/20
                     ${darkMode 
                       ? 'bg-gray-700 border-gray-600 text-white focus:border-green-500' 
                       : 'bg-white border-gray-300 text-gray-900 focus:border-green-500'
                     }`}
-                  placeholder=" "
+                  placeholder="0"
                 />
-                <label
-                  htmlFor="investment"
-                  className={`absolute left-4 top-2 text-xs transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-400 peer-focus:top-2 peer-focus:text-xs
-                    ${darkMode ? 'text-gray-300 peer-placeholder-shown:text-gray-400 peer-focus:text-green-400' : 'text-gray-700 peer-focus:text-green-500'}`}
-                >
-                  Investment ($)
-                </label>
               </div>
 
             </div>
+            
             {/* Refresh Data Button */}
             {selectedToken && (
               <div className="mb-6 text-center">
