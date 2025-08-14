@@ -15,7 +15,7 @@ function EducationalTabs({ darkMode }) {
     return (
       <div className="p-8">
         
-        <div className="flex gap-1 sm:gap-2 mb-8 overflow-x-auto">
+        <div className="flex gap-1 sm:gap-2 mb-8 overflow-x-auto -mx-2">
           {tabs.map((tab) => (
             <button
               key={tab.id}
