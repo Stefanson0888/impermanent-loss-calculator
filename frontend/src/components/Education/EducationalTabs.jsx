@@ -31,7 +31,8 @@ function EducationalTabs({ darkMode }) {
               }`}
             >
               <span className="text-lg">{tab.icon}</span>
-              <span>{tab.name}</span>
+              <span className="hidden sm:inline">{tab.name}</span>
+              <span className="sm:hidden">{tab.name.slice(0, 4)}</span>
             </button>
           ))}
         </div>
