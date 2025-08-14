@@ -15,12 +15,12 @@ function EducationalTabs({ darkMode }) {
     return (
       <div className="p-8">
         
-        <div className="flex space-x-1 mb-8">
+        <div className="flex flex-wrap gap-2 mb-8">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+              className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-6 py-2 sm:py-3 rounded-xl font-semibold transition-all duration-300 text-sm sm:text-base ${
                 activeTab === tab.id
                   ? darkMode
                     ? 'bg-purple-600 text-white shadow-lg'
