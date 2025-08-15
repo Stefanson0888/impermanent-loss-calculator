@@ -23,16 +23,21 @@ const TOKEN_ID_MAPPING = {
 };
 
 const POPULAR_TOKENS = {
-    'ETH': { name: 'Ethereum' },
-    'BTC': { name: 'Bitcoin' },
-    'BNB': { name: 'BNB' },
-    'SOL': { name: 'Solana' },
-    'ADA': { name: 'Cardano' },
-    'MATIC': { name: 'Polygon' },
-    'DOT': { name: 'Polkadot' },
-    'LINK': { name: 'Chainlink' },
-    'UNI': { name: 'Uniswap' },
-    'AAVE': { name: 'Aave' }
+    'ETH': { name: 'Ethereum', category: 'Layer 1' },
+    'BTC': { name: 'Bitcoin', category: 'Store of Value' },
+    'USDT': { name: 'Tether', category: 'Stablecoin' },
+    'USDC': { name: 'USD Coin', category: 'Stablecoin' },
+    'BNB': { name: 'BNB', category: 'Exchange' },
+    'SOL': { name: 'Solana', category: 'Layer 1' },
+    'MATIC': { name: 'Polygon', category: 'Layer 2' },
+    'UNI': { name: 'Uniswap', category: 'DEX' },
+    'LINK': { name: 'Chainlink', category: 'Oracle' },
+    'AAVE': { name: 'Aave', category: 'Lending' },
+    'DAI': { name: 'MakerDAO', category: 'Stablecoin' },
+    'WBTC': { name: 'Wrapped Bitcoin', category: 'Wrapped' },
+    'AVAX': { name: 'Avalanche', category: 'Layer 1' },
+    'CRV': { name: 'Curve DAO', category: 'DEX' },
+    'COMP': { name: 'Compound', category: 'Lending' }
 };
 
 export { TOKEN_ID_MAPPING, POPULAR_TOKENS };

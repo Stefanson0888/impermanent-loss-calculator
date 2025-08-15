@@ -8,12 +8,13 @@ import { POPULAR_POOLS, POPULAR_POOLS_APY, getRiskColor } from './data/pools';
 import { EXPANDED_PROTOCOLS } from './data/protocols';
 
 import { calculateILAdvanced } from './services/calculations/impermanentLoss';
-import { calculateProtocolEfficiency, getProtocolComplexity } from './services/calculations/protocolEfficiency';
 
 // Компоненти
 import AllPoolsSelector from './components/Pools/AllPoolsSelector';
 import ScenarioTable from './components/Analysis/ScenarioTable';
 import EducationalTabs from './components/Education/EducationalTabs';
+
+import useLocalStorage from './hooks/useLocalStorage';
 
 function App() {
   const {
@@ -24,16 +25,17 @@ function App() {
     trackEvent
   } = useAnalytics();
 
-  const [oldPrice, setOldPrice] = useState('');
-  const [newPrice, setNewPrice] = useState('');
-  const [initialInvestment, setInitialInvestment] = useState('');
-  const [poolAPY, setPoolAPY] = useState('');
   const [selectedPool, setSelectedPool] = useState('');
-  const [selectedProtocol, setSelectedProtocol] = useState('uniswap-v2');
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [selectedToken, setSelectedToken] = useState('');
-  const [darkMode, setDarkMode] = useState(false);
+
+  const [oldPrice, setOldPrice] = useLocalStorage('ilc_oldPrice', '');
+  const [newPrice, setNewPrice] = useLocalStorage('ilc_newPrice', '');
+  const [initialInvestment, setInitialInvestment] = useLocalStorage('ilc_investment', '');
+  const [poolAPY, setPoolAPY] = useLocalStorage('ilc_poolAPY', '');
+  const [selectedProtocol, setSelectedProtocol] = useLocalStorage('ilc_protocol', 'uniswap-v2');
+  const [selectedToken, setSelectedToken] = useLocalStorage('ilc_token', '');
+  const [darkMode, setDarkMode] = useLocalStorage('ilc_darkMode', false);
   
   // Нові стейти для API даних
   const [tokenPrice, setTokenPrice] = useState(null);
