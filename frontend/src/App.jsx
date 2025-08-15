@@ -525,7 +525,7 @@ function App() {
                             ? 'bg-gray-700 border-gray-600 text-white focus:border-orange-500' 
                             : 'bg-white border-gray-300 text-gray-900 focus:border-orange-500'
                         }`}
-                        placeholder="25"
+                        placeholder=""
                       />
                       <div className={`text-xs mt-1 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
                         💡 Popular pairs: ETH/USDT ~25-45%, BTC/USDT ~15-30%
