@@ -44,6 +44,7 @@ function App() {
   const [livePools, setLivePools] = useState([]);
   const [loadingPools, setLoadingPools] = useState(false);
   const [lastUpdated, setLastUpdated] = useState(null);
+  const [showPools, setShowPools] = useState(false);
 
   const [showCustom, setShowCustom] = useState(false);
   const [hasVisited, setHasVisited] = useLocalStorage('ilc_hasVisited', false);
@@ -81,6 +82,10 @@ function App() {
     } else {
       setTokenPrice(null);
       setLivePools([]);
+    }
+
+    if (pools.length > 0) {
+      setShowPools(true);
     }
   };
 
@@ -358,7 +363,7 @@ function App() {
                       </div>
                     )}
                     
-                    {selectedToken && livePools.length > 0 && !loadingPools && (
+                    {selectedToken && livePools.length > 0 && !loadingPools && showPools && (
                       <div className={`mt-3 absolute top-full left-0 right-0 z-10 p-4 rounded-lg border transition-colors duration-300 ${
                         darkMode ? 'bg-purple-900/20 border-purple-500/50' : 'bg-purple-50 border-purple-300'
                       }`}>
@@ -375,6 +380,7 @@ function App() {
                               key={index}
                               onClick={() => {
                                 setPoolAPY(pool.apy.toFixed(1));
+                                setShowPools(false);
                               }}
                               className={`p-3 rounded-lg border cursor-pointer transition-all duration-300 ${
                                 darkMode
