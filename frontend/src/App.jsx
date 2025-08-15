@@ -295,8 +295,8 @@ function App() {
                     )}
                     
                     {tokenPrice && !loadingPrice && (
-                      <div className={`mt-3 absolute top-full left-0 right-0 z-10 p-4 rounded-lg border transition-colors duration-300 ${
-                        darkMode ? 'bg-green-900/20 border-green-500/50' : 'bg-green-50 border-green-300'
+                      <div className={`mt-3 p-4 rounded-lg border transition-colors duration-300 ${
+                        darkMode ? 'bg-purple-900/20 border-purple-500/50' : 'bg-purple-50 border-purple-300'
                       }`}>
                         <div className="flex flex-wrap items-center justify-between gap-4">
                           <div className="flex items-center gap-3">
