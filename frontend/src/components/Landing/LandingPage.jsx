@@ -140,7 +140,7 @@ function LandingPage({ darkMode, onGetStarted }) {
             </p>
             </div>
         </div>
-        </div>
+    </div>
         
         {/* CTA Section */}
         <div className={`text-center py-16 px-8 rounded-2xl ${
