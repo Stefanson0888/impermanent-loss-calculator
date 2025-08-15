@@ -367,11 +367,23 @@ function App() {
                       <div className={`mt-3 absolute top-full left-0 right-0 z-10 p-4 rounded-lg border transition-colors duration-300 ${
                         darkMode ? 'bg-purple-900/20 border-purple-500/50' : 'bg-purple-50 border-purple-300'
                       }`}>
-                        <div className="flex items-center gap-2 mb-3">
-                          <div className="text-lg">🏊‍♂️</div>
-                          <div className={`font-semibold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
-                            Top {selectedToken} Pools ({livePools.length} found)
+                        <div className="flex items-center justify-between mb-3">
+                          <div className="flex items-center gap-2">
+                            <div className="text-lg">🏊‍♂️</div>
+                            <div className={`font-semibold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
+                              Top {selectedToken} Pools ({livePools.length} found)
+                            </div>
                           </div>
+                          <button
+                            onClick={() => setShowPools(false)}
+                            className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${
+                              darkMode 
+                                ? 'bg-gray-600 hover:bg-gray-500 text-gray-300' 
+                                : 'bg-gray-200 hover:bg-gray-300 text-gray-600'
+                            }`}
+                          >
+                            ×
+                          </button>
                         </div>
                         
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
