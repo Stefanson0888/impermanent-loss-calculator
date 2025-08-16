@@ -168,7 +168,7 @@ function App() {
               : 'bg-white/90 backdrop-blur-md border-gray-200'
           }`}>
             <div className="max-w-6xl mx-auto px-6 py-6">
-              <div className="flex justify-between items-center">
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-0 sm:justify-between sm:items-center">
                 <div>
                   <h1 className={`text-3xl font-bold transition-colors duration-300 ${
                     darkMode ? 'text-white' : 'text-gray-900'
@@ -182,7 +182,7 @@ function App() {
                   </p>
                 </div>
                 
-                <div className="flex items-center gap-3">
+                <div className="flex items-center justify-center sm:justify-end gap-3">
                 <button
                   onClick={handleClearAll}
                   className={`px-2 sm:px-3 py-2 rounded-lg text-sm font-semibold transition-all duration-300 ${
