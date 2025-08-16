@@ -17,6 +17,12 @@ import EducationalTabs from './components/Education/EducationalTabs';
 import useLocalStorage from './hooks/useLocalStorage';
 import LandingPage from './components/Landing/LandingPage';
 
+// Імпорт Google Fonts
+const googleFontsLink = document.createElement('link');
+googleFontsLink.href = 'https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap';
+googleFontsLink.rel = 'stylesheet';
+document.head.appendChild(googleFontsLink);
+
 function App() {
   const {
     trackCalculation,
@@ -170,9 +176,9 @@ function App() {
             <div className="max-w-6xl mx-auto px-6 py-6">
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-0 sm:justify-between sm:items-center">
                 <div>
-                  <h1 className={`text-3xl font-bold transition-colors duration-300 ${
+                  <h1 className={`text-2xl sm:text-3xl font-bold transition-colors duration-300 ${
                     darkMode ? 'text-white' : 'text-gray-900'
-                  }`}>
+                  }`} style={{ fontFamily: 'Orbitron, monospace' }}>
                     Impermanent Loss Calculator
                   </h1>
                   <p className={`text-sm mt-1 transition-colors duration-300 ${
@@ -185,15 +191,14 @@ function App() {
                 <div className="flex items-center justify-center sm:justify-end gap-3">
                 <button
                   onClick={handleClearAll}
-                  className={`px-2 sm:px-3 py-2 rounded-lg text-sm font-semibold transition-all duration-300 ${
+                  className={`px-3 py-2 rounded-lg text-sm font-semibold transition-all duration-300 ${
                     darkMode
                       ? 'bg-red-600 hover:bg-red-700 text-white'
                       : 'bg-red-500 hover:bg-red-600 text-white'
                   }`}
                   title="Clear all saved data"
                 >
-                  <span className="sm:hidden">🧹</span>
-                  <span className="hidden sm:inline">🧹 Clear All</span>
+                  🧹 Clear All
                 </button>
                   
                   <button
