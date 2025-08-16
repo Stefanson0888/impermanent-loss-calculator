@@ -176,7 +176,7 @@ function App() {
             <div className="max-w-6xl mx-auto px-6 py-6">
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-0 sm:justify-between sm:items-center">
                 <div>
-                  <h1 className={`text-2xl sm:text-3xl font-bold transition-colors duration-300 ${
+                  <h1 className={`text-lg sm:text-2xl lg:text-3xl font-bold transition-colors duration-300 ${
                     darkMode ? 'text-white' : 'text-gray-900'
                   }`} style={{ fontFamily: 'Orbitron, monospace' }}>
                     Impermanent Loss Calculator
@@ -572,7 +572,7 @@ function App() {
                             ? 'bg-gray-700 border-gray-600 text-white focus:border-orange-500' 
                             : 'bg-white border-gray-300 text-gray-900 focus:border-orange-500'
                         }`}
-                        placeholder=""
+                        placeholder="0"
                       />
                       <div className={`text-xs mt-1 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
                         💡 Popular pairs: ETH/USDT ~25-45%, BTC/USDT ~15-30%
