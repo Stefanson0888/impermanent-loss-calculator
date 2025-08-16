@@ -284,7 +284,7 @@ function App() {
                   <div>
                     <h2 className={`text-xl font-bold transition-colors duration-300 ${
                       darkMode ? 'text-white' : 'text-gray-800'
-                    }`}>
+                    }`} style={{ fontFamily: 'Orbitron, monospace' }}>
                       Parameters
                       <span className="text-green-500 ml-2 text-sm">🌐 LIVE DATA</span>
                     </h2>
@@ -642,6 +642,7 @@ function App() {
                             ? 'bg-gray-700 hover:bg-gray-600 disabled:bg-gray-800 text-gray-300'
                             : 'bg-gray-200 hover:bg-gray-300 disabled:bg-gray-100 text-gray-700'
                         }`}
+                        style={{ fontFamily: 'Orbitron, monospace' }}
                       >
                         {loadingPrice ? (
                           <div className="flex items-center gap-2">
@@ -672,6 +673,10 @@ function App() {
                         ? 'bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 text-white'
                         : 'bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white'
                     } shadow-lg hover:shadow-xl disabled:shadow-md`}
+                    style={{ 
+                      fontFamily: 'Orbitron, monospace',
+                      textShadow: '0 0 10px rgba(59, 130, 246, 0.5)'
+                    }}
                   >
                     {loading ? (
                       <div className="flex items-center justify-center gap-2">
@@ -701,7 +706,7 @@ function App() {
                       </svg>
                     </div>
                     <div>
-                      <h2 className={`text-xl font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
+                      <h2 className={`text-xl font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`} style={{ fontFamily: 'Orbitron, monospace' }}>
                         Analysis Results
                       </h2>
                       <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
@@ -868,8 +873,8 @@ function App() {
                           </svg>
                         </div>
                         <div>
-                          <h3 className={`text-lg font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
-                            Scenario Analysis
+                          <h3 className={`text-lg font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`} style={{ fontFamily: 'Orbitron, monospace' }}>
+                              Scenario Analysis
                           </h3>
                           <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                             "What if" price changes - plan your LP strategy
@@ -892,7 +897,7 @@ function App() {
                           </svg>
                         </div>
                         <div>
-                          <h3 className={`text-lg font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
+                          <h3 className={`text-lg font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`} style={{ fontFamily: 'Orbitron, monospace' }}>
                             Fees Analysis ({result.poolAPY}% APY)
                           </h3>
                           <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
@@ -1014,7 +1019,7 @@ function App() {
                     <div>
                       <h2 className={`text-2xl font-bold transition-colors duration-300 ${
                         darkMode ? 'text-white' : 'text-gray-800'
-                      }`}>
+                      }`} style={{ fontFamily: 'Orbitron, monospace' }}>
                         Learn DeFi & Impermanent Loss
                       </h2>
                       <p className={`text-sm transition-colors duration-300 ${
