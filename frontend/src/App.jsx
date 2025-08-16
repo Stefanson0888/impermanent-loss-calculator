@@ -183,17 +183,18 @@ function App() {
                 </div>
                 
                 <div className="flex items-center gap-3">
-                  <button
-                    onClick={handleClearAll}
-                    className={`px-3 py-2 rounded-lg text-sm font-semibold transition-all duration-300 ${
-                      darkMode
-                        ? 'bg-red-600 hover:bg-red-700 text-white'
-                        : 'bg-red-500 hover:bg-red-600 text-white'
-                    }`}
-                    title="Clear all saved data"
-                  >
-                    🧹 Clear All
-                  </button>
+                <button
+                  onClick={handleClearAll}
+                  className={`px-2 sm:px-3 py-2 rounded-lg text-sm font-semibold transition-all duration-300 ${
+                    darkMode
+                      ? 'bg-red-600 hover:bg-red-700 text-white'
+                      : 'bg-red-500 hover:bg-red-600 text-white'
+                  }`}
+                  title="Clear all saved data"
+                >
+                  <span className="sm:hidden">🧹</span>
+                  <span className="hidden sm:inline">🧹 Clear All</span>
+                </button>
                   
                   <button
                     onClick={() => {
