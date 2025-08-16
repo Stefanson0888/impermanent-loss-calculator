@@ -197,10 +197,10 @@ function App() {
                       ? 'bg-gray-700 hover:bg-gray-600 text-red-400'
                       : 'bg-gray-100 hover:bg-gray-200 text-red-500'
                   }`}
-                  title="Clear all saved data - Reset the Force"
+                  title="Clear all saved data"
                 >
-                  <div className="w-5 h-5 flex items-center justify-center text-lg">
-                    🗲
+                  <div className="w-5 h-5 flex items-center justify-center">
+                    🧹
                   </div>
                   <span className={`text-xs font-bold tracking-wider ${
                     darkMode ? 'text-red-400' : 'text-red-500'
@@ -208,7 +208,7 @@ function App() {
                     fontFamily: 'Orbitron, monospace',
                     textShadow: '0 0 8px #ef4444'
                   }}>
-                    RESET
+                    CLEAR
                   </span>
                 </button>
                   
