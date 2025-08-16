@@ -56,6 +56,7 @@ function App() {
   const [hasVisited, setHasVisited] = useLocalStorage('ilc_hasVisited', false);
   const showLanding = !hasVisited;
   const [showToast, setShowToast] = useState(false);
+  const [showThemeToast, setShowThemeToast] = useState(false);
   
   // Автозаповнення ціни при виборі токена
   const handleTokenSelect = async (token) => {
@@ -203,19 +204,29 @@ function App() {
                   
                   <button
                     onClick={() => {
-                      setDarkMode(!darkMode);
+                      const newDarkMode = !darkMode;
+                      setDarkMode(newDarkMode);
+                      
+                      // Star Wars тост при перемиканні на темну тему
+                      if (newDarkMode) {
+                        setShowThemeToast(true);
+                        setTimeout(() => {
+                          setShowThemeToast(false);
+                        }, 3000);
+                      }
+                      
                       trackEvent({
                         action: 'toggle_theme',
                         category: 'ui',
-                        label: !darkMode ? 'dark' : 'light'
+                        label: newDarkMode ? 'dark' : 'light'
                       });
                     }}
-                    className={`p-3 rounded-xl transition-all duration-300 ${
+                    className={`p-3 rounded-xl transition-all duration-300 flex flex-col items-center gap-1 ${
                       darkMode 
                         ? 'bg-gray-700 hover:bg-gray-600 text-yellow-400' 
                         : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
                     }`}
-                    title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+                    title={darkMode ? 'Switch to Light Side' : 'Join the Dark Side'}
                   >
                     {darkMode ? (
                       <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -226,6 +237,14 @@ function App() {
                         <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
                       </svg>
                     )}
+                    <span className={`text-xs font-bold tracking-wider ${
+                      darkMode ? 'text-red-400' : 'text-blue-600'
+                    }`} style={{ 
+                      fontFamily: 'Orbitron, monospace',
+                      textShadow: darkMode ? '0 0 10px #ef4444' : '0 0 10px #2563eb'
+                    }}>
+                      {darkMode ? 'LIGHT' : 'DARK'}
+                    </span>
                   </button>
                 </div>
               </div>
@@ -1015,7 +1034,36 @@ function App() {
                 </div>
               </div>
             </div>
-          )}          
+          )}
+
+          {/* Star Wars Theme Toast */}
+          {showThemeToast && (
+            <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
+              <div className="bg-black border-2 border-red-500 rounded-lg px-8 py-6 shadow-2xl">
+                <div className="text-center">
+                  <div className="text-2xl mb-2">⚔️</div>
+                  <div 
+                    className="text-red-500 text-xl font-bold tracking-widest animate-pulse"
+                    style={{ 
+                      fontFamily: 'Orbitron, monospace',
+                      textShadow: '0 0 20px #ef4444, 0 0 40px #ef4444'
+                    }}
+                  >
+                    WELCOME TO THE
+                  </div>
+                  <div 
+                    className="text-red-600 text-2xl font-black tracking-widest mt-2"
+                    style={{ 
+                      fontFamily: 'Orbitron, monospace',
+                      textShadow: '0 0 30px #dc2626, 0 0 60px #dc2626'
+                    }}
+                  >
+                    DARK SIDE
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}         
         </div>
       )}
     </>
