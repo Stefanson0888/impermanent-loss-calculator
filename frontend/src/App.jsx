@@ -49,6 +49,7 @@ function App() {
   const [showCustom, setShowCustom] = useState(false);
   const [hasVisited, setHasVisited] = useLocalStorage('ilc_hasVisited', false);
   const showLanding = !hasVisited;
+  const [showToast, setShowToast] = useState(false);
   
   // Автозаповнення ціни при виборі токена
   const handleTokenSelect = async (token) => {
@@ -111,8 +112,11 @@ function App() {
       setResult(null);
       setLastUpdated(null);
       
-      // Можна додати повідомлення
-      alert('All data cleared! 🧹');
+      // Показуємо тост
+      setShowToast(true);
+      setTimeout(() => {
+        setShowToast(false);
+      }, 2000); // Зникне через 2 секунди
     }
   };
   
@@ -991,6 +995,21 @@ function App() {
               </div>
             </div>
           </div>
+          {/* Toast повідомлення */}
+          {showToast && (
+            <div className="fixed top-4 right-4 z-50 animate-pulse">
+              <div className={`px-6 py-4 rounded-lg shadow-lg border-2 ${
+                darkMode 
+                  ? 'bg-green-800 border-green-600 text-green-100' 
+                  : 'bg-green-100 border-green-400 text-green-800'
+              }`}>
+                <div className="flex items-center gap-2">
+                  <span className="text-lg">✅</span>
+                  <span className="font-semibold">All data cleared! 🧹</span>
+                </div>
+              </div>
+            </div>
+          )}          
         </div>
       )}
     </>
