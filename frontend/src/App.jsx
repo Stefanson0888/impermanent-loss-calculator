@@ -1051,9 +1051,7 @@ function App() {
             <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
               <div className="bg-black border-2 border-red-500 rounded-lg px-8 py-6 shadow-2xl">
                 <div className="text-center">
-                  <div className="text-red-600 text-3xl mb-2 animate-pulse">
-                    ⚡ 🔴▬▬ι═══════ﺤ 🔴 ﺤ═══════ι▬▬ 🔴 ⚡
-                  </div>
+                  <div className="text-2xl mb-2">⚔️</div>
                   <div 
                     className="text-red-500 text-xl font-bold tracking-widest animate-pulse"
                     style={{ 
