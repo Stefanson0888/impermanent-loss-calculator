@@ -192,14 +192,24 @@ function App() {
                 <div className="flex items-center justify-center sm:justify-end gap-3">
                 <button
                   onClick={handleClearAll}
-                  className={`px-3 py-2 rounded-lg text-sm font-semibold transition-all duration-300 ${
+                  className={`p-3 rounded-xl transition-all duration-300 flex flex-col items-center gap-1 ${
                     darkMode
-                      ? 'bg-red-600 hover:bg-red-700 text-white'
-                      : 'bg-red-500 hover:bg-red-600 text-white'
+                      ? 'bg-gray-700 hover:bg-gray-600 text-red-400'
+                      : 'bg-gray-100 hover:bg-gray-200 text-red-500'
                   }`}
-                  title="Clear all saved data"
+                  title="Clear all saved data - Reset the Force"
                 >
-                  🧹 Clear All
+                  <div className="w-5 h-5 flex items-center justify-center text-lg">
+                    🗲
+                  </div>
+                  <span className={`text-xs font-bold tracking-wider ${
+                    darkMode ? 'text-red-400' : 'text-red-500'
+                  }`} style={{ 
+                    fontFamily: 'Orbitron, monospace',
+                    textShadow: '0 0 8px #ef4444'
+                  }}>
+                    RESET
+                  </span>
                 </button>
                   
                   <button
