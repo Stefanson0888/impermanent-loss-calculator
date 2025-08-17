@@ -732,7 +732,7 @@ function App() {
                           <div className="flex items-center gap-3">
                             <div className="text-2xl">🏊‍♂️</div>
                             <div>
-                              <div className={`font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
+                              <div className={`font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`} style={{ fontFamily: 'Orbitron, monospace' }}>
                                 {pool.name} Pool Analysis
                               </div>
                               <div className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
@@ -772,7 +772,7 @@ function App() {
                           <div className="flex items-center gap-3">
                             <div className="text-2xl">{protocol.icon}</div>
                             <div>
-                              <div className={`font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
+                              <div className={`font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`} style={{ fontFamily: 'Orbitron, monospace' }}>
                                 {protocol.name} Analysis
                               </div>
                               <div className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
@@ -946,7 +946,7 @@ function App() {
                       }`}>
                         <div className="flex items-center justify-between">
                           <div>
-                            <div className={`font-semibold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
+                            <div className={`font-semibold ${darkMode ? 'text-white' : 'text-gray-800'}`} style={{ fontFamily: 'Orbitron, monospace' }}>
                               💰 Break-even Analysis
                             </div>
                             <div className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
