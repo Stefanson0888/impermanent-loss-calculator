@@ -986,7 +986,7 @@ function App() {
                 <div className="flex items-center gap-3">
                   <div className="text-2xl">📡</div>
                   <div>
-                    <div className={`font-semibold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
+                    <div className={`font-semibold ${darkMode ? 'text-white' : 'text-gray-800'}`} style={{ fontFamily: 'Orbitron, monospace' }}>
                       Real-Time Pool Data
                     </div>
                     <div className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
