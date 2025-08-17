@@ -389,7 +389,7 @@ function App() {
                           
                           <div className="flex gap-6 text-sm">
                             <div className="text-center">
-                              <div className={`font-semibold ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                              <div className={`font-semibold ${darkMode ? 'text-gray-300' : 'text-gray-700'}`} style={{ fontFamily: 'Orbitron, monospace' }}>
                                 24h Change
                               </div>
                               <div className={`font-bold ${
@@ -446,7 +446,7 @@ function App() {
                         <div className="flex items-center justify-between mb-3">
                           <div className="flex items-center gap-2">
                             <div className="text-lg">🏊‍♂️</div>
-                            <div className={`font-semibold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
+                            <div className={`font-semibold ${darkMode ? 'text-white' : 'text-gray-800'}`} style={{ fontFamily: 'Orbitron, monospace' }}>
                               Top {selectedToken} Pools ({livePools.length} found)
                             </div>
                           </div>
@@ -801,7 +801,7 @@ function App() {
                   <div className={`rounded-xl p-6 mb-6 ${darkMode ? 'bg-gray-700/50' : 'bg-gray-50'}`}>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
                       <div>
-                        <div className={`text-sm font-semibold mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                        <div className={`text-sm font-semibold mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`} style={{ fontFamily: 'Orbitron, monospace' }}>
                           HODL Strategy
                         </div>
                         <div className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
@@ -813,7 +813,7 @@ function App() {
                       </div>
 
                       <div>
-                        <div className={`text-sm font-semibold mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                        <div className={`text-sm font-semibold mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`} style={{ fontFamily: 'Orbitron, monospace' }}>
                           LP Strategy {result.poolAPY > 0 && <span className="text-orange-500">+Fees</span>}
                         </div>
                         <div className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
@@ -830,7 +830,7 @@ function App() {
                       </div>
 
                       <div>
-                        <div className={`text-sm font-semibold mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                        <div className={`text-sm font-semibold mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`} style={{ fontFamily: 'Orbitron, monospace' }}>
                           Impermanent Loss
                         </div>
                         <div className={`text-2xl font-bold ${result.impermanentLossUSD < 0 ? 'text-red-600' : 'text-green-600'}`}>
@@ -854,7 +854,7 @@ function App() {
                     </div>
 
                     <div className={`mt-6 pt-6 border-t text-center ${darkMode ? 'border-gray-600' : 'border-gray-200'}`}>
-                      <div className={`text-lg font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
+                      <div className={`text-lg font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`} style={{ fontFamily: 'Orbitron, monospace' }}>
                         🏆 Better Strategy: {result.betterStrategy}
                       </div>
                     </div>
@@ -911,7 +911,7 @@ function App() {
                           <div className={`text-lg font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
                             ${result.feesPerDay}
                           </div>
-                          <div className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                          <div className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`} style={{ fontFamily: 'Orbitron, monospace' }}>
                             Per Day
                           </div>
                         </div>
@@ -919,7 +919,7 @@ function App() {
                           <div className={`text-lg font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
                             ${result.feesPerWeek}
                           </div>
-                          <div className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                          <div className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`} style={{ fontFamily: 'Orbitron, monospace' }}>
                             Per Week
                           </div>
                         </div>
@@ -927,7 +927,7 @@ function App() {
                           <div className={`text-lg font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
                             ${result.feesPerMonth}
                           </div>
-                          <div className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                          <div className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`} style={{ fontFamily: 'Orbitron, monospace' }}>
                             Per Month
                           </div>
                         </div>
@@ -935,7 +935,7 @@ function App() {
                           <div className={`text-lg font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
                             ${result.totalFeesEarned}
                           </div>
-                          <div className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                          <div className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`} style={{ fontFamily: 'Orbitron, monospace' }}>
                             {result.assumedDays} Days Total
                           </div>
                         </div>
