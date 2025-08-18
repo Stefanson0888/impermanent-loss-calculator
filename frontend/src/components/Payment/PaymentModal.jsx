@@ -7,11 +7,11 @@ const PaymentModal = ({ isOpen, onClose, darkMode, selectedPlan }) => {
   const plans = {
     pro: {
       name: 'Pro',
-      price: 12,
+      price: 9.99,
       currency: 'USD',
       features: [
         '✅ All 15+ popular tokens',
-        '✅ Live price data',
+        '✅ Live price data', 
         '✅ Advanced protocols (V3, Curve)',
         '✅ Historical IL data',
         '✅ Scenario analysis',
@@ -20,15 +20,28 @@ const PaymentModal = ({ isOpen, onClose, darkMode, selectedPlan }) => {
     },
     pro_plus: {
       name: 'Pro+',
-      price: 25,
-      currency: 'USD', 
+      price: 39.99,
+      currency: 'USD',
       features: [
         '✅ Everything in Pro',
         '✅ Portfolio dashboard',
-        '✅ Smart alerts',
+        '✅ Smart alerts', 
         '✅ Wallet integration',
         '✅ API access',
         '✅ Priority support'
+      ]
+    },
+    enterprise: {
+      name: 'Enterprise',
+      price: 'Custom',
+      currency: '',
+      features: [
+        '✅ Everything in Pro+',
+        '✅ White-label solution',
+        '✅ Custom integrations',
+        '✅ Dedicated support',
+        '✅ SLA guarantee',
+        '✅ On-premise deployment'
       ]
     }
   };
