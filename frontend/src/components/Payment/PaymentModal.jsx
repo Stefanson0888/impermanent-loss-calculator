@@ -4,6 +4,41 @@ const PaymentModal = ({ isOpen, onClose, darkMode, selectedPlan }) => {
   const [loading, setLoading] = useState(false);
   const [currentPlan, setCurrentPlan] = useState(selectedPlan || 'pro');
 
+  const handleWayForPayment = () => {
+    setLoading(true);
+    
+    const plan = plans[currentPlan];
+    const orderReference = `ILC_${Date.now()}_${currentPlan}`;
+    
+    const wayforpay = new Wayforpay();
+    wayforpay.run({
+      merchantAccount: "test_merch_n1", // Замініть на ваш merchant account
+      merchantDomainName: "ilcalculator.pro",
+      orderReference: orderReference,
+      orderDate: Math.floor(Date.now() / 1000),
+      amount: plan.price,
+      currency: "USD",
+      productName: [`ILCalculator.pro ${plan.name} Plan`],
+      productCount: [1],
+      productPrice: [plan.price],
+      language: "EN",
+      returnUrl: "https://ilcalculator.pro/success",
+      serviceUrl: "https://ilcalculator.pro/webhook"
+    }, 
+    function (response) {
+      // Success
+      setLoading(false);
+      alert("Payment successful! Welcome to Pro!");
+      onClose();
+    },
+    function (response) {
+      // Error
+      setLoading(false);
+      alert("Payment failed. Please try again.");
+    });
+  };
+
+
   const plans = {
     pro: {
       name: 'Pro',
