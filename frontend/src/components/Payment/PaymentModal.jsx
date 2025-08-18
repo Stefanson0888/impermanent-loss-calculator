@@ -12,7 +12,7 @@ const PaymentModal = ({ isOpen, onClose, darkMode, selectedPlan }) => {
     
     const wayforpay = new Wayforpay();
     wayforpay.run({
-      merchantAccount: "test_merch_n1", // Замініть на ваш merchant account
+      merchantAccount: "test_merch_n1", // Тестовий merchant
       merchantDomainName: "ilcalculator.pro",
       orderReference: orderReference,
       orderDate: Math.floor(Date.now() / 1000),
@@ -26,15 +26,15 @@ const PaymentModal = ({ isOpen, onClose, darkMode, selectedPlan }) => {
       serviceUrl: "https://ilcalculator.pro/webhook"
     }, 
     function (response) {
-      // Success
+      // Success callback
       setLoading(false);
-      alert("Payment successful! Welcome to Pro!");
+      alert("🎉 Payment successful! Welcome to Pro!");
       onClose();
     },
     function (response) {
-      // Error
+      // Error callback  
       setLoading(false);
-      alert("Payment failed. Please try again.");
+      alert("❌ Payment failed. Please try again.");
     });
   };
 
@@ -161,9 +161,9 @@ const PaymentModal = ({ isOpen, onClose, darkMode, selectedPlan }) => {
                     if (currentPlan === 'enterprise') {
                     // Відкриваємо email для запиту рахунку
                     window.open('mailto:billing@ilcalculator.pro?subject=Enterprise Plan - Request Invoice&body=Hello,%0D%0A%0D%0AI am interested in the Enterprise plan for ILCalculator.pro.%0D%0A%0D%0ACompany: %0D%0AContact person: %0D%0AEmail: %0D%0AExpected users: %0D%0ASpecial requirements: %0D%0A%0D%0APlease send me a custom quote.%0D%0A%0D%0AThank you!');
-                    } else {
-                    // WayForPay для інших планів
-                    console.log('WayForPay payment for', currentPlan);
+                     } else {
+                        // WayForPay для інших планів
+                        handleWayForPayment();
                     }
                 }}
                 disabled={loading}
