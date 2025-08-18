@@ -50,9 +50,9 @@ const PaymentModal = ({ isOpen, onClose, darkMode, selectedPlan }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
-      <div className={`max-w-2xl w-full rounded-2xl shadow-xl border transition-colors duration-300 ${
+      <div className={`max-w-2xl w-full max-h-[90vh] overflow-y-auto rounded-2xl shadow-xl border transition-colors duration-300 ${
         darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
-      }`}>
+    }`}>
         
         {/* Header */}
         <div className={`p-6 border-b ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}>
@@ -79,7 +79,7 @@ const PaymentModal = ({ isOpen, onClose, darkMode, selectedPlan }) => {
 
         {/* Plans */}
         <div className="p-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <div className="grid grid-cols-1 gap-4 mb-6">
             {Object.entries(plans).map(([key, plan]) => (
               <div
                 key={key}
