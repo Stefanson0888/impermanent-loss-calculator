@@ -18,6 +18,7 @@ import useLocalStorage from './hooks/useLocalStorage';
 import LandingPage from './components/Landing/LandingPage';
 
 import PaymentModal from './components/Payment/PaymentModal';
+import LegalRouter from './components/Legal/LegalRouter';
 
 // Імпорт Google Fonts
 const googleFontsLink = document.createElement('link');
@@ -62,7 +63,8 @@ function App() {
 
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState('pro'); // 'pro' або 'pro_plus'
-  
+  const [showLegalPages, setShowLegalPages] = useState(false);
+
   // Автозаповнення ціни при виборі токена
   const handleTokenSelect = async (token) => {
     setSelectedToken(token);
@@ -166,6 +168,11 @@ function App() {
         <LandingPage 
           darkMode={darkMode}
           onGetStarted={handleGetStarted}
+        />
+      ) : showLegalPages ? (
+        <LegalRouter 
+          darkMode={darkMode}
+          onBack={() => setShowLegalPages(false)}
         />
       ) : (
         <div className={`min-h-screen transition-colors duration-300 ${
