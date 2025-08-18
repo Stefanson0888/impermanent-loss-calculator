@@ -1107,6 +1107,15 @@ function App() {
           )}         
         </div>
       )}
+
+      {/* Payment Modal */}
+      <PaymentModal 
+        isOpen={showPaymentModal}
+        onClose={() => setShowPaymentModal(false)}
+        darkMode={darkMode}
+        selectedPlan={selectedPlan}
+      />
+
     </>
   );
 }
