@@ -120,19 +120,35 @@ const PaymentModal = ({ isOpen, onClose, darkMode, selectedPlan }) => {
             ))}
           </div>
 
-          {/* Payment Button */}
-          <button
-            onClick={() => {/* WayForPay буде тут */}}
-            disabled={loading}
-            className={`w-full py-4 px-6 rounded-xl font-bold transition-all duration-300 ${
-              darkMode
-                ? 'bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white'
-                : 'bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white'
-            } shadow-lg hover:shadow-xl`}
-            style={{ fontFamily: 'Orbitron, monospace' }}
-          >
-            {loading ? 'Processing...' : `Pay ${plans[currentPlan].price} USD - Start ${plans[currentPlan].name}`}
-          </button>
+            {/* Payment Button */}
+            <button
+                onClick={() => {
+                    if (currentPlan === 'enterprise') {
+                    // Відкриваємо email для запиту рахунку
+                    window.open('mailto:billing@ilcalculator.pro?subject=Enterprise Plan - Request Invoice&body=Hello,%0D%0A%0D%0AI am interested in the Enterprise plan for ILCalculator.pro.%0D%0A%0D%0ACompany: %0D%0AContact person: %0D%0AEmail: %0D%0AExpected users: %0D%0ASpecial requirements: %0D%0A%0D%0APlease send me a custom quote.%0D%0A%0D%0AThank you!');
+                    } else {
+                    // WayForPay для інших планів
+                    console.log('WayForPay payment for', currentPlan);
+                    }
+                }}
+                disabled={loading}
+                className={`w-full py-4 px-6 rounded-xl font-bold transition-all duration-300 ${
+                    currentPlan === 'enterprise'
+                    ? darkMode
+                        ? 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white'
+                        : 'bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white'
+                    : darkMode
+                        ? 'bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white'
+                        : 'bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white'
+                } shadow-lg hover:shadow-xl`}
+                style={{ fontFamily: 'Orbitron, monospace' }}
+                >
+                {loading ? 'Processing...' : 
+                currentPlan === 'enterprise' 
+                    ? '📧 Request Invoice & Custom Quote'
+                    : `💳 Pay $${plans[currentPlan].price} - Start ${plans[currentPlan].name}`
+                }
+            </button>
         </div>
       </div>
     </div>
