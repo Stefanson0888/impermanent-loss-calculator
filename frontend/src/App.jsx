@@ -17,6 +17,8 @@ import EducationalTabs from './components/Education/EducationalTabs';
 import useLocalStorage from './hooks/useLocalStorage';
 import LandingPage from './components/Landing/LandingPage';
 
+import PaymentModal from './components/Payment/PaymentModal';
+
 // Імпорт Google Fonts
 const googleFontsLink = document.createElement('link');
 googleFontsLink.href = 'https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap';
@@ -57,6 +59,9 @@ function App() {
   const showLanding = !hasVisited;
   const [showToast, setShowToast] = useState(false);
   const [showThemeToast, setShowThemeToast] = useState(false);
+
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState('pro'); // 'pro' або 'pro_plus'
   
   // Автозаповнення ціни при виборі токена
   const handleTokenSelect = async (token) => {
@@ -190,6 +195,27 @@ function App() {
                 </div>
                 
                 <div className="flex items-center justify-center sm:justify-end gap-3">
+
+                <button
+                  onClick={() => setShowPaymentModal(true)}
+                  className={`p-3 rounded-xl transition-all duration-300 flex flex-col items-center gap-1 ${
+                    darkMode
+                      ? 'bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white'
+                      : 'bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white'
+                  }`}
+                  title="Upgrade to Pro - Unlock all features"
+                >
+                  <div className="w-5 h-5 flex items-center justify-center text-lg">
+                    ⭐
+                  </div>
+                  <span className={`text-xs font-bold tracking-wider text-white`} style={{ 
+                    fontFamily: 'Orbitron, monospace',
+                    textShadow: '0 0 8px rgba(147, 51, 234, 0.8)'
+                  }}>
+                    PRO
+                  </span>
+                </button>
+
                 <button
                   onClick={handleClearAll}
                   className={`p-3 rounded-xl transition-all duration-300 flex flex-col items-center gap-1 ${
