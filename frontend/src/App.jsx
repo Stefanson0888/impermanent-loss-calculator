@@ -170,10 +170,10 @@ function App() {
           onGetStarted={handleGetStarted}
         />
       ) : showLegalPages ? (
-        <LegalRouter 
-          darkMode={darkMode}
-          onBack={() => setShowLegalPages(false)}
-        />
+      <LegalRouter 
+        darkMode={darkMode}
+        onBack={() => setShowLegalPages(false)}
+      />
       ) : (
         <div className={`min-h-screen transition-colors duration-300 ${
           darkMode 
@@ -1068,6 +1068,67 @@ function App() {
               </div>
             </div>
           </div>
+          
+          {/* Footer */}
+          <footer className={`mt-16 border-t transition-colors duration-300 ${
+            darkMode ? 'border-gray-700 bg-gray-800/50' : 'border-gray-200 bg-gray-50'
+          }`}>
+            <div className="max-w-6xl mx-auto px-6 py-8">
+              <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+                
+                <div className={`text-center md:text-left ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                  <div className={`font-bold text-lg ${darkMode ? 'text-white' : 'text-gray-800'}`} 
+                       style={{ fontFamily: 'Orbitron, monospace' }}>
+                    ILCalculator.pro
+                  </div>
+                  <div className="text-sm">
+                    Professional DeFi analytics for liquidity providers
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap justify-center gap-4 text-sm">
+                  <button
+                    onClick={() => setShowLegalPages(true)}
+                    className={`hover:underline transition-colors ${
+                      darkMode ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'
+                    }`}
+                  >
+                    Terms of Service
+                  </button>
+                  <button
+                    onClick={() => setShowLegalPages(true)}
+                    className={`hover:underline transition-colors ${
+                      darkMode ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'
+                    }`}
+                  >
+                    Privacy Policy
+                  </button>
+                  <button
+                    onClick={() => setShowLegalPages(true)}
+                    className={`hover:underline transition-colors ${
+                      darkMode ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'
+                    }`}
+                  >
+                    Refund Policy
+                  </button>
+                  <button
+                    onClick={() => setShowLegalPages(true)}
+                    className={`hover:underline transition-colors ${
+                      darkMode ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'
+                    }`}
+                  >
+                    Contact Us
+                  </button>
+                </div>
+
+                <div className={`text-sm text-center md:text-right ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                  <div>© 2025 ILCalculator.pro</div>
+                  <div>Made with ❤️ for DeFi community</div>
+                </div>
+              </div>
+            </div>
+          </footer>
+
           {/* Toast повідомлення */}
           {showToast && (
             <div className="fixed top-4 right-4 z-50 animate-pulse">
