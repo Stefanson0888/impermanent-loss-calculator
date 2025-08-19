@@ -94,7 +94,7 @@ const PrivacyPolicy = ({ darkMode }) => {
           </h2>
           <p>
             For privacy-related questions or requests, contact us at: 
-            <a href="mailto:privacy@ilcalculator.pro" className="text-blue-500 hover:text-blue-600 ml-1">
+            <a href="mailto:ilcalculator.pro@gmail.com" className="text-blue-500 hover:text-blue-600 ml-1">
               privacy@ilcalculator.pro
             </a>
           </p>

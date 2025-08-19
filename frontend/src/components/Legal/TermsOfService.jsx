@@ -77,7 +77,7 @@ const TermsOfService = ({ darkMode }) => {
           </h2>
           <p>
             For questions about these Terms of Service, please contact us at: 
-            <a href="mailto:legal@ilcalculator.pro" className="text-blue-500 hover:text-blue-600 ml-1">
+            <a href="mailto:ilcalculator.pro@gmail.com" className="text-blue-500 hover:text-blue-600 ml-1">
               legal@ilcalculator.pro
             </a>
           </p>

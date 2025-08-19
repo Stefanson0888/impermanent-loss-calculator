@@ -47,7 +47,7 @@ const RefundPolicy = ({ darkMode }) => {
           <div className={`bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border border-blue-200 dark:border-blue-700`}>
             <p className="mb-3"><strong>To request a refund:</strong></p>
             <ol className="list-decimal pl-6 space-y-2">
-              <li>Email us at <a href="mailto:support@ilcalculator.pro" className="text-blue-500 hover:text-blue-600">support@ilcalculator.pro</a></li>
+              <li>Email us at <a href="mailto:Ilcalculator.pro@gmail.com" className="text-blue-500 hover:text-blue-600">Ilcalculator.pro@gmail.com</a></li>
               <li>Include your order reference number</li>
               <li>Specify the reason for refund request</li>
               <li>We'll respond within 24 hours</li>
@@ -102,7 +102,7 @@ const RefundPolicy = ({ darkMode }) => {
           </h2>
           <div className={`bg-gray-50 dark:bg-gray-800 p-4 rounded-lg`}>
             <p><strong>Refund Support:</strong></p>
-            <p>Email: <a href="mailto:support@ilcalculator.pro" className="text-blue-500 hover:text-blue-600">support@ilcalculator.pro</a></p>
+            <p>Email: <a href="mailto:ilcalculator.pro@gmail.com" className="text-blue-500 hover:text-blue-600">support@ilcalculator.pro</a></p>
             <p>Response time: Within 24 hours</p>
             <p>Business hours: Monday-Friday, 9 AM - 6 PM (UTC+2)</p>
           </div>
