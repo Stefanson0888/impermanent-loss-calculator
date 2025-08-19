@@ -19,6 +19,7 @@ import LandingPage from './components/Landing/LandingPage';
 
 import PaymentModal from './components/Payment/PaymentModal';
 import LegalRouter from './components/Legal/LegalRouter';
+import { BrowserRouter as Router, Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
 
 // Імпорт Google Fonts
 const googleFontsLink = document.createElement('link');
@@ -1188,4 +1189,13 @@ function App() {
   );
 }
 
-export default App;
+// Обгортка App з Router
+function AppWithRouter() {
+  return (
+    <Router>
+      <App />
+    </Router>
+  );
+}
+
+export default AppWithRouter;
