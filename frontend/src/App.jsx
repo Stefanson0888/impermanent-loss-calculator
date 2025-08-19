@@ -37,6 +37,9 @@ function App() {
     trackEvent
   } = useAnalytics();
 
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const [selectedPool, setSelectedPool] = useState('');
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -164,6 +167,11 @@ function App() {
     }
   };
 
+  const isLegalPage = location.pathname.includes('/terms') || 
+                   location.pathname.includes('/privacy') || 
+                   location.pathname.includes('/refund') || 
+                   location.pathname.includes('/contacts');
+
   return (
     <>
       {showLanding ? (
@@ -171,10 +179,10 @@ function App() {
           darkMode={darkMode}
           onGetStarted={handleGetStarted}
         />
-      ) : showLegalPages ? (
-      <LegalRouter 
-        darkMode={darkMode}
-        onBack={() => setShowLegalPages(false)}
+      ) : isLegalPage ? (
+        <LegalRouter 
+          darkMode={darkMode}
+          onBack={() => navigate('/')}
       />
       ) : (
         <div className={`min-h-screen transition-colors duration-300 ${
