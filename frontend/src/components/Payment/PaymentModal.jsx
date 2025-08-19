@@ -12,18 +12,16 @@ const PaymentModal = ({ isOpen, onClose, darkMode, selectedPlan }) => {
     
     const wayforpay = new Wayforpay();
     wayforpay.run({
-      merchantAccount: "test_merch_n1", // Тестовий merchant
-      merchantDomainName: "ilcalculator.pro",
-      orderReference: orderReference,
-      orderDate: Math.floor(Date.now() / 1000),
-      amount: plan.price,
-      currency: "USD",
-      productName: [`ILCalculator.pro ${plan.name} Plan`],
-      productCount: [1],
-      productPrice: [plan.price],
-      language: "EN",
-      returnUrl: "https://ilcalculator.pro/success",
-      serviceUrl: "https://ilcalculator.pro/webhook"
+        merchantAccount: "www_wayforpay_com",
+        merchantDomainName: "www.wayforpay.com",
+        orderReference: orderReference,
+        orderDate: Math.floor(Date.now() / 1000),
+        amount: plan.price,
+        currency: "UAH", // Змінили на гривні для тесту
+        productName: [`ILCalculator.pro ${plan.name} Plan`],
+        productCount: [1],
+        productPrice: [plan.price],
+        language: "EN"  
     }, 
     function (response) {
       // Success callback
