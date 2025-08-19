@@ -1123,7 +1123,7 @@ function App() {
 
                 <div className={`text-sm text-center md:text-right ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                   <div>© 2025 ILCalculator.pro</div>
-                  <div>Made with ❤️ for DeFi community</div>
+                  <div>Made by Stefanson for DeFi community</div>
                 </div>
               </div>
             </div>
