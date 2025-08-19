@@ -1195,13 +1195,36 @@ function App() {
   );
 }
 
-// Обгортка з Router
+// Обгортка з Router та Routes
 function AppWithRouter() {
   return (
     <Router>
-      <App />
+      <Routes>
+        <Route path="/" element={<App />} />
+        <Route path="/terms" element={<TermsPage />} />
+        <Route path="/privacy" element={<PrivacyPage />} />
+        <Route path="/refund" element={<RefundPage />} />
+        <Route path="/contacts" element={<ContactPage />} />
+      </Routes>
     </Router>
   );
+}
+
+// Тимчасові компоненти для legal сторінок
+function TermsPage() {
+  return <LegalRouter darkMode={true} onBack={() => window.location.href = '/'} />;
+}
+
+function PrivacyPage() {
+  return <LegalRouter darkMode={true} onBack={() => window.location.href = '/'} />;
+}
+
+function RefundPage() {
+  return <LegalRouter darkMode={true} onBack={() => window.location.href = '/'} />;
+}
+
+function ContactPage() {
+  return <LegalRouter darkMode={true} onBack={() => window.location.href = '/'} />;
 }
 
 export default AppWithRouter;
