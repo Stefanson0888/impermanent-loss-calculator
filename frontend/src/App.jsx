@@ -37,9 +37,6 @@ function App() {
     trackEvent
   } = useAnalytics();
 
-  const navigate = useNavigate();
-  const location = useLocation();
-
   const [selectedPool, setSelectedPool] = useState('');
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -179,10 +176,10 @@ function App() {
           darkMode={darkMode}
           onGetStarted={handleGetStarted}
         />
-      ) : isLegalPage ? (
+      ) : showLegalPages ? (
         <LegalRouter 
           darkMode={darkMode}
-          onBack={() => navigate('/')}
+          onBack={() => setShowLegalPages(false)}
       />
       ) : (
         <div className={`min-h-screen transition-colors duration-300 ${
