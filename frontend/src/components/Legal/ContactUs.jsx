@@ -19,7 +19,7 @@ const ContactUs = ({ darkMode }) => {
               📧 General Support
             </h2>
             <div className={`p-4 rounded-lg border ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}>
-              <p><strong>Email:</strong> <a href="mailto:support@ilcalculator.pro" className="text-blue-500 hover:text-blue-600">support@ilcalculator.pro</a></p>
+              <p><strong>Email:</strong> <a href="Ilcalculator.pro@gmail.com" className="text-blue-500 hover:text-blue-600">Ilcalculator.pro@gmail.com</a></p>
               <p><strong>Response time:</strong> Within 24 hours</p>
               <p><strong>Languages:</strong> English, Ukrainian</p>
             </div>
@@ -31,7 +31,7 @@ const ContactUs = ({ darkMode }) => {
               💼 Business & Enterprise
             </h2>
             <div className={`p-4 rounded-lg border ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}>
-              <p><strong>Email:</strong> <a href="mailto:billing@ilcalculator.pro" className="text-blue-500 hover:text-blue-600">billing@ilcalculator.pro</a></p>
+              <p><strong>Email:</strong> <a href="Ilcalculator.pro@gmail.com" className="text-blue-500 hover:text-blue-600">Ilcalculator.pro@gmail.com</a></p>
               <p><strong>For:</strong> Enterprise plans, custom quotes, partnerships</p>
             </div>
           </section>
@@ -42,7 +42,7 @@ const ContactUs = ({ darkMode }) => {
               🔒 Privacy & Legal
             </h2>
             <div className={`p-4 rounded-lg border ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}>
-              <p><strong>Email:</strong> <a href="mailto:legal@ilcalculator.pro" className="text-blue-500 hover:text-blue-600">legal@ilcalculator.pro</a></p>
+              <p><strong>Email:</strong> <a href="mailto:Ilcalculator.pro@gmail.com" className="text-blue-500 hover:text-blue-600">Ilcalculator.pro@gmail.com</a></p>
               <p><strong>For:</strong> Privacy requests, legal questions, GDPR</p>
             </div>
           </section>
