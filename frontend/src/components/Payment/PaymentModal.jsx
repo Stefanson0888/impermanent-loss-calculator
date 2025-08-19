@@ -9,32 +9,41 @@ const PaymentModal = ({ isOpen, onClose, darkMode, selectedPlan }) => {
     
     const plan = plans[currentPlan];
     const orderReference = `ILC_${Date.now()}_${currentPlan}`;
+  
+    // DEMO MODE - симуляція успішної оплати
+    setTimeout(() => {
+        setLoading(false);
+        alert(`🎉 DEMO: Payment successful!\n\nPlan: ${plan.name}\nAmount: $${plan.price}\nOrder: DEMO_${Date.now()}\n\n(Real payments require merchant approval)`);
+        onClose();
+    }, 2000);
     
+    // Реальний WayForPay код (коментуємо поки не отримаємо merchant)
+    /*
+    const orderReference = `ILC_${Date.now()}_${currentPlan}`;
     const wayforpay = new Wayforpay();
     wayforpay.run({
-        merchantAccount: "www_wayforpay_com",
-        merchantDomainName: "www.wayforpay.com",
+        merchantAccount: "YOUR_REAL_MERCHANT", 
+        merchantDomainName: "ilcalculator.pro",
         orderReference: orderReference,
         orderDate: Math.floor(Date.now() / 1000),
         amount: plan.price,
-        currency: "UAH", // Змінили на гривні для тесту
+        currency: "USD",
         productName: [`ILCalculator.pro ${plan.name} Plan`],
         productCount: [1],
         productPrice: [plan.price],
-        language: "EN"  
+        language: "EN"
     }, 
     function (response) {
-      // Success callback
-      setLoading(false);
-      alert("🎉 Payment successful! Welcome to Pro!");
-      onClose();
+        setLoading(false);
+        alert("🎉 Payment successful! Welcome to Pro!");
+        onClose();
     },
     function (response) {
-      // Error callback  
-      setLoading(false);
-      alert("❌ Payment failed. Please try again.");
+        setLoading(false);
+        alert("❌ Payment failed. Please try again.");
     });
-  };
+    */
+    };
 
 
   const plans = {
