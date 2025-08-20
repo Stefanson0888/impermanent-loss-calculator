@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, createContext, useContext } from 'react';
 import axios from 'axios';
 import { useAnalytics } from './hooks/useAnalytics';
 import { CoinGeckoAPI, DefiLlamaAPI } from './services/api';
@@ -18,7 +18,6 @@ import useLocalStorage from './hooks/useLocalStorage';
 import LandingPage from './components/Landing/LandingPage';
 
 import PaymentModal from './components/Payment/PaymentModal';
-import LegalRouter from './components/Legal/LegalRouter';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 
 import TermsOfService from './components/Legal/TermsOfService';
@@ -33,7 +32,10 @@ googleFontsLink.href = 'https://fonts.googleapis.com/css2?family=Orbitron:wght@4
 googleFontsLink.rel = 'stylesheet';
 document.head.appendChild(googleFontsLink);
 
-function App() {
+const ThemeContext = createContext();
+export const useTheme = () => useContext(ThemeContext);
+
+function AppContent() {
   const {
     trackCalculation,
     trackTokenSelect,
@@ -52,7 +54,7 @@ function App() {
   const [poolAPY, setPoolAPY] = useLocalStorage('ilc_poolAPY', '');
   const [selectedProtocol, setSelectedProtocol] = useLocalStorage('ilc_protocol', 'uniswap-v2');
   const [selectedToken, setSelectedToken] = useLocalStorage('ilc_token', '');
-  const [darkMode, setDarkMode] = useLocalStorage('ilc_darkMode', false);
+  const { darkMode } = useTheme();
   
   // Нові стейти для API даних
   const [tokenPrice, setTokenPrice] = useState(null);
@@ -258,24 +260,6 @@ function App() {
                 </button>
                   
                   <button
-                    onClick={() => {
-                      const newDarkMode = !darkMode;
-                      setDarkMode(newDarkMode);
-                      
-                      // Star Wars тост при перемиканні на темну тему
-                      if (newDarkMode) {
-                        setShowThemeToast(true);
-                        setTimeout(() => {
-                          setShowThemeToast(false);
-                        }, 3000);
-                      }
-                      
-                      trackEvent({
-                        action: 'toggle_theme',
-                        category: 'ui',
-                        label: newDarkMode ? 'dark' : 'light'
-                      });
-                    }}
                     className={`p-3 rounded-xl transition-all duration-300 flex flex-col items-center gap-1 ${
                       darkMode 
                         ? 'bg-gray-700 hover:bg-gray-600 text-yellow-400' 
@@ -1202,16 +1186,20 @@ function App() {
 
 // Обгортка з Router та Routes
 function AppWithRouter() {
+  const [darkMode, setDarkMode] = useLocalStorage('ilc_darkMode', false);
+
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<App />} />
-        <Route path="/terms" element={<TermsOfService darkMode={false} />} />
-        <Route path="/privacy" element={<PrivacyPolicy darkMode={false} />} />
-        <Route path="/refund" element={<RefundPolicy darkMode={false} />} />
-        <Route path="/contacts" element={<ContactUs darkMode={false} />} />
-      </Routes>
-    </Router>
+    <ThemeContext.Provider value={{ darkMode, setDarkMode }}>
+      <Router>
+        <Routes>
+          <Route path="/" element={<AppContent />} />
+          <Route path="/terms" element={<TermsOfService />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/refund" element={<RefundPolicy />} />
+          <Route path="/contacts" element={<ContactUs />} />
+        </Routes>
+      </Router>
+    </ThemeContext.Provider>
   );
 }
 
