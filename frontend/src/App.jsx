@@ -21,6 +21,11 @@ import PaymentModal from './components/Payment/PaymentModal';
 import LegalRouter from './components/Legal/LegalRouter';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 
+import TermsOfService from './components/Legal/TermsOfService';
+import PrivacyPolicy from './components/Legal/PrivacyPolicy';
+import RefundPolicy from './components/Legal/RefundPolicy';
+import ContactUs from './components/Legal/ContactUs';
+
 
 // Імпорт Google Fonts
 const googleFontsLink = document.createElement('link');
@@ -1201,30 +1206,13 @@ function AppWithRouter() {
     <Router>
       <Routes>
         <Route path="/" element={<App />} />
-        <Route path="/terms" element={<TermsPage />} />
-        <Route path="/privacy" element={<PrivacyPage />} />
-        <Route path="/refund" element={<RefundPage />} />
-        <Route path="/contacts" element={<ContactPage />} />
+        <Route path="/terms" element={<TermsOfService darkMode={true} />} />
+        <Route path="/privacy" element={<PrivacyPolicy darkMode={true} />} />
+        <Route path="/refund" element={<RefundPolicy darkMode={true} />} />
+        <Route path="/contacts" element={<ContactUs darkMode={true} />} />
       </Routes>
     </Router>
   );
-}
-
-// Тимчасові компоненти для legal сторінок
-function TermsPage() {
-  return <LegalRouter darkMode={true} onBack={() => window.location.href = '/'} />;
-}
-
-function PrivacyPage() {
-  return <LegalRouter darkMode={true} onBack={() => window.location.href = '/'} />;
-}
-
-function RefundPage() {
-  return <LegalRouter darkMode={true} onBack={() => window.location.href = '/'} />;
-}
-
-function ContactPage() {
-  return <LegalRouter darkMode={true} onBack={() => window.location.href = '/'} />;
 }
 
 export default AppWithRouter;
