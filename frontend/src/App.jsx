@@ -1205,10 +1205,10 @@ function AppWithRouter() {
     <Router>
       <Routes>
         <Route path="/" element={<App />} />
-        <Route path="/terms" element={<TermsOfService darkMode={darkMode} />} />
-        <Route path="/privacy" element={<PrivacyPolicy darkMode={darkMode} />} />
-        <Route path="/refund" element={<RefundPolicy darkMode={darkMode} />} />
-        <Route path="/contacts" element={<ContactUs darkMode={darkMode} />} />
+        <Route path="/terms" element={<TermsOfService darkMode={false} />} />
+        <Route path="/privacy" element={<PrivacyPolicy darkMode={false} />} />
+        <Route path="/refund" element={<RefundPolicy darkMode={false} />} />
+        <Route path="/contacts" element={<ContactUs darkMode={false} />} />
       </Routes>
     </Router>
   );
