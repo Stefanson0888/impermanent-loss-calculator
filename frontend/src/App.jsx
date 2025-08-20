@@ -18,7 +18,6 @@ import useLocalStorage from './hooks/useLocalStorage';
 import LandingPage from './components/Landing/LandingPage';
 
 import PaymentModal from './components/Payment/PaymentModal';
-import LegalRouter from './components/Legal/LegalRouter';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 
 import TermsOfService from './components/Legal/TermsOfService';
@@ -1206,10 +1205,10 @@ function AppWithRouter() {
     <Router>
       <Routes>
         <Route path="/" element={<App />} />
-        <Route path="/terms" element={<TermsOfService darkMode={true} />} />
-        <Route path="/privacy" element={<PrivacyPolicy darkMode={true} />} />
-        <Route path="/refund" element={<RefundPolicy darkMode={true} />} />
-        <Route path="/contacts" element={<ContactUs darkMode={true} />} />
+        <Route path="/terms" element={<TermsOfService darkMode={darkMode} />} />
+        <Route path="/privacy" element={<PrivacyPolicy darkMode={darkMode} />} />
+        <Route path="/refund" element={<RefundPolicy darkMode={darkMode} />} />
+        <Route path="/contacts" element={<ContactUs darkMode={darkMode} />} />
       </Routes>
     </Router>
   );
