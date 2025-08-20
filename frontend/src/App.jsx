@@ -54,7 +54,7 @@ function AppContent() {
   const [poolAPY, setPoolAPY] = useLocalStorage('ilc_poolAPY', '');
   const [selectedProtocol, setSelectedProtocol] = useLocalStorage('ilc_protocol', 'uniswap-v2');
   const [selectedToken, setSelectedToken] = useLocalStorage('ilc_token', '');
-  const { darkMode } = useTheme();
+  const { darkMode, setDarkMode } = useTheme();
   
   // Нові стейти для API даних
   const [tokenPrice, setTokenPrice] = useState(null);
