@@ -253,7 +253,7 @@ function AppContent() {
                     RESET
                   </span>
                 </button>
-                  
+
                   <button
                     className={`p-3 rounded-xl transition-all duration-300 flex flex-col items-center gap-1 ${
                       darkMode 
@@ -261,6 +261,22 @@ function AppContent() {
                         : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
                     }`}
                     title={darkMode ? 'Switch to Light Side' : 'Join the Dark Side'}
+                    onClick={() => {
+                      setDarkMode(!darkMode);
+                      
+                      if (!darkMode) {
+                        setShowThemeToast(true);
+                        setTimeout(() => {
+                          setShowThemeToast(false);
+                        }, 3000);
+                      }
+                      
+                      trackEvent({
+                        action: 'toggle_theme',
+                        category: 'ui', 
+                        label: !darkMode ? 'dark' : 'light'
+                      });
+                    }}
                   >
                     {darkMode ? (
                       <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
