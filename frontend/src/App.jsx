@@ -214,7 +214,7 @@ function AppContent() {
 
                 <button
                   onClick={() => setShowPaymentModal(true)}
-                  className={`p-3 rounded-xl transition-all duration-300 flex flex-col items-center gap-1 ${
+                  className={`p-3 h-16 w-16 rounded-xl transition-all duration-300 flex flex-col items-center gap-1
                     darkMode
                       ? 'bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white'
                       : 'bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white'
@@ -234,7 +234,7 @@ function AppContent() {
 
                 <button
                   onClick={handleClearAll}
-                  className={`p-3 rounded-xl transition-all duration-300 flex flex-col items-center gap-1 ${
+                  className={`p-3 h-16 w-16 rounded-xl transition-all duration-300 flex flex-col items-center gap-1
                     darkMode
                       ? 'bg-gray-700 hover:bg-gray-600 text-red-400'
                       : 'bg-gray-100 hover:bg-gray-200 text-red-500'
@@ -255,7 +255,7 @@ function AppContent() {
                 </button>
 
                   <button
-                    className={`p-3 rounded-xl transition-all duration-300 flex flex-col items-center gap-1 ${
+                    className={`p-3 h-16 w-16 rounded-xl transition-all duration-300 flex flex-col items-center gap-1
                       darkMode 
                         ? 'bg-gray-700 hover:bg-gray-600 text-yellow-400' 
                         : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
