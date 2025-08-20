@@ -251,10 +251,10 @@ function AppContent() {
                 </button>
 
                   <button
-                    className={`p-2 min-h-[64px] min-w-[64px] rounded-xl transition-all duration-300 flex flex-col items-center gap-1
+                    className={`p-2 min-h-[64px] min-w-[64px] rounded-xl transition-all duration-300 flex flex-col items-center gap-1 ${
                       darkMode 
-                        ? 'bg-gray-700 hover:bg-gray-600 text-yellow-400' 
-                        : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                        ? 'bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700 text-yellow-100' 
+                        : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white'
                     }`}
                     title={darkMode ? 'Switch to Light Side' : 'Join the Dark Side'}
                     onClick={() => {
