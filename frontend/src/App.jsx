@@ -3,7 +3,15 @@ import axios from 'axios';
 import { useAnalytics } from './hooks/useAnalytics';
 import { CoinGeckoAPI, DefiLlamaAPI } from './services/api';
 
-import { TOKEN_ID_MAPPING } from './data/tokens';
+import { TOKEN_ID_MAPPING, POPULAR_TOKENS } from './data/tokens';
+import { POPULAR_POOLS } from './data/pools';
+import { EXPANDED_PROTOCOLS } from './data/protocols';
+
+import { calculateILAdvanced } from './services/calculations/impermanentLoss';
+
+import AllPoolsSelector from './components/Pools/AllPoolsSelector';
+import ScenarioTable from './components/Analysis/ScenarioTable';
+import EducationalTabs from './components/Education/EducationalTabs';
 
 import useLocalStorage from './hooks/useLocalStorage';
 import LandingPage from './components/Landing/LandingPage';
@@ -16,11 +24,9 @@ import PrivacyPolicy from './components/Legal/PrivacyPolicy';
 import RefundPolicy from './components/Legal/RefundPolicy';
 import ContactUs from './components/Legal/ContactUs';
 
-// Context для теми
 const ThemeContext = createContext();
 export const useTheme = () => useContext(ThemeContext);
 
-// Імпорт Google Fonts
 const googleFontsLink = document.createElement('link');
 googleFontsLink.href = 'https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap';
 googleFontsLink.rel = 'stylesheet';
@@ -30,8 +36,12 @@ function AppContent() {
   const {
     trackCalculation,
     trackTokenSelect,
+    trackPriceInput,
+    trackDonation,
+    trackEvent
   } = useAnalytics();
 
+  const [selectedPool, setSelectedPool] = useState('');
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -46,9 +56,13 @@ function AppContent() {
   const [tokenPrice, setTokenPrice] = useState(null);
   const [lastUpdated, setLastUpdated] = useState(null);
   const [livePools, setLivePools] = useState([]);
+  const [loadingPools, setLoadingPools] = useState(false);
+  const [showPools, setShowPools] = useState(false);
 
   const [hasVisited, setHasVisited] = useLocalStorage('ilc_hasVisited', false);
   const showLanding = !hasVisited;
+  const [showToast, setShowToast] = useState(false);
+  const [showThemeToast, setShowThemeToast] = useState(false);
 
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState('pro');
@@ -68,8 +82,14 @@ function AppContent() {
 
         setLastUpdated(priceData.lastUpdated);
 
+        setLoadingPools(true);
         const pools = await DefiLlamaAPI.findPoolsForPair(token, 'USDT');
         setLivePools(pools);
+        setLoadingPools(false);
+
+        if (pools.length > 0) {
+          setShowPools(true);
+        }
       } catch (error) {
         console.error('Error fetching token data:', error);
       }
@@ -83,6 +103,34 @@ function AppContent() {
     setHasVisited(true);
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    trackCalculation(
+      selectedToken || 'Custom',
+      'USDT',
+      parseFloat(oldPrice),
+      parseFloat(newPrice),
+      Math.abs(parseFloat(newPrice) - parseFloat(oldPrice)) / parseFloat(oldPrice) * 100
+    );
+
+    try {
+      const res = await axios.post('https://impermanent-loss-calculator-api.vercel.app/calculate', {
+        oldPrice: parseFloat(oldPrice),
+        newPrice: parseFloat(newPrice),
+        initialInvestment: parseFloat(initialInvestment) || 0,
+        poolAPY: parseFloat(poolAPY) || 0,
+        protocolType: selectedProtocol
+      });
+      setResult(res.data);
+    } catch (err) {
+      alert(`Error: ${err.response?.data?.error || err.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       {showLanding ? (
@@ -93,9 +141,40 @@ function AppContent() {
             ? 'bg-gradient-to-br from-gray-900 via-slate-800 to-gray-900' 
             : 'bg-gradient-to-br from-slate-50 via-white to-blue-50'
         }`}>
-          {/* Тут має бути основний функціонал калькулятора (AllPoolsSelector, ScenarioTable, EducationalTabs і т.д.) */}
+          <AllPoolsSelector 
+            darkMode={darkMode}
+            selectedPool={selectedPool}
+            setSelectedPool={setSelectedPool}
+            selectedProtocol={selectedProtocol}
+            setSelectedProtocol={setSelectedProtocol}
+            selectedToken={selectedToken}
+            handleTokenSelect={handleTokenSelect}
+            tokenPrice={tokenPrice}
+            loadingPrice={loading}
+            livePools={livePools}
+            loadingPools={loadingPools}
+            lastUpdated={lastUpdated}
+          />
 
-          {/* Footer */}
+          <ScenarioTable 
+            darkMode={darkMode}
+            result={result}
+            handleSubmit={handleSubmit}
+            loading={loading}
+            oldPrice={oldPrice}
+            setOldPrice={setOldPrice}
+            newPrice={newPrice}
+            setNewPrice={setNewPrice}
+            initialInvestment={initialInvestment}
+            setInitialInvestment={setInitialInvestment}
+            poolAPY={poolAPY}
+            setPoolAPY={setPoolAPY}
+            selectedProtocol={selectedProtocol}
+            selectedToken={selectedToken}
+          />
+
+          <EducationalTabs darkMode={darkMode} />
+
           <footer className={`mt-16 border-t transition-colors duration-300 ${
             darkMode ? 'border-gray-700 bg-gray-800/50' : 'border-gray-200 bg-gray-50'
           }`}>
