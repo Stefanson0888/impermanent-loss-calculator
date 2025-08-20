@@ -214,7 +214,11 @@ function AppContent() {
 
                 <button
                   onClick={() => setShowPaymentModal(true)}
-                  className={`p-2 min-h-[64px] min-w-[64px] rounded-xl transition-all duration-300 flex flex-col items-center gap-1 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white`}
+                  className={`p-2 min-h-[64px] min-w-[64px] rounded-xl transition-all duration-300 flex flex-col items-center gap-1 ${
+                    darkMode
+                      ? 'bg-gray-700 hover:bg-gray-600 text-red-400'
+                      : 'bg-gray-100 hover:bg-gray-200 text-red-500'
+                  }`}
                   title="Upgrade to Pro - Unlock all features"
                 >
                   <div className="w-5 h-5 flex items-center justify-center text-lg text-red-500">
