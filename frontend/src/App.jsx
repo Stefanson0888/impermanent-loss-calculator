@@ -216,8 +216,8 @@ function AppContent() {
                   onClick={() => setShowPaymentModal(true)}
                   className={`p-2 min-h-[64px] min-w-[64px] rounded-xl transition-all duration-300 flex flex-col items-center gap-1 ${
                     darkMode
-                      ? 'bg-gray-700 hover:bg-gray-600 text-yellow-400'
-                      : 'bg-gray-100 hover:bg-gray-200 text-yellow-500'
+                      ? 'bg-gray-700 hover:bg-gray-600 text-red-400'
+                      : 'bg-gray-100 hover:bg-gray-200 text-red-500'
                   }`}
                   title="Upgrade to Pro - Unlock all features"
                 >
@@ -257,8 +257,8 @@ function AppContent() {
                   <button
                     className={`p-2 min-h-[64px] min-w-[64px] rounded-xl transition-all duration-300 flex flex-col items-center gap-1 ${
                       darkMode
-                        ? 'bg-gray-700 hover:bg-gray-600 text-red-400'
-                        : 'bg-gray-100 hover:bg-gray-200 text-red-500'
+                        ? 'bg-gray-700 hover:bg-gray-600 text-yellow-400'
+                        : 'bg-gray-100 hover:bg-gray-200 text-yellow-500'
                     }`}
                     title={darkMode ? 'Switch to Light Side' : 'Join the Dark Side'}
                     onClick={() => {
