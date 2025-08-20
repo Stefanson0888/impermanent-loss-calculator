@@ -241,36 +241,8 @@ function AppContent() {
                   }`}
                   title="Clear all saved data - Reset the Force"
                 >
-                <button
-                  onClick={() => {
-                    const { setDarkMode } = useTheme();
-                    const newDarkMode = !darkMode;
-                    setDarkMode(newDarkMode);
-                    
-                    if (newDarkMode) {
-                      setShowThemeToast(true);
-                      setTimeout(() => {
-                        setShowThemeToast(false);
-                      }, 3000);
-                    }
-                    
-                    trackEvent({
-                      action: 'toggle_theme',
-                      category: 'ui',
-                      label: newDarkMode ? 'dark' : 'light'
-                    });
-                  }}
-                  className={`p-3 rounded-xl transition-all duration-300 flex flex-col items-center gap-1 ${
-                    darkMode 
-                      ? 'bg-gray-700 hover:bg-gray-600 text-yellow-400' 
-                      : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
-                  }`}
-                  title={darkMode ? 'Switch to Light Side' : 'Join the Dark Side'}
-                >
-                  {/* іконка та текст як раніше */}
-                </button>
                   <div className="w-5 h-5 flex items-center justify-center text-lg">
-                    🗲
+                  🗲
                   </div>
                   <span className={`text-xs font-bold tracking-wider ${
                     darkMode ? 'text-red-400' : 'text-red-500'
