@@ -183,11 +183,6 @@ function AppContent() {
           darkMode={darkMode}
           onGetStarted={handleGetStarted}
         />
-      ) : showLegalPages ? (
-        <LegalRouter 
-          darkMode={darkMode}
-          onBack={() => setShowLegalPages(false)}
-      />
       ) : (
         <div className={`min-h-screen transition-colors duration-300 ${
           darkMode 
@@ -246,6 +241,34 @@ function AppContent() {
                   }`}
                   title="Clear all saved data - Reset the Force"
                 >
+                <button
+                  onClick={() => {
+                    const { setDarkMode } = useTheme();
+                    const newDarkMode = !darkMode;
+                    setDarkMode(newDarkMode);
+                    
+                    if (newDarkMode) {
+                      setShowThemeToast(true);
+                      setTimeout(() => {
+                        setShowThemeToast(false);
+                      }, 3000);
+                    }
+                    
+                    trackEvent({
+                      action: 'toggle_theme',
+                      category: 'ui',
+                      label: newDarkMode ? 'dark' : 'light'
+                    });
+                  }}
+                  className={`p-3 rounded-xl transition-all duration-300 flex flex-col items-center gap-1 ${
+                    darkMode 
+                      ? 'bg-gray-700 hover:bg-gray-600 text-yellow-400' 
+                      : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                  }`}
+                  title={darkMode ? 'Switch to Light Side' : 'Join the Dark Side'}
+                >
+                  {/* іконка та текст як раніше */}
+                </button>
                   <div className="w-5 h-5 flex items-center justify-center text-lg">
                     🗲
                   </div>
@@ -1083,38 +1106,38 @@ function AppContent() {
                 </div>
 
                 <div className="flex flex-wrap justify-center gap-4 text-sm">
-                  <button
-                    onClick={() => setShowLegalPages(true)}
+                  <Link
+                    to="/terms"
                     className={`hover:underline transition-colors ${
                       darkMode ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'
                     }`}
                   >
                     Terms of Service
-                  </button>
-                  <button
-                    onClick={() => setShowLegalPages(true)}
+                  </Link>
+                  <Link
+                    to="/privacy"
                     className={`hover:underline transition-colors ${
                       darkMode ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'
                     }`}
                   >
                     Privacy Policy
-                  </button>
-                  <button
-                    onClick={() => setShowLegalPages(true)}
+                  </Link>
+                  <Link
+                    to="/refund"
                     className={`hover:underline transition-colors ${
                       darkMode ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'
                     }`}
                   >
                     Refund Policy
-                  </button>
-                  <button
-                    onClick={() => setShowLegalPages(true)}
+                  </Link>
+                  <Link
+                    to="/contacts"
                     className={`hover:underline transition-colors ${
                       darkMode ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'
                     }`}
                   >
                     Contact Us
-                  </button>
+                  </Link>
                 </div>
 
                 <div className={`text-sm text-center md:text-right ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
