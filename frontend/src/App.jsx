@@ -3,16 +3,7 @@ import axios from 'axios';
 import { useAnalytics } from './hooks/useAnalytics';
 import { CoinGeckoAPI, DefiLlamaAPI } from './services/api';
 
-import { TOKEN_ID_MAPPING, POPULAR_TOKENS } from './data/tokens';
-import { POPULAR_POOLS, getRiskColor } from './data/pools';
-import { EXPANDED_PROTOCOLS } from './data/protocols';
-
-import { calculateILAdvanced } from './services/calculations/impermanentLoss';
-
-// Компоненти
-import AllPoolsSelector from './components/Pools/AllPoolsSelector';
-import ScenarioTable from './components/Analysis/ScenarioTable';
-import EducationalTabs from './components/Education/EducationalTabs';
+import { TOKEN_ID_MAPPING } from './data/tokens';
 
 import useLocalStorage from './hooks/useLocalStorage';
 import LandingPage from './components/Landing/LandingPage';
@@ -35,16 +26,12 @@ googleFontsLink.href = 'https://fonts.googleapis.com/css2?family=Orbitron:wght@4
 googleFontsLink.rel = 'stylesheet';
 document.head.appendChild(googleFontsLink);
 
-function App() {
+function AppContent() {
   const {
     trackCalculation,
     trackTokenSelect,
-    trackPriceInput,
-    trackDonation,
-    trackEvent
   } = useAnalytics();
 
-  const [selectedPool, setSelectedPool] = useState('');
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -54,30 +41,23 @@ function App() {
   const [poolAPY, setPoolAPY] = useLocalStorage('ilc_poolAPY', '');
   const [selectedProtocol, setSelectedProtocol] = useLocalStorage('ilc_protocol', 'uniswap-v2');
   const [selectedToken, setSelectedToken] = useLocalStorage('ilc_token', '');
-  const [darkMode, setDarkMode] = useLocalStorage('ilc_darkMode', false);
+  const [darkMode] = useLocalStorage('ilc_darkMode', false);
 
   const [tokenPrice, setTokenPrice] = useState(null);
-  const [loadingPrice, setLoadingPrice] = useState(false);
-  const [livePools, setLivePools] = useState([]);
-  const [loadingPools, setLoadingPools] = useState(false);
   const [lastUpdated, setLastUpdated] = useState(null);
-  const [showPools, setShowPools] = useState(false);
+  const [livePools, setLivePools] = useState([]);
 
   const [hasVisited, setHasVisited] = useLocalStorage('ilc_hasVisited', false);
   const showLanding = !hasVisited;
-  const [showToast, setShowToast] = useState(false);
-  const [showThemeToast, setShowThemeToast] = useState(false);
 
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState('pro');
 
-  // Автозаповнення ціни при виборі токена
   const handleTokenSelect = async (token) => {
     setSelectedToken(token);
     trackTokenSelect(`${token}/USDT`);
 
     if (token && TOKEN_ID_MAPPING[token]) {
-      setLoadingPrice(true);
       try {
         const priceData = await CoinGeckoAPI.getTokenPrice(TOKEN_ID_MAPPING[token]);
         setTokenPrice(priceData);
@@ -88,18 +68,10 @@ function App() {
 
         setLastUpdated(priceData.lastUpdated);
 
-        setLoadingPools(true);
         const pools = await DefiLlamaAPI.findPoolsForPair(token, 'USDT');
         setLivePools(pools);
-        setLoadingPools(false);
-
-        if (pools.length > 0) {
-          setShowPools(true);
-        }
       } catch (error) {
         console.error('Error fetching token data:', error);
-      } finally {
-        setLoadingPrice(false);
       }
     } else {
       setTokenPrice(null);
@@ -111,71 +83,17 @@ function App() {
     setHasVisited(true);
   };
 
-  const handleClearAll = () => {
-    const confirmed = window.confirm('Clear all saved data? This will reset all fields.');
-
-    if (confirmed) {
-      setOldPrice('');
-      setNewPrice('');
-      setInitialInvestment('');
-      setPoolAPY('');
-      setSelectedProtocol('uniswap-v2');
-      setSelectedToken('');
-
-      setTokenPrice(null);
-      setLivePools([]);
-      setResult(null);
-      setLastUpdated(null);
-
-      setShowToast(true);
-      setTimeout(() => {
-        setShowToast(false);
-      }, 2000);
-    }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-
-    trackCalculation(
-      selectedToken || 'Custom',
-      'USDT',
-      parseFloat(oldPrice),
-      parseFloat(newPrice),
-      Math.abs(parseFloat(newPrice) - parseFloat(oldPrice)) / parseFloat(oldPrice) * 100
-    );
-
-    try {
-      const res = await axios.post('https://impermanent-loss-calculator-api.vercel.app/calculate', {
-        oldPrice: parseFloat(oldPrice),
-        newPrice: parseFloat(newPrice),
-        initialInvestment: parseFloat(initialInvestment) || 0,
-        poolAPY: parseFloat(poolAPY) || 0,
-        protocolType: selectedProtocol
-      });
-      setResult(res.data);
-    } catch (err) {
-      alert(`Error: ${err.response?.data?.error || err.message}`);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <>
       {showLanding ? (
-        <LandingPage 
-          darkMode={darkMode}
-          onGetStarted={handleGetStarted}
-        />
+        <LandingPage darkMode={darkMode} onGetStarted={handleGetStarted} />
       ) : (
         <div className={`min-h-screen transition-colors duration-300 ${
           darkMode 
             ? 'bg-gradient-to-br from-gray-900 via-slate-800 to-gray-900' 
             : 'bg-gradient-to-br from-slate-50 via-white to-blue-50'
         }`}>
-          {/* ...основний контент залишаємо без змін... */}
+          {/* Тут має бути основний функціонал калькулятора (AllPoolsSelector, ScenarioTable, EducationalTabs і т.д.) */}
 
           {/* Footer */}
           <footer className={`mt-16 border-t transition-colors duration-300 ${
@@ -218,7 +136,6 @@ function App() {
         </div>
       )}
 
-      {/* Payment Modal */}
       <PaymentModal 
         isOpen={showPaymentModal}
         onClose={() => setShowPaymentModal(false)}
@@ -229,7 +146,6 @@ function App() {
   );
 }
 
-// Обгортка з Router, ThemeContext та Routes
 function AppWithRouter() {
   const [darkMode, setDarkMode] = useLocalStorage('ilc_darkMode', false);
 
@@ -237,7 +153,7 @@ function AppWithRouter() {
     <ThemeContext.Provider value={{ darkMode, setDarkMode }}>
       <Router>
         <Routes>
-          <Route path="/" element={<App />} />
+          <Route path="/" element={<AppContent />} />
           <Route path="/terms" element={<TermsOfService />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/refund" element={<RefundPolicy />} />
