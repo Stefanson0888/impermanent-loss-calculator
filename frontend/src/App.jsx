@@ -163,7 +163,7 @@ function App() {
   };
 
   return (
-    <ThemeContext.Provider value={{ darkMode, setDarkMode }}>
+    <>
       {showLanding ? (
         <LandingPage 
           darkMode={darkMode}
@@ -225,29 +225,27 @@ function App() {
         darkMode={darkMode}
         selectedPlan={selectedPlan}
       />
+    </>
+  );
+}
+
+// Обгортка з Router, ThemeContext та Routes
+function AppWithRouter() {
+  const [darkMode, setDarkMode] = useLocalStorage('ilc_darkMode', false);
+
+  return (
+    <ThemeContext.Provider value={{ darkMode, setDarkMode }}>
+      <Router>
+        <Routes>
+          <Route path="/" element={<App />} />
+          <Route path="/terms" element={<TermsOfService />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/refund" element={<RefundPolicy />} />
+          <Route path="/contacts" element={<ContactUs />} />
+        </Routes>
+      </Router>
     </ThemeContext.Provider>
   );
-}
-
-// Обгортка з Router та Routes
-function AppWithRouter() {
-  return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<App />} />
-        <Route path="/terms" element={<WithTheme><TermsOfService /></WithTheme>} />
-        <Route path="/privacy" element={<WithTheme><PrivacyPolicy /></WithTheme>} />
-        <Route path="/refund" element={<WithTheme><RefundPolicy /></WithTheme>} />
-        <Route path="/contacts" element={<WithTheme><ContactUs /></WithTheme>} />
-      </Routes>
-    </Router>
-  );
-}
-
-// HOC для передачі теми
-function WithTheme({ children }) {
-  const { darkMode } = useTheme();
-  return React.cloneElement(children, { darkMode });
 }
 
 export default AppWithRouter;
