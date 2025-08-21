@@ -203,7 +203,7 @@ const ContactUs = ({ darkMode = false }) => {
                   <button
                     onClick={() => {
                       // Тимчасово просто відкриваємо email
-                      window.open('mailto:support@ilcalculator.pro?subject=Contact Form Message');
+                      window.open('mailto:ilcalculator.pro@gmail.com?subject=Contact Form Message');
                     }}
                     className={`w-full py-3 px-4 rounded-lg font-semibold transition-all duration-300 ${
                       darkMode

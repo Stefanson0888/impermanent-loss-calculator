@@ -197,7 +197,7 @@ const RefundPolicy = ({ darkMode = false }) => {
                 darkMode ? 'bg-gray-800' : 'bg-gray-50'
               }`}>
                 <p><strong>Refund Support:</strong></p>
-                <p>Email: <a href="mailto:ilcalculator.pro@gmail.com" className="text-blue-500 hover:text-blue-600">support@ilcalculator.pro</a></p>
+                <p>Email: <a href="mailto:ilcalculator.pro@gmail.com" className="text-blue-500 hover:text-blue-600">ilcalculator.pro@gmail.com</a></p>
                 <p>Response time: Within 24 hours</p>
                 <p>Business hours: Monday-Friday, 9 AM - 6 PM (UTC+2)</p>
               </div>

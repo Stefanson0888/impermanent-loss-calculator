@@ -25,6 +25,9 @@ import PrivacyPolicy from './components/Legal/PrivacyPolicy';
 import RefundPolicy from './components/Legal/RefundPolicy';
 import ContactUs from './components/Legal/ContactUs';
 
+import { LanguageProvider } from './contexts/LanguageContext';
+import LanguagePicker from './components/LanguagePicker';
+
 
 // Імпорт Google Fonts
 const googleFontsLink = document.createElement('link');
@@ -296,6 +299,9 @@ function AppContent() {
                       {darkMode ? 'LIGHT' : 'DARK'}
                     </span>
                   </button>
+
+                  <LanguagePicker darkMode={darkMode} />
+
                 </div>
               </div>
             </div>
@@ -1200,17 +1206,19 @@ function AppWithRouter() {
   const [darkMode, setDarkMode] = useLocalStorage('ilc_darkMode', false);
 
   return (
-    <ThemeContext.Provider value={{ darkMode, setDarkMode }}>
-      <Router>
-        <Routes>
-          <Route path="/" element={<AppContent />} />
-          <Route path="/terms" element={<TermsOfService />} />
-          <Route path="/privacy" element={<PrivacyPolicy />} />
-          <Route path="/refund" element={<RefundPolicy />} />
-          <Route path="/contacts" element={<ContactUs />} />
-        </Routes>
-      </Router>
-    </ThemeContext.Provider>
+    <LanguageProvider>
+      <ThemeContext.Provider value={{ darkMode, setDarkMode }}>
+        <Router>
+          <Routes>
+            <Route path="/" element={<AppContent />} />
+            <Route path="/terms" element={<TermsOfService />} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
+            <Route path="/refund" element={<RefundPolicy />} />
+            <Route path="/contacts" element={<ContactUs />} />
+          </Routes>
+        </Router>
+      </ThemeContext.Provider>
+    </LanguageProvider>
   );
 }
 
