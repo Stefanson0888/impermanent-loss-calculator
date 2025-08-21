@@ -27,6 +27,7 @@ import ContactUs from './components/Legal/ContactUs';
 
 import { LanguageProvider } from './contexts/LanguageContext';
 import LanguagePicker from './components/LanguagePicker';
+import { useLanguage } from './contexts/LanguageContext';
 
 
 // Імпорт Google Fonts
@@ -58,6 +59,7 @@ function AppContent() {
   const [selectedProtocol, setSelectedProtocol] = useLocalStorage('ilc_protocol', 'uniswap-v2');
   const [selectedToken, setSelectedToken] = useLocalStorage('ilc_token', '');
   const { darkMode, setDarkMode } = useTheme();
+  const { t } = useLanguage();
   
   // Нові стейти для API даних
   const [tokenPrice, setTokenPrice] = useState(null);
@@ -204,7 +206,7 @@ function AppContent() {
                   <h1 className={`text-lg sm:text-2xl lg:text-3xl font-bold transition-colors duration-300 ${
                     darkMode ? 'text-white' : 'text-gray-900'
                   }`} style={{ fontFamily: 'Orbitron, monospace' }}>
-                    Impermanent Loss Calculator
+                    {t('header.title')}
                   </h1>
                   <p className={`text-sm mt-1 transition-colors duration-300 ${
                     darkMode ? 'text-gray-400' : 'text-gray-600'

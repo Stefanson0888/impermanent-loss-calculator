@@ -30,7 +30,7 @@ const LanguagePicker = ({ darkMode }) => {
       </button>
 
       {isOpen && (
-        <div className={`absolute top-full right-0 mt-2 z-50 rounded-lg shadow-lg border min-w-[150px] ${
+        <div className={`absolute top-full right-0 mt-2 z-[9999] rounded-lg shadow-lg border min-w-[150px] ${
           darkMode
             ? 'bg-gray-800 border-gray-700'
             : 'bg-white border-gray-200'
@@ -67,7 +67,7 @@ const LanguagePicker = ({ darkMode }) => {
       {/* Overlay to close dropdown */}
       {isOpen && (
         <div 
-          className="fixed inset-0 z-40" 
+          className="fixed inset-0 z-[9998]" 
           onClick={() => setIsOpen(false)}
         />
       )}
