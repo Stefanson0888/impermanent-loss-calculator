@@ -211,7 +211,7 @@ function AppContent() {
                   <p className={`text-sm mt-1 transition-colors duration-300 ${
                     darkMode ? 'text-gray-400' : 'text-gray-600'
                   }`}>
-                    Professional DeFi analysis tool for liquidity providers
+                    {t('header.subtitle')}
                   </p>
                 </div>
                 
