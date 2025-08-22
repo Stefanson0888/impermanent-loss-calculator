@@ -17,7 +17,7 @@ const LanguagePicker = ({ darkMode }) => {
       const rect = buttonRef.current.getBoundingClientRect();
       setCoords({
         top: rect.bottom + window.scrollY + 8, // 8px відступ вниз
-        left: rect.left + window.scrollX,
+        left: rect.right + window.scrollX,
         width: rect.width
       });
     }
@@ -75,7 +75,7 @@ const LanguagePicker = ({ darkMode }) => {
           style={{
             position: 'absolute',
             top: `${coords.top}px`,
-            left: `${coords.left}px`,
+            right: `${window.innerWidth - coords.left}px`,
             minWidth: `${Math.max(coords.width, 150)}px`,
             zIndex: 9999
           }}
