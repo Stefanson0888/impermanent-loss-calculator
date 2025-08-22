@@ -76,7 +76,7 @@ const LanguagePicker = ({ darkMode }) => {
             position: 'absolute',
             top: `${coords.top}px`,
             left: `${coords.left}px`,
-            width: `${coords.width}px`,
+            minWidth: `${Math.max(coords.width, 150)}px`,
             zIndex: 9999
           }}
         >
