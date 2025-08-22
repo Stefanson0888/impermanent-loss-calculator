@@ -1108,7 +1108,7 @@ function AppContent() {
                       darkMode ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'
                     }`}
                   >
-                    Terms of Service
+                    {t('footer.terms')}
                   </Link>
                   <Link
                     to="/privacy"
@@ -1116,7 +1116,7 @@ function AppContent() {
                       darkMode ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'
                     }`}
                   >
-                    Privacy Policy
+                    {t('footer.privacy')}
                   </Link>
                   <Link
                     to="/refund"
@@ -1124,7 +1124,7 @@ function AppContent() {
                       darkMode ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'
                     }`}
                   >
-                    Refund Policy
+                    {t('footer.refund')}
                   </Link>
                   <Link
                     to="/contacts"
@@ -1132,7 +1132,7 @@ function AppContent() {
                       darkMode ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'
                     }`}
                   >
-                    Contact Us
+                    {t('footer.contact')}
                   </Link>
                 </div>
 
