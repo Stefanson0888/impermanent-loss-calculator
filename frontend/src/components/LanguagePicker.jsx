@@ -30,7 +30,7 @@ const LanguagePicker = ({ darkMode }) => {
       </button>
 
       {isOpen && (
-        <div className={`fixed top-20 right-6 z-[9999] rounded-lg shadow-lg border min-w-[150px] ${
+        <div className={`absolute top-full left-0 mt-2 z-[9999]
           darkMode
             ? 'bg-gray-800 border-gray-700'
             : 'bg-white border-gray-200'
