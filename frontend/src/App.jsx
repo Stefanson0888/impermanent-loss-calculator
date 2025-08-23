@@ -755,10 +755,10 @@ function AppContent() {
                     </div>
                     <div>
                       <h2 className={`text-xl font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`} style={{ fontFamily: 'Orbitron, monospace' }}>
-                        Analysis Results
+                        {t('results.title')}
                       </h2>
                       <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                        Your position performance
+                        {t('results.subtitle')}
                         {selectedPool && (() => {
                           const pool = POPULAR_POOLS.find(p => p.id === selectedPool);
                           return pool ? ` • ${pool.name} on ${pool.protocol}` : '';
@@ -850,7 +850,7 @@ function AppContent() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
                       <div>
                         <div className={`text-sm font-semibold mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`} style={{ fontFamily: 'Orbitron, monospace' }}>
-                          HODL Strategy
+                          {t('results.hodlStrategy')}
                         </div>
                         <div className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
                           ${result.hodlValue}
@@ -862,7 +862,7 @@ function AppContent() {
 
                       <div>
                         <div className={`text-sm font-semibold mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`} style={{ fontFamily: 'Orbitron, monospace' }}>
-                          LP Strategy {result.poolAPY > 0 && <span className="text-orange-500">+Fees</span>}
+                          {t('results.lpStrategy')} {result.poolAPY > 0 && <span className="text-orange-500">+Fees</span>}
                         </div>
                         <div className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
                           ${result.poolAPY > 0 ? result.lpValueWithFees : result.lpValue}
@@ -879,7 +879,7 @@ function AppContent() {
 
                       <div>
                         <div className={`text-sm font-semibold mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`} style={{ fontFamily: 'Orbitron, monospace' }}>
-                          Impermanent Loss
+                          {t('results.impermanentLoss')}
                         </div>
                         <div className={`text-2xl font-bold ${result.impermanentLossUSD < 0 ? 'text-red-600' : 'text-green-600'}`}>
                           ${Math.abs(result.impermanentLossUSD)}
@@ -903,7 +903,7 @@ function AppContent() {
 
                     <div className={`mt-6 pt-6 border-t text-center ${darkMode ? 'border-gray-600' : 'border-gray-200'}`}>
                       <div className={`text-lg font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`} style={{ fontFamily: 'Orbitron, monospace' }}>
-                        🏆 Better Strategy: {result.betterStrategy}
+                        {t('results.betterStrategy')}: {result.betterStrategy}
                       </div>
                     </div>
                   </div>
