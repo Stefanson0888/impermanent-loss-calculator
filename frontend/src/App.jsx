@@ -568,7 +568,7 @@ function AppContent() {
                       <div className="h-10 flex flex-col justify-end gap-1">
                         <div className="flex items-center gap-2">
                           <span className={`text-sm font-semibold ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                            Initial Price ($)
+                            {t('calculator.initialPrice')}
                           </span>
                           {selectedToken && <span className="text-blue-500">[{selectedToken}]</span>}
                         </div>
@@ -601,7 +601,7 @@ function AppContent() {
                       <div className="h-10 flex flex-col justify-end gap-1">
                         <div className="flex items-center gap-2">
                           <span className={`text-sm font-semibold ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                            Current Price ($)
+                            {t('calculator.currentPrice')}
                           </span>
                           {selectedToken && <span className="text-purple-500">[{selectedToken}]</span>}
                         </div>
@@ -633,7 +633,7 @@ function AppContent() {
                     <div>
                       <div className="h-10 flex items-end gap-2">
                         <span className={`text-sm font-semibold ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                          Pool APY (%)
+                          {t('calculator.poolAPY')}
                         </span>
                         <span className="text-orange-500 text-xs">✨ NEW</span>
                       </div>
@@ -660,7 +660,7 @@ function AppContent() {
                     <div>
                       <div className="h-10 flex items-end gap-2">
                         <span className={`text-sm font-semibold ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                          Investment ($)
+                          {t('calculator.investment')}
                         </span>
                       </div>
                       <input
@@ -729,14 +729,14 @@ function AppContent() {
                     {loading ? (
                       <div className="flex items-center justify-center gap-2">
                         <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                        <span>Calculating...</span>
+                        <span>{t('calculator.calculating')}</span>
                       </div>
                     ) : (
                       <div className="flex items-center justify-center gap-2">
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                         </svg>
-                        <span>Calculate Impermanent Loss</span>
+                        <span>{t('calculator.calculateButton')}</span>
                       </div>
                     )}
                   </button>
