@@ -333,13 +333,13 @@ function AppContent() {
                     <h2 className={`text-xl font-bold transition-colors duration-300 ${
                       darkMode ? 'text-white' : 'text-gray-800'
                     }`} style={{ fontFamily: 'Orbitron, monospace' }}>
-                      Parameters
+                      {t('calculator.parameters')}
                       <span className="text-green-500 ml-2 text-sm">🌐 LIVE DATA</span>
                     </h2>
                     <p className={`text-sm transition-colors duration-300 ${
                       darkMode ? 'text-gray-400' : 'text-gray-600'
                     }`}>
-                      Enter your position details
+                      {t('calculator.parametersSubtitle')}
                     </p>
                   </div>
                 </div>
@@ -349,8 +349,8 @@ function AppContent() {
                     <label className={`block text-sm font-semibold mb-3 h-12 flex items-end transition-colors duration-300 ${
                       darkMode ? 'text-gray-300' : 'text-gray-700'
                     }`}>
-                      🔧 AMM Protocol
-                      <span className="text-purple-500 ml-1 text-xs">MULTI-PROTOCOL</span>
+                      {t('calculator.protocol')}
+                      <span className="text-purple-500 ml-1 text-xs">{t('calculator.protocolMulti')}</span>
                     </label>
                     
                     <select
@@ -385,8 +385,8 @@ function AppContent() {
                     <label className={`block text-sm font-semibold mb-3 h-12 flex items-end transition-colors duration-300 ${
                       darkMode ? 'text-gray-300' : 'text-gray-700'
                     }`}>
-                      Select Token (Optional)
-                      <span className="text-green-500 ml-2 text-xs">🔴 LIVE PRICES</span>
+                      {t('calculator.selectToken')}
+                      <span className="text-green-500 ml-2 text-xs">🔴 {t('calculator.livePrices')}</span>
                     </label>
                     
                     <select
