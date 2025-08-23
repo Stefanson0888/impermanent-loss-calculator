@@ -123,7 +123,7 @@ function AppContent() {
   };
 
   const handleClearAll = () => {
-    const confirmed = window.confirm('Clear all saved data? This will reset all fields.');
+    const confirmed = window.confirm(t('notifications.clearConfirm'));
     
     if (confirmed) {
       // Очищаємо всі збережені дані
@@ -1097,7 +1097,7 @@ function AppContent() {
                     ILCalculator.pro
                   </div>
                   <div className="text-sm">
-                    Professional DeFi analytics for liquidity providers
+                    {t('footer.description')}
                   </div>
                 </div>
 
@@ -1137,8 +1137,8 @@ function AppContent() {
                 </div>
 
                 <div className={`text-sm text-center md:text-right ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                  <div>© 2025 ILCalculator.pro</div>
-                  <div>Made by Stefanson for DeFi community</div>
+                  <div>{t('footer.copyright')}</div>
+                  <div>{t('footer.madeBy')}</div>
                 </div>
               </div>
             </div>
@@ -1154,7 +1154,7 @@ function AppContent() {
               }`}>
                 <div className="flex items-center gap-2">
                   <span className="text-lg">✅</span>
-                  <span className="font-semibold">All data cleared! 🧹</span>
+                  <span className="font-semibold">{t('notifications.dataCleared')}</span>
                 </div>
               </div>
             </div>
